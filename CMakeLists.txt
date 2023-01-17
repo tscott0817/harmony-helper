@@ -26,7 +26,9 @@ endif()
 
 # Our Project
 
-add_executable(${PROJECT_NAME} main.cpp)
+# set( GRID-SRC main.cpp components/resources/shaders/Shader.cpp)
+
+add_executable(${PROJECT_NAME} main.cpp components/neck.h components/neck.cpp)
 #set(raylib_VERBOSE 1)
 target_link_libraries(${PROJECT_NAME} raylib)
 

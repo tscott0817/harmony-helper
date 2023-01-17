@@ -12,8 +12,9 @@ private:
     int screenHeight;
     Image neckImage;
     Texture2D neckTexture;
-    Rectangle boxRec;
-    Vector2 boxCenter;
+    Rectangle neckRectangle;
+    Vector2 neckCenter;
+    Vector2 neckPosition;
 
 public:
 

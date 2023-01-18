@@ -12,15 +12,19 @@ private:
     int screenHeight;
     Image containerImage;
     Image neckImage;
+    Image fretImage;
     Image stringImage;
     Texture2D containerTexture;
     Texture2D neckTexture;
+    Texture2D fretTexture;
     Texture2D stringTexture;
     Rectangle container;
     Rectangle neckRectangle;
+    Rectangle fretRectangle;
     Rectangle stringRectangle;
     Vector2 containerCenter;
     Vector2 neckCenter;
+    Vector2 fretCenter;
     Vector2 stringCenter;
 
 public:
@@ -28,7 +32,7 @@ public:
     Neck(int screenWidth, int screenHeight, float width, float height);
 
     void initGuitarNeck();
-    int drawGuitarNeck();
+    int drawGuitarNeck(float windowScale);
     void destroy();
 
 };

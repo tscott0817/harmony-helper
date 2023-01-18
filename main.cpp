@@ -1,9 +1,11 @@
 #include "raylib.h"
+#include "raymath.h"
 #include <iostream>
 #include "components/neck.h"
 
-//int drawGuitarNeck(Texture2D neckTexture, Rectangle boxRec, const int screenWidth, const int screenHeight, Vector2 boxCenter);
-
+// For window resizing
+#define MIN(a, b) ((a)<(b)? (a) : (b))
+#define MAX(a, b) ((a)>(b)? (a) : (b))
 
 int main(void)
 {
@@ -11,27 +13,25 @@ int main(void)
     const int screenWidth = 1280;
     const int screenHeight = 720;
 
+    SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(screenWidth, screenHeight, "Guitar App");
 
     Vector2 squarePosition = { 50.0f, 600.0f };
     Vector2 squareSize = {80.0f, 80.0f};
     Color squareColor = DARKBLUE;
 
-    Neck guitarNeck(screenWidth, screenHeight, 800, 400);
+    Neck guitarNeck(screenWidth, screenHeight, .8f, .6f);
 
 
     SetTargetFPS(60);
-
-
-    // Texture swap
-    int textureSwap = 0;
 
     // Main game loop
     while (!WindowShouldClose())
     {
 
+        // Compute required framebuffer scaling
+        float scale = MIN((float)GetScreenWidth()/screenWidth, (float)GetScreenHeight()/screenHeight);
 
-        /** I think the x and y positions are the top left corners **/
         // For mouse hovering
         if (GetMousePosition().x > squarePosition.x && GetMousePosition().x < squarePosition.x + (squareSize.x) &&
             GetMousePosition().y > squarePosition.y && GetMousePosition().y < squarePosition.y + (squareSize.y)) {
@@ -47,7 +47,7 @@ int main(void)
 
         ClearBackground(RAYWHITE);
 
-        guitarNeck.drawGuitarNeck();
+        guitarNeck.drawGuitarNeck(scale);
         DrawRectangleV(squarePosition, squareSize, squareColor);
 
         EndDrawing();

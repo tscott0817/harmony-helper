@@ -1,15 +1,38 @@
 #include "neck.h"
 
 
-Neck::Neck(int screenWidth, int screenHeight) {
+Neck::Neck(int screenWidth, int screenHeight, float width, float height) {
+
+    /** The parent container **/
+    containerImage = LoadImage("../plaid.png");     // Loaded in CPU memory (RAM)
+    containerTexture = LoadTextureFromImage(containerImage);  // Image converted to texture, GPU memory (VRAM)
+    UnloadImage(containerImage);   // Once image has been converted to texture and uploaded to VRAM, it can be unloaded from RAM
+
+    // Only change the position and size of neckContainer (Make this the params the user can change, drop down menu)
+    container = {static_cast<float>(screenWidth / 2), static_cast<float>(screenHeight / 2),
+                     width, height};  // @params: x-pos, y-pos, width, height
+
+    containerCenter = {container.width / 2, container.height / 2};
+
+    /** Neck **/
     neckImage = LoadImage("../wood.png");     // Loaded in CPU memory (RAM)
     neckTexture = LoadTextureFromImage(neckImage);  // Image converted to texture, GPU memory (VRAM)
     UnloadImage(neckImage);   // Once image has been converted to texture and uploaded to VRAM, it can be unloaded from RAM
 
-    neckRectangle = {0, 0, static_cast<float>(neckTexture.width), static_cast<float>(neckTexture.height)};
-    neckCenter = { static_cast<float>(neckTexture.width / 2), static_cast<float>(neckTexture.height / 2)};
-    neckPosition = {static_cast<float>(screenWidth) / 2.0f, static_cast<float>(screenHeight) / 2.0f};
+    // Use the container position +/- some integer to move child objects
+    // Use the size of the container * some float to resize child object
+    neckRectangle = {container.x, container.y, container.width, container.height * .5f};
+    neckCenter = {static_cast<float>(neckRectangle.width / 2), static_cast<float>(neckRectangle.height / 2)};
 
+    /** Strings **/
+    stringImage = LoadImage("../silver.png");
+    stringTexture = LoadTextureFromImage(stringImage);
+    UnloadImage(stringImage);
+
+    stringRectangle = {neckRectangle.x, neckRectangle.y, neckRectangle.width, neckRectangle.height * .25f};
+    stringCenter = {static_cast<float>(stringRectangle.width / 2), static_cast<float>(stringRectangle.height / 2)};
+
+    // Not in use currently
     this->screenWidth = screenWidth;
     this->screenHeight = screenHeight;
 
@@ -17,31 +40,29 @@ Neck::Neck(int screenWidth, int screenHeight) {
 
 int Neck::drawGuitarNeck() {
 
-    /**
-     * Neck:
-     *   width = 80% of screen size
-     *   height = 20% of screen height
-     *
-     * **/
+    /** Container **/
+    DrawTexturePro(containerTexture,
+                   container,
+                   (Rectangle) {container.x, container.y, container.width, container.height},  /** Params = (x-pos, y-pos, height, width) **/
+                   containerCenter, 0, WHITE);
+    /** Neck **/
     DrawTexturePro(neckTexture,
                    neckRectangle,
-                   (Rectangle) {neckPosition.x, neckPosition.y, neckRectangle.width, neckRectangle.height},  /** Params = (x-pos, y-pos, height, width) **/
+                   (Rectangle) {neckRectangle.x, neckRectangle.y, neckRectangle.width, neckRectangle.height},  /** Params = (x-pos, y-pos, height, width) **/
                    neckCenter, 0, WHITE);
 
-    /**
-     * Strings:
-     *
-     */
-    DrawRectangleV({static_cast<float>(neckPosition.x / 4), neckPosition.y}, {neckRectangle.width, 10}, LIGHTGRAY);
-//    DrawRectangleV({static_cast<float>(neckPosition.x / 8), neckPosition.y + (neckRectangle.y * (1/6))}, {neckRectangle.width, 10}, LIGHTGRAY);
-//    DrawRectangleV({static_cast<float>(neckPosition.x / 8), neckPosition.y + (neckRectangle.y * (1/6))}, {neckRectangle.width, 10}, LIGHTGRAY);
-//    DrawRectangleV({static_cast<float>(neckPosition.x / 8), neckPosition.y + (neckRectangle.y * (1/6))}, {neckRectangle.width, 10}, LIGHTGRAY);
-//    DrawRectangleV({static_cast<float>(neckPosition.x / 8), neckPosition.y + (neckRectangle.y * (1/6))}, {neckRectangle.width, 10}, LIGHTGRAY);
-//    DrawRectangleV({static_cast<float>(neckPosition.x / 8), neckPosition.y + (neckRectangle.y * (1/6))}, {neckRectangle.width, 10}, LIGHTGRAY);
+    /** Strings **/
+    DrawTexturePro(stringTexture,
+                   stringRectangle,
+                   (Rectangle) {stringRectangle.x, stringRectangle.y, stringRectangle.width, stringRectangle.height},  /** Params = (x-pos, y-pos, height, width) **/
+                   stringCenter, 0, WHITE);
 
     return 0;
 }
 
+// To remove textures from memory after program closes, must be after main loop ends
 void Neck::destroy() {
-    UnloadTexture(neckTexture);       // Texture unloading
+    UnloadTexture(containerTexture);
+    UnloadTexture(neckTexture);
+    UnloadTexture(stringTexture);
 }

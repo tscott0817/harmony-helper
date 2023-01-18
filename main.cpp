@@ -17,7 +17,7 @@ int main(void)
     Vector2 squareSize = {80.0f, 80.0f};
     Color squareColor = DARKBLUE;
 
-    Neck guitarNeck(screenWidth, screenHeight);
+    Neck guitarNeck(screenWidth, screenHeight, 800, 400);
 
 
     SetTargetFPS(60);
@@ -48,6 +48,7 @@ int main(void)
         ClearBackground(RAYWHITE);
 
         guitarNeck.drawGuitarNeck();
+        DrawRectangleV(squarePosition, squareSize, squareColor);
 
         EndDrawing();
         //----------------------------------------------------------------------------------

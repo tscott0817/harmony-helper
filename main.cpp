@@ -42,6 +42,8 @@ int main(void)
         }
 
         //std::cout << textureSwap << std::endl;
+        Vector2 mousePos = GetMousePosition();
+        guitarNeck.hover(mousePos);
 
         BeginDrawing();
 

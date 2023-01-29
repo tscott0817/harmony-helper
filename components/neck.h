@@ -32,12 +32,9 @@ private:
     Vector2 fretCenter;
     Vector2 stringCenter;
     Vector2 noteCenter;
-    std::vector<Vector2> noteLocations;
+    std::vector<std::vector<Vector2>> noteLocations;
     bool notesLocAdded;
-    std::vector<Color>* noteColorVec = new std::vector<Color>;
-    //Color noteColor;
-    Color* noteColor = new Color;
-    //std::unique_ptr<Color> noteColor;
+    std::vector<std::vector<Color>> noteColorVec;
 
 public:
 

@@ -41,14 +41,18 @@ Neck::Neck(int screenWidth, int screenHeight, float width, float height) {
     stringCenter = {static_cast<float>(stringRectangle.width / 2), static_cast<float>(stringRectangle.height / 2)};
 
     /** Note Containers **/
-    *noteColor = BLUE;
     noteRectangle = {neckRectangle.x, neckRectangle.y, stringRectangle.width * .025f, stringRectangle.height * 3.0f};
     noteCenter = {static_cast<float>(noteRectangle.width / 2), static_cast<float>(noteRectangle.height / 2)};
-    noteLocations = {};
     notesLocAdded = false;
-    *noteColorVec = {};
     for (int i = 0; i < 100; i++) {
-        noteColorVec->push_back(BLUE);
+        std::vector<Vector2> tempLoc;
+        std::vector<Color> tempColor;
+        for (int j = 0; j < 100; j++) {
+            tempLoc.push_back({0, 0});
+            tempColor.push_back(BLUE);
+        }
+        noteLocations.push_back(tempLoc);
+        noteColorVec.push_back(tempColor);
     }
 
     // Not in use currently
@@ -168,47 +172,18 @@ int Neck::drawGuitarNeck(float windowScale) {
 
 
     /** Note Containers **/
-    // TODO: Probably make a nested loop; so number of strings can be chosen and applied in loop rather than having 6 here
-    for (int i = 1; i <= 12; i++) {
+    for (int i = 1; i <= 12; i++) {  // Rows
+        for (int j = 1; j <= 6; j++) {  // Columns
 
-        // Draw the note container
-        DrawRectangle(neckRectangle.x - (neckRectangle.width * .54f) + ((neckRectangle.width * .08) * i), static_cast<float>(neckRectangle.y - (neckRectangle.height * .40) - (noteRectangle.height * .5f)), noteRectangle.width, noteRectangle.height, noteColorVec->at(0));
-        // Store the container coordinates (since iterated here in loop)
-        if (!notesLocAdded) {
-            noteLocations.push_back({static_cast<float>(neckRectangle.x - (neckRectangle.width * .54f) + ((neckRectangle.width * .08) * i)), static_cast<float>(neckRectangle.y - (neckRectangle.height * .40) - (noteRectangle.height * .5f))});
+            // Draw the note container
+            DrawRectangle(static_cast<float>(neckRectangle.x - (neckRectangle.width * .54f) + ((neckRectangle.width * .08) * i)), static_cast<float>((neckRectangle.y * 1.333333335) - ((neckRectangle.height * .16) * j) - (noteRectangle.height * .5f)), noteRectangle.width, noteRectangle.height, noteColorVec[i][j]);
+            // Store the container coordinates (since iterated here in loop)
+            if (!notesLocAdded) {
+                noteLocations[i][j] = {static_cast<float>(neckRectangle.x - (neckRectangle.width * .54f) + ((neckRectangle.width * .08) * i)), static_cast<float>((neckRectangle.y * 1.333333335) - ((neckRectangle.height * .16) * j) - (noteRectangle.height * .5f))};
+            }
         }
-
-        DrawRectangle(stringRectangle.x - (stringRectangle.width * .54f) + ((stringRectangle.width * .08) * i), static_cast<float>(stringRectangle.y - (neckRectangle.height * .24) - (noteRectangle.height * .5f)), noteRectangle.width, noteRectangle.height, noteColorVec->at(1));
-        if (!notesLocAdded) {
-            noteLocations.push_back({static_cast<float>(neckRectangle.x - (neckRectangle.width * .54f) + ((neckRectangle.width * .08) * i)), static_cast<float>(neckRectangle.y - (neckRectangle.height * .24) - (noteRectangle.height * .5f))});
-        }
-
-        DrawRectangle(stringRectangle.x - (stringRectangle.width * .54f) + ((stringRectangle.width * .08) * i), static_cast<float>(stringRectangle.y - (neckRectangle.height * .08) - (noteRectangle.height * .5f)), noteRectangle.width, noteRectangle.height, *noteColor);
-        if (!notesLocAdded) {
-            noteLocations.push_back({static_cast<float>(neckRectangle.x - (neckRectangle.width * .54f) + ((neckRectangle.width * .08) * i)), static_cast<float>(neckRectangle.y - (neckRectangle.height * .08) - (noteRectangle.height * .5f))});
-        }
-
-        DrawRectangle(stringRectangle.x - (stringRectangle.width * .54f) + ((stringRectangle.width * .08) * i), static_cast<float>(stringRectangle.y + (neckRectangle.height * .08) - (noteRectangle.height * .5f)), noteRectangle.width, noteRectangle.height, *noteColor);
-        if (!notesLocAdded) {
-        noteLocations.push_back({static_cast<float>(neckRectangle.x - (neckRectangle.width * .54f) + ((neckRectangle.width * .08) * i)), static_cast<float>(neckRectangle.y + (neckRectangle.height * .08) - (noteRectangle.height * .5f))});
-        }
-
-        DrawRectangle(stringRectangle.x - (stringRectangle.width * .54f) + ((stringRectangle.width * .08) * i), static_cast<float>(stringRectangle.y + (neckRectangle.height * .24) - (noteRectangle.height * .5f)), noteRectangle.width, noteRectangle.height, *noteColor);
-        if (!notesLocAdded) {
-            noteLocations.push_back({static_cast<float>(neckRectangle.x - (neckRectangle.width * .54f) + ((neckRectangle.width * .08) * i)), static_cast<float>(neckRectangle.y + (neckRectangle.height * .24) - (noteRectangle.height * .5f))});
-        }
-
-        DrawRectangle(stringRectangle.x - (stringRectangle.width * .54f) + ((stringRectangle.width * .08) * i), static_cast<float>(stringRectangle.y + (neckRectangle.height * .40) - (noteRectangle.height * .5f)), noteRectangle.width, noteRectangle.height, *noteColor);
-        if (!notesLocAdded) {
-            noteLocations.push_back({static_cast<float>(neckRectangle.x - (neckRectangle.width * .54f) + ((neckRectangle.width * .08) * i)), static_cast<float>(neckRectangle.y + (neckRectangle.height * .40) - (noteRectangle.height * .5f))});
-        }
-
-        notesLocAdded = true;
     }
-    //std::cout << containerCenter.x << ", " << containerCenter.y << std::endl;
-
-
-
+    notesLocAdded = true;
 
     return 0;
 }
@@ -216,17 +191,21 @@ int Neck::drawGuitarNeck(float windowScale) {
 void Neck::hover(Vector2 mousePos) {
     //std::cout << mousePos.x << ", " << mousePos.y << std::endl;
     for (int i = 0; i < noteLocations.size(); i++) {
-        if (mousePos.x > noteLocations[i].x && mousePos.x < noteLocations[i].x + (noteRectangle.width) &&
-            mousePos.y > noteLocations[i].y && mousePos.y < noteLocations[i].y + (noteRectangle.height)) {
-            std::cout << "Currently Hovering" << std::endl;
-            std::cout << noteLocations[i].x << ", " << noteLocations[i].y << std::endl;
-            //*noteColor = MAROON;
-            noteColorVec->at(i) = MAROON;
-        } else {
-            //*noteColor = BLUE;
-            noteColorVec->at(i) = BLUE;
-        }
+        for (int j = 0; j < noteLocations[i].size(); j++) {
+            if (mousePos.x > noteLocations[i][j].x && mousePos.x < noteLocations[i][j].x + (noteRectangle.width) &&
+                mousePos.y > noteLocations[i][j].y && mousePos.y < noteLocations[i][j].y + (noteRectangle.height)) {
+                std::cout << "Currently Hovering" << std::endl;
+                std::cout << noteLocations[i][j].x << ", " << noteLocations[i][j].y << std::endl;
+                //*noteColor = MAROON;
+                //noteColorVec->at(i) = MAROON;
+                noteColorVec[i][j] = MAROON;
+            } else {
+                //*noteColor = BLUE;
+                //noteColorVec->at(i) = BLUE;
+                noteColorVec[i][j] = BLUE;
+            }
 
+        }
     }
 }
 

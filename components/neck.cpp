@@ -21,7 +21,7 @@ Neck::Neck(int screenWidth, int screenHeight, float width, float height) {
 
     // Use the container position +/- some integer to move child objects
     // Use the size of the container * some float to resize child object
-    neckRectangle = {container.x, container.y, container.width, container.height * .5f}; // TODO: Fill container with neck (Currently have padding for testing)
+    neckRectangle = {container.x, container.y, container.width, container.height}; // TODO: Fill container with neck (Currently have padding for testing)
     neckCenter = {static_cast<float>(neckRectangle.width / 2), static_cast<float>(neckRectangle.height / 2)};
 
     /** Frets **/
@@ -29,6 +29,7 @@ Neck::Neck(int screenWidth, int screenHeight, float width, float height) {
     fretTexture = LoadTextureFromImage(fretImage);
     UnloadImage(fretImage);
 
+    // Create a rectangle for the frets, make the first starting position the far left of the neck
     fretRectangle = {neckRectangle.x, neckRectangle.y, static_cast<float>(neckRectangle.width * .02), neckRectangle.height};
     fretCenter = {static_cast<float>(fretRectangle.width / 2), static_cast<float>(fretRectangle.height / 2)};
 
@@ -41,9 +42,14 @@ Neck::Neck(int screenWidth, int screenHeight, float width, float height) {
     stringCenter = {static_cast<float>(stringRectangle.width / 2), static_cast<float>(stringRectangle.height / 2)};
 
     /** Note Containers **/
+    // Create a rectangle for the note containers
+    // This rectangle should scale and transform in relation to the string rectangles
+    // noteRectangle = {stringRectangle.x, stringRectangle.y, stringRectangle.width * .04f, stringRectangle.height};
     noteRectangle = {neckRectangle.x, neckRectangle.y, stringRectangle.width * .025f, stringRectangle.height * 3.0f};
     noteCenter = {static_cast<float>(noteRectangle.width / 2), static_cast<float>(noteRectangle.height / 2)};
     notesLocAdded = false;
+
+    // TODO: Just filling to 100 for room, but don't want to hardcode this 100
     for (int i = 0; i < 100; i++) {
         std::vector<Vector2> tempLoc;
         std::vector<Color> tempColor;
@@ -75,8 +81,28 @@ int Neck::drawGuitarNeck(float windowScale) {
                    (Rectangle) {neckRectangle.x, neckRectangle.y, neckRectangle.width, neckRectangle.height},
                    neckCenter, 0, WHITE);
 
-    /** Frets **/
-    // Frets separated by 1/8 width of neck
+//    /** Frets **/
+//    // Frets separated by 1/8 width of neck
+
+    // TODO: Keeping things symmetrical to start, then will add shifts as needed
+
+    // Use Draw Texture Pro to draw the fret
+    // Use 2 for loops as the frets go to either the right or the left of the neck position
+    // There are 12 frets in total, so 6 on each side
+//    for (int i = 0; i < 7; i++) {
+//        DrawTexturePro(fretTexture,
+//                       fretRectangle,
+//                       (Rectangle) {static_cast<float>(fretRectangle.x + (neckRectangle.width * .08) * i), fretRectangle.y, fretRectangle.width, fretRectangle.height},
+//                       fretCenter, 0, WHITE);
+//    }
+//    for (int i = 0; i < 7; i++) {
+//        DrawTexturePro(fretTexture,
+//                       fretRectangle,
+//                       (Rectangle) {static_cast<float>(fretRectangle.x - (neckRectangle.width * .08) * i), fretRectangle.y, fretRectangle.width, fretRectangle.height},
+//                       fretCenter, 0, WHITE);
+//    }
+
+
     DrawTexturePro(stringTexture,
                    fretRectangle,
                    (Rectangle) {static_cast<float>(fretRectangle.x - (neckRectangle.width * .49)), fretRectangle.y, fretRectangle.width, fretRectangle.height},
@@ -141,8 +167,8 @@ int Neck::drawGuitarNeck(float windowScale) {
                    fretRectangle,
                    (Rectangle) {static_cast<float>(fretRectangle.x + (neckRectangle.width * .47)), fretRectangle.y, fretRectangle.width, fretRectangle.height},
                    fretCenter, 0, WHITE);
-
-
+//
+//
     /** Strings **/
     // Strings separated 1/6 height of neck
     DrawTexturePro(stringTexture,
@@ -175,14 +201,19 @@ int Neck::drawGuitarNeck(float windowScale) {
     for (int i = 1; i <= 12; i++) {  // Rows
         for (int j = 1; j <= 6; j++) {  // Columns
 
-            // Draw the note container
-            DrawRectangle(static_cast<float>(neckRectangle.x - (neckRectangle.width * .54f) + ((neckRectangle.width * .08) * i)), static_cast<float>((neckRectangle.y * 1.333333335) - ((neckRectangle.height * .16) * j) - (noteRectangle.height * .5f)), noteRectangle.width, noteRectangle.height, noteColorVec[i][j]);
+            // Draw the note container that positions the notes half way in between the frets on the x-axis and half way in between the strings on the y-axis
+//            DrawRectangle(static_cast<float>(neckRectangle.x - (neckRectangle.width * .54f) + ((neckRectangle.width * .08) * i)), static_cast<float>((neckRectangle.y * 1.333333335) - ((neckRectangle.height * .16) * j) - (noteRectangle.height * .5f)), noteRectangle.width, noteRectangle.height, noteColorVec[i][j]);
+            DrawRectangle(static_cast<float>(neckRectangle.x - (neckRectangle.width * .54f) + ((neckRectangle.width * .08) * i)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .5f)), noteRectangle.width, noteRectangle.height, noteColorVec[i][j]);
+
             // Store the container coordinates (since iterated here in loop)
             if (!notesLocAdded) {
-                noteLocations[i][j] = {static_cast<float>(neckRectangle.x - (neckRectangle.width * .54f) + ((neckRectangle.width * .08) * i)), static_cast<float>((neckRectangle.y * 1.333333335) - ((neckRectangle.height * .16) * j) - (noteRectangle.height * .5f))};
+                noteLocations[i][j] = {static_cast<float>(neckRectangle.x - (neckRectangle.width * .54f) + ((neckRectangle.width * .08) * i)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .5f))};
             }
         }
     }
+
+    // Draw the note container using nested for loop, each note container should have it's y-value in the middle of the string
+
     notesLocAdded = true;
 
     return 0;

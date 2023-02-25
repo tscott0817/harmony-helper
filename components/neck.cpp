@@ -1,7 +1,8 @@
 #include "neck.h"
 
 // TODO: Points of origin are inconsistent between layers (some are top left corner of parent object, others center)
-Neck::Neck(int screenWidth, int screenHeight, float width, float height) {
+// TODO: Not sure that I want the screen width and height here, could just declare in main, but I do need it for positioning, so might be best to passin here
+Neck::Neck(int screenWidth, int screenHeight, float posX, float posY, float width, float height) {
 
     /** The parent container **/
     containerImage = LoadImage("../blue_background.png");     // Loaded in CPU memory (RAM)
@@ -9,7 +10,7 @@ Neck::Neck(int screenWidth, int screenHeight, float width, float height) {
     UnloadImage(containerImage);   // Once image has been converted to texture and uploaded to VRAM, it can be unloaded from RAM
 
     // Only change the position and size of neckContainer (Make this the params the user can change, drop down menu)
-    container = {static_cast<float>(screenWidth / 2), static_cast<float>(screenHeight / 2),
+    container = {posX, posY,
                  static_cast<float>(screenWidth * width), static_cast<float>(screenHeight * height)};  // @params: x-pos, y-pos, width, height
 
     containerCenter = {container.width / 2, container.height / 2};
@@ -44,7 +45,6 @@ Neck::Neck(int screenWidth, int screenHeight, float width, float height) {
     /** Note Containers **/
     // Create a rectangle for the note containers
     // This rectangle should scale and transform in relation to the string rectangles
-    // noteRectangle = {stringRectangle.x, stringRectangle.y, stringRectangle.width * .04f, stringRectangle.height};
     noteRectangle = {neckRectangle.x, neckRectangle.y, stringRectangle.width * .025f, stringRectangle.height * 3.0f};
     noteCenter = {static_cast<float>(noteRectangle.width / 2), static_cast<float>(noteRectangle.height / 2)};
     notesLocAdded = false;
@@ -62,8 +62,8 @@ Neck::Neck(int screenWidth, int screenHeight, float width, float height) {
     }
 
     // Not in use currently
-    this->screenWidth = screenWidth;
-    this->screenHeight = screenHeight;
+//    this->screenWidth = screenWidth;
+//    this->screenHeight = screenHeight;
 
 }
 
@@ -81,28 +81,8 @@ int Neck::drawGuitarNeck(float windowScale) {
                    (Rectangle) {neckRectangle.x, neckRectangle.y, neckRectangle.width, neckRectangle.height},
                    neckCenter, 0, WHITE);
 
-//    /** Frets **/
-//    // Frets separated by 1/8 width of neck
-
-    // TODO: Keeping things symmetrical to start, then will add shifts as needed
-
-    // Use Draw Texture Pro to draw the fret
-    // Use 2 for loops as the frets go to either the right or the left of the neck position
-    // There are 12 frets in total, so 6 on each side
-//    for (int i = 0; i < 7; i++) {
-//        DrawTexturePro(fretTexture,
-//                       fretRectangle,
-//                       (Rectangle) {static_cast<float>(fretRectangle.x + (neckRectangle.width * .08) * i), fretRectangle.y, fretRectangle.width, fretRectangle.height},
-//                       fretCenter, 0, WHITE);
-//    }
-//    for (int i = 0; i < 7; i++) {
-//        DrawTexturePro(fretTexture,
-//                       fretRectangle,
-//                       (Rectangle) {static_cast<float>(fretRectangle.x - (neckRectangle.width * .08) * i), fretRectangle.y, fretRectangle.width, fretRectangle.height},
-//                       fretCenter, 0, WHITE);
-//    }
-
-
+    /** Frets **/
+    // Frets separated by 1/8 width of neck
     DrawTexturePro(stringTexture,
                    fretRectangle,
                    (Rectangle) {static_cast<float>(fretRectangle.x - (neckRectangle.width * .49)), fretRectangle.y, fretRectangle.width, fretRectangle.height},

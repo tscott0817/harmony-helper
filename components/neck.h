@@ -6,12 +6,12 @@
 #include <vector>
 #include <memory>
 
-
 class Neck {
-
 private:
     int screenWidth;
     int screenHeight;
+
+    // TODO: Need to collect these all in structs
     Image containerImage;
     Image neckImage;
     Image fretImage;
@@ -38,8 +38,10 @@ private:
 
 public:
 
-    Neck(int screenWidth, int screenHeight, float width, float height);
+    // Constructors
+    Neck(int screenWidth, int screenHeight, float posX, float posY, float width, float height);
 
+    // Guitar Methods
     void initGuitarNeck();
     int drawGuitarNeck(float windowScale);
     void hover(Vector2 mousePos);

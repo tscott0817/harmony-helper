@@ -1,7 +1,7 @@
 #include "modal_chart.h"
 
 ModalChart::ModalChart(int screenWidth, int screenHeight, float posX, float posY, float width, float height) {
-    containerImage = LoadImage("../plaid.png");
+    containerImage = LoadImage("../images/plaid.png");
     containerTexture = LoadTextureFromImage(containerImage);
     UnloadImage(containerImage);
     container = {posX, posY,

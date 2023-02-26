@@ -37,6 +37,15 @@ private:
     bool notesLocAdded;
     std::vector<std::vector<Color>> noteColorVec;
 
+    // Neck Colors
+    Color hoverColor;
+    Color rootColor;
+    Color secondColor;
+    Color thirdColor;
+    Color fourthColor;
+    Color fifthColor;
+
+
 public:
 
     // Constructors

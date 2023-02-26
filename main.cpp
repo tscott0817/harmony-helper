@@ -42,9 +42,10 @@ int main()
 
         // For mouse interactions
         Vector2 mousePos = GetMousePosition();
+        bool leftMouseClicked = IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
         guitarNeck.hover(mousePos);
         modalChart.hover(mousePos);
-        menu.hover(mousePos);
+        menu.hover(mousePos, leftMouseClicked);
 
         BeginDrawing();
 

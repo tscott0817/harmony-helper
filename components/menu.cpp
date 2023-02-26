@@ -1,7 +1,7 @@
 #include "menu.h"
 
 Menu::Menu(int screenWidth, int screenHeight, float posX, float posY, float width, float height) {
-    containerImage = LoadImage("../plaid.png");
+    containerImage = LoadImage("../images/plaid.png");
     containerTexture = LoadTextureFromImage(containerImage);
     UnloadImage(containerImage);
     container = {posX, posY,
@@ -66,19 +66,25 @@ int Menu::drawMenu(float windowScale) {
     return 0;  // TODO: Probably no reason to return int, make void
 
 }
-void Menu::hover(Vector2 mousePos) {
+void Menu::hover(Vector2 mousePos, bool mousePressed) {
     for (int i = 0; i < menuLocations.size(); i++) {
         for (int j = 0; j < menuLocations[i].size(); j++) {
             if (mousePos.x > menuLocations[i][j].x && mousePos.x < menuLocations[i][j].x + (menuRectangle.width) &&
                 mousePos.y > menuLocations[i][j].y && mousePos.y < menuLocations[i][j].y + (menuRectangle.height)) {
-                std::cout << "Chord Chart -> Currently Hovering at Coordinates:" << std::endl;
+                std::cout << "Main Menu -> Currently Hovering at Coordinates:" << std::endl;
                 std::cout << menuLocations[i][j].x << ", " << menuLocations[i][j].y << std::endl;
-                //*noteColor = MAROON;
-                //noteColorVec->at(i) = MAROON;
                 menuColorVec[i][j] = MAROON;
-            } else {
-                //*noteColor = BLUE;
-                //noteColorVec->at(i) = BLUE;
+
+                if (mousePressed) {
+                    std::cout << "Main Menu -> Clicked at Coordinates:" << std::endl;
+                    std::cout << menuLocations[i][j].x << ", " << menuLocations[i][j].y << std::endl;
+                    menuColorVec[i][j] = GREEN;
+
+                    // TODO: All code for what happens at each button press
+
+                }
+            }
+            else {
                 menuColorVec[i][j] = BLUE;
             }
 

@@ -1,3 +1,4 @@
+#include "cmath"
 #include "neck.h"
 
 // TODO: Points of origin are inconsistent between layers (some are top left corner of parent object, others center)
@@ -16,7 +17,7 @@ Neck::Neck(int screenWidth, int screenHeight, float posX, float posY, float widt
     containerCenter = {container.width / 2, container.height / 2};
 
     /** Neck **/
-    neckImage = LoadImage("../wood.png");     // Loaded in CPU memory (RAM)
+    neckImage = LoadImage("../images/wood.png");     // Loaded in CPU memory (RAM)
     neckTexture = LoadTextureFromImage(neckImage);  // Image converted to texture, GPU memory (VRAM)
     UnloadImage(neckImage);   // Once image has been converted to texture and uploaded to VRAM, it can be unloaded from RAM
 
@@ -26,16 +27,16 @@ Neck::Neck(int screenWidth, int screenHeight, float posX, float posY, float widt
     neckCenter = {static_cast<float>(neckRectangle.width / 2), static_cast<float>(neckRectangle.height / 2)};
 
     /** Frets **/
-    fretImage = LoadImage("../fret.png");
+    fretImage = LoadImage("../images/fret.png");
     fretTexture = LoadTextureFromImage(fretImage);
     UnloadImage(fretImage);
 
     // Create a rectangle for the frets, make the first starting position the far left of the neck
-    fretRectangle = {neckRectangle.x, neckRectangle.y, static_cast<float>(neckRectangle.width * .02), neckRectangle.height};
+    fretRectangle = {neckRectangle.x, neckRectangle.y, static_cast<float>(neckRectangle.width * .01), neckRectangle.height};
     fretCenter = {static_cast<float>(fretRectangle.width / 2), static_cast<float>(fretRectangle.height / 2)};
 
     /** Strings **/
-    stringImage = LoadImage("../silver.png");
+    stringImage = LoadImage("../images/silver.png");
     stringTexture = LoadTextureFromImage(stringImage);
     UnloadImage(stringImage);
 
@@ -50,18 +51,24 @@ Neck::Neck(int screenWidth, int screenHeight, float posX, float posY, float widt
     notesLocAdded = false;
 
     // TODO: Just filling to 100 for room, but don't want to hardcode this 100
+    hoverColor = Color{190, 33, 55, 100};
+    rootColor = Color{0, 121, 241, 155};
+    secondColor = MAROON;
+    thirdColor = GREEN;
+    fourthColor = YELLOW;
+    fifthColor = PURPLE;
     for (int i = 0; i < 100; i++) {
         std::vector<Vector2> tempLoc;
         std::vector<Color> tempColor;
         for (int j = 0; j < 100; j++) {
             tempLoc.push_back({0, 0});
-            tempColor.push_back(BLUE);
+            tempColor.push_back(rootColor);
         }
         noteLocations.push_back(tempLoc);
         noteColorVec.push_back(tempColor);
     }
 
-    // Not in use currently
+    // TODO: Not in use currently
 //    this->screenWidth = screenWidth;
 //    this->screenHeight = screenHeight;
 
@@ -147,8 +154,7 @@ int Neck::drawGuitarNeck(float windowScale) {
                    fretRectangle,
                    (Rectangle) {static_cast<float>(fretRectangle.x + (neckRectangle.width * .47)), fretRectangle.y, fretRectangle.width, fretRectangle.height},
                    fretCenter, 0, WHITE);
-//
-//
+
     /** Strings **/
     // Strings separated 1/6 height of neck
     DrawTexturePro(stringTexture,
@@ -182,7 +188,8 @@ int Neck::drawGuitarNeck(float windowScale) {
         for (int j = 1; j <= 6; j++) {  // Columns
 
             //DrawRectangle(static_cast<float>(neckRectangle.x - (neckRectangle.width * .54f) + ((neckRectangle.width * .08) * i)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .5f)), noteRectangle.width, noteRectangle.height, noteColorVec[i][j]);
-            DrawCircle(static_cast<float>(neckRectangle.x - (neckRectangle.width * .53f) + ((neckRectangle.width * .08) * i)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .56f)), 35, noteColorVec[i][j]);
+            int noteRadius = sqrt(pow(noteRectangle.width, 2) + pow(noteRectangle.height, 2)) * .5f;
+            DrawCircle(static_cast<float>(neckRectangle.x - (neckRectangle.width * .53f) + ((neckRectangle.width * .08) * i)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .56f)), noteRadius, noteColorVec[i][j]);
             // Store the container coordinates (since iterated here in loop)
             if (!notesLocAdded) {
                 // TODO: Make my own circle struct, just using rectangle right now
@@ -206,13 +213,9 @@ void Neck::hover(Vector2 mousePos) {
                 mousePos.y > noteLocations[i][j].y && mousePos.y < noteLocations[i][j].y + (noteRectangle.height)) {
                 std::cout << "Guitar Neck -> Currently Hovering at Coordinates:" << std::endl;
                 std::cout << noteLocations[i][j].x << ", " << noteLocations[i][j].y << std::endl;
-                //*noteColor = MAROON;
-                //noteColorVec->at(i) = MAROON;
-                noteColorVec[i][j] = MAROON;
+                noteColorVec[i][j] = hoverColor;
             } else {
-                //*noteColor = BLUE;
-                //noteColorVec->at(i) = BLUE;
-                noteColorVec[i][j] = BLUE;
+                noteColorVec[i][j] = rootColor;
             }
 
         }

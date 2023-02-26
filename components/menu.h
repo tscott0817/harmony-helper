@@ -27,7 +27,7 @@ public:
 
     void initMenu();
     int drawMenu(float windowScale);
-    void hover(Vector2 mousePos);
+    void hover(Vector2 mousePos, bool mousePressed);
     void destroy();
 
 

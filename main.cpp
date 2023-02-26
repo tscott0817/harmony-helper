@@ -3,6 +3,7 @@
 #include <iostream>
 #include "components/neck.h"
 #include "components/modal_chart.h"
+#include "components/menu.h"
 
 // For window resizing
 #define MIN(a, b) ((a)<(b)? (a) : (b))
@@ -15,16 +16,17 @@ int main()
     const int screenHeight = 1080;
 
     // Object sizes
-    float guitarWidth = .7f;
-    float guitarHeight = .3f;
+    float guitarWidth = .8f;
+    float guitarHeight = .4f;
     float guitarPosX = screenWidth * .5f;  // The ( * 0.5f) are basically scalars for the guitar's position
-    float guitarPosY = screenHeight * .75f;
+    float guitarPosY = screenHeight * .2f;
 
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(screenWidth, screenHeight, "Guitar App");
 
     Neck guitarNeck(screenWidth, screenHeight, guitarPosX, guitarPosY, guitarWidth, guitarHeight);
-    ModalChart modalChart(screenWidth, screenHeight, screenWidth * .5f, screenHeight * .3f, .6f, .5f);
+    ModalChart modalChart(screenWidth, screenHeight, screenWidth * .35f, screenHeight * .7f, .6f, .5f);
+    Menu menu(screenWidth, screenHeight, screenWidth * .8f, screenHeight * .7f, .2f, .4f);
 
 
     SetTargetFPS(60);
@@ -35,13 +37,14 @@ int main()
 
         // Compute required framebuffer scaling
         // TODO: This can be used to resize objects dynamically with the window size,
-        // TODO: This should probably be an argument of the constructor, but needs to be called each frame, so maybe put it in init()
+        // TODO: Needs to be called each frame, so I think it should be param for object methods
         float scale = MIN((float)GetScreenWidth()/screenWidth, (float)GetScreenHeight()/screenHeight);
 
-        //std::cout << textureSwap << std::endl;
+        // For mouse interactions
         Vector2 mousePos = GetMousePosition();
         guitarNeck.hover(mousePos);
         modalChart.hover(mousePos);
+        menu.hover(mousePos);
 
         BeginDrawing();
 
@@ -49,6 +52,7 @@ int main()
 
         guitarNeck.drawGuitarNeck(scale);
         modalChart.drawModalChart(scale);
+        menu.drawMenu(scale);
 
 
         EndDrawing();
@@ -59,6 +63,7 @@ int main()
     //--------------------------------------------------------------------------------------
     guitarNeck.destroy();
     modalChart.destroy();
+    menu.destroy();
     CloseWindow();        // Close window and OpenGL context
     //--------------------------------------------------------------------------------------
 

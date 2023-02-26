@@ -1,6 +1,6 @@
-#include "modal_chart.h"
+#include "menu.h"
 
-ModalChart::ModalChart(int screenWidth, int screenHeight, float posX, float posY, float width, float height) {
+Menu::Menu(int screenWidth, int screenHeight, float posX, float posY, float width, float height) {
     containerImage = LoadImage("../plaid.png");
     containerTexture = LoadTextureFromImage(containerImage);
     UnloadImage(containerImage);
@@ -12,10 +12,10 @@ ModalChart::ModalChart(int screenWidth, int screenHeight, float posX, float posY
 //    chartImage = LoadImage("../pink.png");
 //    chartTexture = LoadTextureFromImage(containerImage);
     // UnloadImage(chartImage);
-    chartRectangle = {container.x, container.y, container.width * .14f, container.height * .15f};
-    chartCenter = {static_cast<float>(chartRectangle.width / 2), static_cast<float>(chartRectangle.height / 2)};
+    menuRectangle = {container.x, container.y, container.width * .49f, container.height * .15f};
+    menuCenter = {static_cast<float>(menuRectangle.width / 2), static_cast<float>(menuRectangle.height / 2)};
 
-    chartLocAdded = false;
+    menuLocAdded = false;
 
     // TODO: Just filling to 100 for room, but don't want to hardcode this 100
     for (int i = 0; i < 100; i++) {
@@ -25,16 +25,16 @@ ModalChart::ModalChart(int screenWidth, int screenHeight, float posX, float posY
             tempLoc.push_back({0, 0});
             tempColor.push_back(BLUE);
         }
-        chartLocations.push_back(tempLoc);
-        chartColorVec.push_back(tempColor);
+        menuLocations.push_back(tempLoc);
+        menuColorVec.push_back(tempColor);
     }
 
 }
 
-void ModalChart::initModalChart() {
+void Menu::initMenu() {
 
 }
-int ModalChart::drawModalChart(float windowScale) {
+int Menu::drawMenu(float windowScale) {
     /** Container **/
     DrawTexturePro(containerTexture,
                    container,
@@ -42,50 +42,50 @@ int ModalChart::drawModalChart(float windowScale) {
                    containerCenter, 0, WHITE);
 
     /** Chart **/
-    for (int i = 0; i < 7; i++) {
+    for (int i = 0; i < 2; i++) {
         for (int j = 0; j < 6; j++) {
 //            DrawTexturePro(chartTexture,
 //                           chartRectangle,
 //                           (Rectangle) {container.x * i, container.y * j, chartRectangle.width, chartRectangle.height},
 //                           chartCenter, 0, WHITE);
 
-            DrawRectangle(static_cast<float>((container.x) + ((container.width * .1435f) * i) - (container.width * .5f)),
+            DrawRectangle(static_cast<float>((container.x) + ((container.width * .5f) * i) - (container.width * .4925f)),
                           static_cast<float>((container.y) - ((container.height * .16f) * j) + (container.height * .325f)),
-                          chartRectangle.width, chartRectangle.height, chartColorVec[i][j]);
+                          menuRectangle.width, menuRectangle.height, menuColorVec[i][j]);
 
             // Store the container coordinates (since iterated here in loop)
-            if (!chartLocAdded) {
-                chartLocations[i][j] = {static_cast<float>((container.x) + ((container.width * .1435f) * i) - (container.width * .5f)),
+            if (!menuLocAdded) {
+                menuLocations[i][j] = {static_cast<float>((container.x) + ((container.width * .5f) * i) - (container.width * .4925f)),
                                         static_cast<float>((container.y) - ((container.height * .16f) * j) + (container.height * .325f))};
             }
         }
     }
 
-    chartLocAdded = true;
+    menuLocAdded = true;
 
     return 0;  // TODO: Probably no reason to return int, make void
 
 }
-void ModalChart::hover(Vector2 mousePos) {
-    for (int i = 0; i < chartLocations.size(); i++) {
-        for (int j = 0; j < chartLocations[i].size(); j++) {
-            if (mousePos.x > chartLocations[i][j].x && mousePos.x < chartLocations[i][j].x + (chartRectangle.width) &&
-                mousePos.y > chartLocations[i][j].y && mousePos.y < chartLocations[i][j].y + (chartRectangle.height)) {
+void Menu::hover(Vector2 mousePos) {
+    for (int i = 0; i < menuLocations.size(); i++) {
+        for (int j = 0; j < menuLocations[i].size(); j++) {
+            if (mousePos.x > menuLocations[i][j].x && mousePos.x < menuLocations[i][j].x + (menuRectangle.width) &&
+                mousePos.y > menuLocations[i][j].y && mousePos.y < menuLocations[i][j].y + (menuRectangle.height)) {
                 std::cout << "Chord Chart -> Currently Hovering at Coordinates:" << std::endl;
-                std::cout << chartLocations[i][j].x << ", " << chartLocations[i][j].y << std::endl;
+                std::cout << menuLocations[i][j].x << ", " << menuLocations[i][j].y << std::endl;
                 //*noteColor = MAROON;
                 //noteColorVec->at(i) = MAROON;
-                chartColorVec[i][j] = MAROON;
+                menuColorVec[i][j] = MAROON;
             } else {
                 //*noteColor = BLUE;
                 //noteColorVec->at(i) = BLUE;
-                chartColorVec[i][j] = BLUE;
+                menuColorVec[i][j] = BLUE;
             }
 
         }
     }
 }
-void ModalChart::destroy() {
+void Menu::destroy() {
     UnloadTexture(containerTexture);
-    UnloadTexture(chartTexture);
+    UnloadTexture(menuTexture);
 }

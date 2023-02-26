@@ -8,6 +8,8 @@
 
 class ModalChart {
 private:
+
+    // TODO: Make these structs?
     Image containerImage;
     Texture2D containerTexture;
     Rectangle container;

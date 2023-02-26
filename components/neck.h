@@ -27,6 +27,7 @@ private:
     Rectangle fretRectangle;
     Rectangle stringRectangle;
     Rectangle noteRectangle;
+    //Circle noteCircle;
     Vector2 containerCenter;
     Vector2 neckCenter;
     Vector2 fretCenter;

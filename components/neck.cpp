@@ -1,7 +1,7 @@
 #include "neck.h"
 
 // TODO: Points of origin are inconsistent between layers (some are top left corner of parent object, others center)
-// TODO: Not sure that I want the screen width and height here, could just declare in main, but I do need it for positioning, so might be best to passin here
+// TODO: Not sure that I want the screen width and height here, could just declare in main, but I do need it for positioning, so might be best to pass in here
 Neck::Neck(int screenWidth, int screenHeight, float posX, float posY, float width, float height) {
 
     /** The parent container **/
@@ -181,18 +181,17 @@ int Neck::drawGuitarNeck(float windowScale) {
     for (int i = 1; i <= 12; i++) {  // Rows
         for (int j = 1; j <= 6; j++) {  // Columns
 
-            // Draw the note container that positions the notes half way in between the frets on the x-axis and half way in between the strings on the y-axis
-//            DrawRectangle(static_cast<float>(neckRectangle.x - (neckRectangle.width * .54f) + ((neckRectangle.width * .08) * i)), static_cast<float>((neckRectangle.y * 1.333333335) - ((neckRectangle.height * .16) * j) - (noteRectangle.height * .5f)), noteRectangle.width, noteRectangle.height, noteColorVec[i][j]);
-            DrawRectangle(static_cast<float>(neckRectangle.x - (neckRectangle.width * .54f) + ((neckRectangle.width * .08) * i)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .5f)), noteRectangle.width, noteRectangle.height, noteColorVec[i][j]);
-
+            //DrawRectangle(static_cast<float>(neckRectangle.x - (neckRectangle.width * .54f) + ((neckRectangle.width * .08) * i)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .5f)), noteRectangle.width, noteRectangle.height, noteColorVec[i][j]);
+            DrawCircle(static_cast<float>(neckRectangle.x - (neckRectangle.width * .53f) + ((neckRectangle.width * .08) * i)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .56f)), 35, noteColorVec[i][j]);
             // Store the container coordinates (since iterated here in loop)
             if (!notesLocAdded) {
+                // TODO: Make my own circle struct, just using rectangle right now
                 noteLocations[i][j] = {static_cast<float>(neckRectangle.x - (neckRectangle.width * .54f) + ((neckRectangle.width * .08) * i)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .5f))};
+                // If circle
+                // noteLocations[i][j] = {static_cast<float>(neckRectangle.x - (neckRectangle.width * .53f) + ((neckRectangle.width * .08) * i)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .56f))};
             }
         }
     }
-
-    // Draw the note container using nested for loop, each note container should have it's y-value in the middle of the string
 
     notesLocAdded = true;
 
@@ -205,7 +204,7 @@ void Neck::hover(Vector2 mousePos) {
         for (int j = 0; j < noteLocations[i].size(); j++) {
             if (mousePos.x > noteLocations[i][j].x && mousePos.x < noteLocations[i][j].x + (noteRectangle.width) &&
                 mousePos.y > noteLocations[i][j].y && mousePos.y < noteLocations[i][j].y + (noteRectangle.height)) {
-                std::cout << "Currently Hovering" << std::endl;
+                std::cout << "Guitar Neck -> Currently Hovering at Coordinates:" << std::endl;
                 std::cout << noteLocations[i][j].x << ", " << noteLocations[i][j].y << std::endl;
                 //*noteColor = MAROON;
                 //noteColorVec->at(i) = MAROON;

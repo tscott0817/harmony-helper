@@ -40,7 +40,7 @@ Neck::Neck(int screenWidth, int screenHeight, float posX, float posY, float widt
     stringTexture = LoadTextureFromImage(stringImage);
     UnloadImage(stringImage);
 
-    stringRectangle = {neckRectangle.x, neckRectangle.y, neckRectangle.width, neckRectangle.height * .04f};
+    stringRectangle = {neckRectangle.x, neckRectangle.y, neckRectangle.width, neckRectangle.height * .02f};
     stringCenter = {static_cast<float>(stringRectangle.width / 2), static_cast<float>(stringRectangle.height / 2)};
 
     /** Note Containers **/
@@ -188,7 +188,7 @@ int Neck::drawGuitarNeck(float windowScale) {
         for (int j = 1; j <= 6; j++) {  // Columns
 
             //DrawRectangle(static_cast<float>(neckRectangle.x - (neckRectangle.width * .54f) + ((neckRectangle.width * .08) * i)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .5f)), noteRectangle.width, noteRectangle.height, noteColorVec[i][j]);
-            int noteRadius = sqrt(pow(noteRectangle.width, 2) + pow(noteRectangle.height, 2)) * .5f;
+            int noteRadius = sqrt(pow(noteRectangle.width, 2) + pow(noteRectangle.height, 2)) * .75f;
             DrawCircle(static_cast<float>(neckRectangle.x - (neckRectangle.width * .53f) + ((neckRectangle.width * .08) * i)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .56f)), noteRadius, noteColorVec[i][j]);
             // Store the container coordinates (since iterated here in loop)
             if (!notesLocAdded) {

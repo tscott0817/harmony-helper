@@ -25,6 +25,9 @@ private:
     std::vector<std::vector<Color>> chartColorVec;
 
 public:
+
+    // TOOD: Maybe make setters / getters
+    bool canDraw;
     ModalChart(int screenWidth, int screenHeight, float posX, float posY, float width, float height);
 
     void initModalChart();

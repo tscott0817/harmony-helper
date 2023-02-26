@@ -29,6 +29,8 @@ ModalChart::ModalChart(int screenWidth, int screenHeight, float posX, float posY
         chartColorVec.push_back(tempColor);
     }
 
+    canDraw = true;
+
 }
 
 void ModalChart::initModalChart() {

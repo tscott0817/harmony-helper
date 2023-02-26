@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <memory>
+#include "../components/modal_chart.h"
 
 
 class Menu {
@@ -22,12 +23,14 @@ private:
     bool menuLocAdded;
     std::vector<std::vector<Color>> menuColorVec;
 
+    int buttonOnePressed;
+
 public:
     Menu(int screenWidth, int screenHeight, float posX, float posY, float width, float height);
 
     void initMenu();
     int drawMenu(float windowScale);
-    void hover(Vector2 mousePos, bool mousePressed);
+    void hover(Vector2 mousePos, bool mousePressed, ModalChart &modalChart);
     void destroy();
 
 

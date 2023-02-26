@@ -3,7 +3,7 @@
 #include <iostream>
 #include "components/neck.h"
 #include "components/modal_chart.h"
-#include "components/menu.h"
+#include "controller/menu.h"
 
 // For window resizing
 #define MIN(a, b) ((a)<(b)? (a) : (b))
@@ -12,8 +12,8 @@
 int main()
 {
 
-    const int screenWidth = 1920;
-    const int screenHeight = 1080;
+    const int screenWidth = 2556;
+    const int screenHeight = 1440;
 
     // Object sizes
     float guitarWidth = .8f;
@@ -45,14 +45,16 @@ int main()
         bool leftMouseClicked = IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
         guitarNeck.hover(mousePos);
         modalChart.hover(mousePos);
-        menu.hover(mousePos, leftMouseClicked);
+        menu.hover(mousePos, leftMouseClicked, modalChart);
 
         BeginDrawing();
 
         ClearBackground(RAYWHITE);
 
         guitarNeck.drawGuitarNeck(scale);
-        modalChart.drawModalChart(scale);
+        if (modalChart.canDraw) {
+            modalChart.drawModalChart(scale);
+        }
         menu.drawMenu(scale);
 
 

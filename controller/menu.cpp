@@ -29,6 +29,8 @@ Menu::Menu(int screenWidth, int screenHeight, float posX, float posY, float widt
         menuColorVec.push_back(tempColor);
     }
 
+    buttonOnePressed = 0;
+
 }
 
 void Menu::initMenu() {
@@ -66,7 +68,7 @@ int Menu::drawMenu(float windowScale) {
     return 0;  // TODO: Probably no reason to return int, make void
 
 }
-void Menu::hover(Vector2 mousePos, bool mousePressed) {
+void Menu::hover(Vector2 mousePos, bool mousePressed, ModalChart &modalChart) {
     for (int i = 0; i < menuLocations.size(); i++) {
         for (int j = 0; j < menuLocations[i].size(); j++) {
             if (mousePos.x > menuLocations[i][j].x && mousePos.x < menuLocations[i][j].x + (menuRectangle.width) &&
@@ -75,13 +77,20 @@ void Menu::hover(Vector2 mousePos, bool mousePressed) {
                 std::cout << menuLocations[i][j].x << ", " << menuLocations[i][j].y << std::endl;
                 menuColorVec[i][j] = MAROON;
 
-                if (mousePressed) {
+                // Flips like a switch, maybe can use button = !button like c#?
+                if (mousePressed && buttonOnePressed == 0) {
                     std::cout << "Main Menu -> Clicked at Coordinates:" << std::endl;
                     std::cout << menuLocations[i][j].x << ", " << menuLocations[i][j].y << std::endl;
                     menuColorVec[i][j] = GREEN;
-
-                    // TODO: All code for what happens at each button press
-
+                    modalChart.canDraw = false; // TODO: Probably don't want public access like this
+                    buttonOnePressed = 1;
+                }
+                else if (mousePressed && buttonOnePressed == 1) {
+                    std::cout << "Main Menu -> Clicked at Coordinates:" << std::endl;
+                    std::cout << menuLocations[i][j].x << ", " << menuLocations[i][j].y << std::endl;
+                    menuColorVec[i][j] = PURPLE;
+                    modalChart.canDraw = true; // TODO: Probably don't want public access like this
+                    buttonOnePressed = 0;
                 }
             }
             else {

@@ -78,14 +78,19 @@ void Menu::hover(Vector2 mousePos, bool mousePressed, ModalChart &modalChart) {
                 menuColorVec[i][j] = MAROON;
 
                 // Flips like a switch, maybe can use button = !button like c#?
-                if (mousePressed && buttonOnePressed == 0) {
+                // This is for top left button
+                if (mousePressed && buttonOnePressed == 0 &&
+                   ((menuLocations[i][j].x == menuLocations[0][5].x) && (menuLocations[i][j].y == menuLocations[0][5].y))) {
+
                     std::cout << "Main Menu -> Clicked at Coordinates:" << std::endl;
                     std::cout << menuLocations[i][j].x << ", " << menuLocations[i][j].y << std::endl;
                     menuColorVec[i][j] = GREEN;
                     modalChart.canDraw = false; // TODO: Probably don't want public access like this
                     buttonOnePressed = 1;
                 }
-                else if (mousePressed && buttonOnePressed == 1) {
+                else if (mousePressed && buttonOnePressed == 1 &&
+                        ((menuLocations[i][j].x == menuLocations[0][5].x) && (menuLocations[i][j].y == menuLocations[0][5].y))) {
+
                     std::cout << "Main Menu -> Clicked at Coordinates:" << std::endl;
                     std::cout << menuLocations[i][j].x << ", " << menuLocations[i][j].y << std::endl;
                     menuColorVec[i][j] = PURPLE;

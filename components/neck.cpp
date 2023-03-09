@@ -17,7 +17,7 @@ Neck::Neck(int screenWidth, int screenHeight, float posX, float posY, float widt
     containerCenter = {container.width / 2, container.height / 2};
 
     /** Neck **/
-    neckImage = LoadImage("../images/wood.png");     // Loaded in CPU memory (RAM)
+    neckImage = LoadImage("../images/wood_dark.png");     // Loaded in CPU memory (RAM)
     neckTexture = LoadTextureFromImage(neckImage);  // Image converted to texture, GPU memory (VRAM)
     UnloadImage(neckImage);   // Once image has been converted to texture and uploaded to VRAM, it can be unloaded from RAM
 
@@ -45,18 +45,36 @@ Neck::Neck(int screenWidth, int screenHeight, float posX, float posY, float widt
 
     /** Note Containers **/
     // Create a rectangle for the note containers
-    // This rectangle should scale and transform in relation to the string rectangles
-    noteRectangle = {neckRectangle.x, neckRectangle.y, stringRectangle.width * .025f, stringRectangle.height * 3.0f};
-    noteCenter = {static_cast<float>(noteRectangle.width / 2), static_cast<float>(noteRectangle.height / 2)};
-    notesLocAdded = false;
+    noteRectangle = {neckRectangle.x, neckRectangle.y, neckRectangle.width * .05f, neckRectangle.height * .15f};
+    // noteCenter = {static_cast<float>(noteRectangle.width / 2), static_cast<float>(noteRectangle.height / 2)};
 
-    // TODO: Just filling to 100 for room, but don't want to hardcode this 100
-    hoverColor = Color{190, 33, 55, 100};
-    rootColor = Color{0, 121, 241, 155};
+    notesLocAdded = false;
+    testText = "Test Text";
+    noteName = "X";
+    // testFont = GetFontDefault();
+    testFont = LoadFontEx("../resources/OpenSans-Light.ttf", 200, nullptr, 100);
+
+    // Generate mipmap levels to use trilinear filtering
+    // NOTE: On 2D drawing it won't be noticeable, it looks like FILTER_BILINEAR
+    GenTextureMipmaps(&testFont.texture);
+    fontSize = (float)testFont.baseSize;
+    // fontSize = 250.0f;
+    fontPosition = { 500.0f, 750.0f};
+    textSize = { 10.0f, 10.0f };
+
+    // Setup texture scaling filter
+    SetTextureFilter(testFont.texture, TEXTURE_FILTER_POINT);
+    currentFontFilter = 0;      // TEXTURE_FILTER_POINT
+
+
+    hoverColor = Color{190, 33, 55, 200};
+    rootColor = Color{0, 121, 241, 200};
     secondColor = MAROON;
     thirdColor = GREEN;
     fourthColor = YELLOW;
     fifthColor = PURPLE;
+
+    // TODO: Just filling to 100 for room, but don't want to hardcode this 100
     for (int i = 0; i < 100; i++) {
         std::vector<Vector2> tempLoc;
         std::vector<Color> tempColor;
@@ -68,7 +86,7 @@ Neck::Neck(int screenWidth, int screenHeight, float posX, float posY, float widt
         noteColorVec.push_back(tempColor);
     }
 
-    // TODO: Not in use currently
+    // TODO: Not in use currently, don't know if I want to have class members for this
 //    this->screenWidth = screenWidth;
 //    this->screenHeight = screenHeight;
 
@@ -183,24 +201,41 @@ int Neck::drawGuitarNeck(float windowScale) {
                    stringCenter, 0, WHITE);
 
 
+    // TODO: Need to have note names appear in the note container
+
     /** Note Containers **/
     for (int i = 1; i <= 12; i++) {  // Rows
         for (int j = 1; j <= 6; j++) {  // Columns
 
-            //DrawRectangle(static_cast<float>(neckRectangle.x - (neckRectangle.width * .54f) + ((neckRectangle.width * .08) * i)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .5f)), noteRectangle.width, noteRectangle.height, noteColorVec[i][j]);
-            int noteRadius = sqrt(pow(noteRectangle.width, 2) + pow(noteRectangle.height, 2)) * .75f;
-            DrawCircle(static_cast<float>(neckRectangle.x - (neckRectangle.width * .53f) + ((neckRectangle.width * .08) * i)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .56f)), noteRadius, noteColorVec[i][j]);
+            // Calculate the diagnonal line of the noteRectangle
+            float diagonal = sqrt(pow(noteRectangle.width, 2) + pow(noteRectangle.height, 2));
+            DrawRectangle(static_cast<int>(neckRectangle.x - (neckRectangle.width * .53f) + ((neckRectangle.width * .08) * i) - (noteRectangle.width / 2)), static_cast<int>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .56f) - (noteRectangle.height / 2)), noteRectangle.width, noteRectangle.height, BLACK);
+
+            // Using DrawEllipse, draw and ellipse that fills and scales with the noteRectangle
+            DrawEllipse(static_cast<float>(neckRectangle.x - (neckRectangle.width * .53f) + ((neckRectangle.width * .08) * i)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .56f)), static_cast<float>(noteRectangle.width / 2), static_cast<float>(noteRectangle.height / 2), noteColorVec[i][j]);
+
+            // Create a float that will keep a DrawTextEx size from never going beyond the noteRectangle height and width
+            float noteTextSize = (noteRectangle.width > noteRectangle.height) ? static_cast<float>(noteRectangle.height) : static_cast<float>(noteRectangle.width);
+
+            // Create a Vector2 that will keep the (0,0) coordinate of a DrawTextEx directly in the center of the noteRectangle
+            Vector2 noteTextSizeVec = {static_cast<float>(noteLocations[i][j].x + (noteRectangle.width * .325f)), static_cast<float>(noteLocations[i][j].y - (noteRectangle.height * .1f))};
+
+            // DrawTextEx with above parameters
+            DrawTextEx(testFont, noteName, noteTextSizeVec, noteTextSize, 0, WHITE);
+
             // Store the container coordinates (since iterated here in loop)
             if (!notesLocAdded) {
                 // TODO: Make my own circle struct, just using rectangle right now
-                noteLocations[i][j] = {static_cast<float>(neckRectangle.x - (neckRectangle.width * .54f) + ((neckRectangle.width * .08) * i)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .5f))};
-                // If circle
-                // noteLocations[i][j] = {static_cast<float>(neckRectangle.x - (neckRectangle.width * .53f) + ((neckRectangle.width * .08) * i)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .56f))};
+                noteLocations[i][j] = {static_cast<float>(neckRectangle.x - (neckRectangle.width * .555f) + ((neckRectangle.width * .08) * i)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .495f))};
             }
         }
     }
-
     notesLocAdded = true;
+
+    /** Text Tests **/
+    DrawTextEx(testFont, testText, fontPosition, fontSize, 0, BLACK);
+
+
 
     return 0;
 }

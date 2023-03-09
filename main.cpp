@@ -12,14 +12,15 @@
 int main()
 {
 
-    const int screenWidth = 2556;
+    const int screenWidth =  2560;
     const int screenHeight = 1440;
+    Color backgroundColor = RAYWHITE;
 
     // Object sizes
     float guitarWidth = .8f;
     float guitarHeight = .4f;
     float guitarPosX = screenWidth * .5f;  // The ( * 0.5f) are basically scalars for the guitar's position
-    float guitarPosY = screenHeight * .2f;
+    float guitarPosY = screenHeight * .225f;
 
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(screenWidth, screenHeight, "Guitar App");
@@ -30,6 +31,8 @@ int main()
 
 
     SetTargetFPS(60);
+
+    // DrawText("Use mouse wheel to change font size", 20, 20, 10, GRAY);
 
     // Main game loop
     while (!WindowShouldClose())
@@ -44,18 +47,20 @@ int main()
         Vector2 mousePos = GetMousePosition();
         bool leftMouseClicked = IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
         guitarNeck.hover(mousePos);
-        modalChart.hover(mousePos);
-        menu.hover(mousePos, leftMouseClicked, modalChart);
+//        modalChart.hover(mousePos);
+//        menu.hover(mousePos, leftMouseClicked, modalChart);
 
         BeginDrawing();
 
-        ClearBackground(RAYWHITE);
+        ClearBackground(backgroundColor);
 
         guitarNeck.drawGuitarNeck(scale);
-        if (modalChart.canDraw) {
-            modalChart.drawModalChart(scale);
-        }
-        menu.drawMenu(scale);
+
+        // TODO: canDraw value is changed by the menu
+//        if (modalChart.canDraw) {
+//            modalChart.drawModalChart(scale);
+//        }
+//        menu.drawMenu(scale);
 
 
         EndDrawing();

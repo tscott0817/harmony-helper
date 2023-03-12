@@ -59,7 +59,7 @@ Neck::Neck(int screenWidth, int screenHeight, float posX, float posY, float widt
     GenTextureMipmaps(&testFont.texture);
     fontSize = (float)testFont.baseSize;
     // fontSize = 250.0f;
-    fontPosition = { 500.0f, 750.0f};
+    fontPosition = { 500.0f, 1200.0f};
     textSize = { 10.0f, 10.0f };
 
     // Setup texture scaling filter
@@ -204,30 +204,34 @@ int Neck::drawGuitarNeck(float windowScale) {
     // TODO: Need to have note names appear in the note container
 
     /** Note Containers **/
+    SetTextureFilter(testFont.texture, TEXTURE_FILTER_TRILINEAR);  // TODO: Shouldn't need to do this every frame
+
+    // Create a float that will keep a DrawTextEx size from never going beyond the noteRectangle height and width
+    float noteTextSize = (noteRectangle.width > noteRectangle.height) ? static_cast<float>(noteRectangle.height) : static_cast<float>(noteRectangle.width);
+
     for (int i = 1; i <= 12; i++) {  // Rows
         for (int j = 1; j <= 6; j++) {  // Columns
 
             // Calculate the diagnonal line of the noteRectangle
             float diagonal = sqrt(pow(noteRectangle.width, 2) + pow(noteRectangle.height, 2));
-            DrawRectangle(static_cast<int>(neckRectangle.x - (neckRectangle.width * .53f) + ((neckRectangle.width * .08) * i) - (noteRectangle.width / 2)), static_cast<int>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .56f) - (noteRectangle.height / 2)), noteRectangle.width, noteRectangle.height, BLACK);
+            //DrawRectangle(static_cast<int>(neckRectangle.x - (neckRectangle.width * .53f) + ((neckRectangle.width * .08) * i) - (noteRectangle.width / 2)), static_cast<int>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .56f) - (noteRectangle.height / 2)), noteRectangle.width, noteRectangle.height, BLACK);
 
             // Using DrawEllipse, draw and ellipse that fills and scales with the noteRectangle
             DrawEllipse(static_cast<float>(neckRectangle.x - (neckRectangle.width * .53f) + ((neckRectangle.width * .08) * i)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .56f)), static_cast<float>(noteRectangle.width / 2), static_cast<float>(noteRectangle.height / 2), noteColorVec[i][j]);
 
-            // Create a float that will keep a DrawTextEx size from never going beyond the noteRectangle height and width
-            float noteTextSize = (noteRectangle.width > noteRectangle.height) ? static_cast<float>(noteRectangle.height) : static_cast<float>(noteRectangle.width);
-
-            // Create a Vector2 that will keep the (0,0) coordinate of a DrawTextEx directly in the center of the noteRectangle
-            Vector2 noteTextSizeVec = {static_cast<float>(noteLocations[i][j].x + (noteRectangle.width * .325f)), static_cast<float>(noteLocations[i][j].y - (noteRectangle.height * .1f))};
-
-            // DrawTextEx with above parameters
-            DrawTextEx(testFont, noteName, noteTextSizeVec, noteTextSize, 0, WHITE);
-
-            // Store the container coordinates (since iterated here in loop)
+            // Store the container coordinates (only need to once for now)
+            // TODO: If implementing drag on object, will need to update this when position changes.
+            // TODO: Maybe something like "If current location does not match any in the vector, update the entire vector".
             if (!notesLocAdded) {
                 // TODO: Make my own circle struct, just using rectangle right now
                 noteLocations[i][j] = {static_cast<float>(neckRectangle.x - (neckRectangle.width * .555f) + ((neckRectangle.width * .08) * i)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .495f))};
             }
+
+            // Create a Vector2 that will keep the (0,0) coordinate of a DrawTextEx directly in the center of the noteRectangle
+            // TODO: Might want to do this not use locations and instead use the noteRectangle (so it doesn't have to update each frame)
+            Vector2 noteTextSizeVec = {static_cast<float>(noteLocations[i][j].x + (noteRectangle.width * .325f)), static_cast<float>(noteLocations[i][j].y - (noteRectangle.height * .1f))};
+            // DrawTextEx with above parameters
+            DrawTextEx(testFont, lowE[i - 1], noteTextSizeVec, noteTextSize, 0, WHITE);
         }
     }
     notesLocAdded = true;

@@ -1,40 +1,48 @@
 #ifndef GUITAR_APP_MENU_H
 #define GUITAR_APP_MENU_H
 #include "raylib.h"
+#define RAYGUI_STATIC
+#include "../raygui.h"
+#undef RAYGUI_STATIC            // Avoid including raygui implementation again
+
+
+#include "../components/modal_chart.h"
 #include <iostream>
 #include <vector>
 #include <memory>
-#include "../components/modal_chart.h"
+
+// #define RAYGUI_STATIC
 
 
 class Menu {
 private:
-    Image containerImage;
-    Texture2D containerTexture;
+    int tempVal;
+    // GUI init
+    //----------------------------------------------------------------------------------
+    int active;
+    bool editMode;
+
     Rectangle container;
     Vector2 containerCenter;
+    Texture2D containerTexture;
 
-    Image menuImage;
-    Texture2D menuTexture;
-    Rectangle menuRectangle;
-    Vector2 menuCenter;
+    Rectangle buttonOneRec;
+    Vector2 buttonOneCenter;
 
-    std::vector<std::vector<Vector2>> menuLocations;
-    bool menuLocAdded;
-    std::vector<std::vector<Color>> menuColorVec;
+    Color blackBackground;
 
-    int buttonOnePressed;
+
 
 public:
+
+    // Menu constructor
     Menu(int screenWidth, int screenHeight, float posX, float posY, float width, float height);
 
-    void initMenu();
-    int drawMenu(float windowScale);
-    void hover(Vector2 mousePos, bool mousePressed, ModalChart &modalChart);
-    void destroy();
+    void setBackground(int width, int height);
+    void drawTopMenu(int width, int height);
+
 
 
 };
-
 
 #endif //GUITAR_APP_MENU_H

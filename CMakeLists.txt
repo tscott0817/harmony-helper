@@ -7,7 +7,9 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Dependencies
+#set(RAYLIB_VERSION 4.5.0)
 set(RAYLIB_VERSION 4.2.0)
+#find_package(raylib ${RAYLIB_VERSION} REQUIRED) # QUIET or REQUIRED
 find_package(raylib ${RAYLIB_VERSION} QUIET) # QUIET or REQUIRED
 if (NOT raylib_FOUND) # If there's none, fetch and build raylib
     include(FetchContent)
@@ -28,7 +30,8 @@ endif()
 
 # set( GRID-SRC main.cpp components/resources/shaders/Shader.cpp)
 
-add_executable(${PROJECT_NAME} main.cpp components/neck.h components/neck.cpp components/modal_chart.h components/modal_chart.cpp controller/menu.h controller/menu.cpp)
+add_executable(${PROJECT_NAME} main.cpp raygui.h components/neck.h components/neck.cpp components/modal_chart.h components/modal_chart.cpp controller/menu.h controller/menu.cpp)
+
 #set(raylib_VERBOSE 1)
 target_link_libraries(${PROJECT_NAME} raylib)
 

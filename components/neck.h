@@ -57,7 +57,8 @@ private:
     Vector2 fontPosition;
     Vector2 textSize;
     int currentFontFilter;
-
+    
+    const char *lowE[12] = {"E", "F", "F#", "G", "G#", "A", "A#", "B", "C", "C#", "D", "D#"};
 
 
 public:

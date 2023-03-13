@@ -58,6 +58,9 @@ private:
     Vector2 textSize;
     int currentFontFilter;
     Vector2 tempNoteLoc;
+
+    Vector2 containerLoc;
+    bool containerLocAdded;
     
     const char *lowE[12] = {"E", "F", "F#", "G", "G#", "A", "A#", "B", "C", "C#", "D", "D#"};
 

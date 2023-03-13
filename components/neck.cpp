@@ -1,11 +1,10 @@
 #include "cmath"
 #include "neck.h"
 
-// TODO: Points of origin are inconsistent between layers (some are top left corner of parent object, others center)
-// TODO: Not sure that I want the screen width and height here, could just declare in main, but I do need it for positioning, so might be best to pass in here
 Neck::Neck(int screenWidth, int screenHeight, float posX, float posY, float width, float height) {
 
-    stateActive = false;
+    /** State Managing **/
+    stateActive = false;  // TODO: May use to 'pause'
 
     /** The parent container **/
     containerImage = LoadImage("../images/blue_background.png");     // Loaded in CPU memory (RAM)
@@ -16,6 +15,7 @@ Neck::Neck(int screenWidth, int screenHeight, float posX, float posY, float widt
     container = {posX, posY, static_cast<float>(screenWidth * width), static_cast<float>(screenHeight * height)};  // @params: x-pos, y-pos, width, height
 
     containerCenter = {container.width / 2, container.height / 2};
+    containerLocAdded = false;
 
     /** Neck **/
     neckImage = LoadImage("../images/wood_dark.png");     // Loaded in CPU memory (RAM)
@@ -31,8 +31,6 @@ Neck::Neck(int screenWidth, int screenHeight, float posX, float posY, float widt
     fretImage = LoadImage("../images/fret.png");
     fretTexture = LoadTextureFromImage(fretImage);
     UnloadImage(fretImage);
-
-    // Create a rectangle for the frets, make the first starting position the far left of the neck
     fretRectangle = {neckRectangle.x, neckRectangle.y, static_cast<float>(neckRectangle.width * .01), neckRectangle.height};
     fretCenter = {static_cast<float>(fretRectangle.width / 2), static_cast<float>(fretRectangle.height / 2)};
 
@@ -52,22 +50,19 @@ Neck::Neck(int screenWidth, int screenHeight, float posX, float posY, float widt
     notesLocAdded = false;
     testText = "Test Text";
     noteName = "X";
-    // testFont = GetFontDefault();
     testFont = LoadFontEx("../resources/OpenSans-Light.ttf", 200, nullptr, 100);
 
     // Generate mipmap levels to use trilinear filtering
     // NOTE: On 2D drawing it won't be noticeable, it looks like FILTER_BILINEAR
     GenTextureMipmaps(&testFont.texture);
     fontSize = (float)testFont.baseSize;
-    // fontSize = 250.0f;
     fontPosition = { 500.0f, 1200.0f};
     textSize = { 10.0f, 10.0f };
 
     // Setup texture scaling filter
-    SetTextureFilter(testFont.texture, TEXTURE_FILTER_POINT);
-    currentFontFilter = 2;      // TEXTURE_FILTER_POINT
+    SetTextureFilter(testFont.texture, TEXTURE_FILTER_TRILINEAR);
 
-
+    // Colors
     hoverColor = Color{190, 33, 55, 200};
     rootColor = Color{0, 121, 241, 200};
     secondColor = MAROON;
@@ -86,11 +81,6 @@ Neck::Neck(int screenWidth, int screenHeight, float posX, float posY, float widt
         noteLocations.push_back(tempLoc);
         noteColorVec.push_back(tempColor);
     }
-
-    // TODO: Not in use currently, don't know if I want to have class members for this
-//    this->screenWidth = screenWidth;
-//    this->screenHeight = screenHeight;
-
 }
 
 int Neck::drawGuitarNeck(float windowScale) {
@@ -100,6 +90,11 @@ int Neck::drawGuitarNeck(float windowScale) {
                    container,
                    (Rectangle) {container.x, container.y, container.width, container.height},  /** Params = (x-pos, y-pos, height, width) **/
                    containerCenter, 0, WHITE);
+
+    // Get the location of the container
+    containerLoc = {container.x, container.y};  // TODO: Want to update location only when container is moved, not every frame
+    std::cout << "Guitar Container Coordinates: " << containerLoc.x << ", " << containerLoc.y << std::endl;
+
 
     /** Neck **/
     DrawTexturePro(neckTexture,
@@ -202,14 +197,7 @@ int Neck::drawGuitarNeck(float windowScale) {
                    stringCenter, 0, WHITE);
 
 
-    // TODO: Need to have note names appear in the note container
-
     /** Note Containers **/
-    SetTextureFilter(testFont.texture, TEXTURE_FILTER_TRILINEAR);  // TODO: Shouldn't need to do this every frame
-
-    // Create a float that will keep a DrawTextEx size from never going beyond the noteRectangle height and width
-    float noteTextSize = (noteRectangle.width > noteRectangle.height) ? static_cast<float>(noteRectangle.height) : static_cast<float>(noteRectangle.width);
-
     for (int i = 1; i <= 12; i++) {  // Rows
         for (int j = 1; j <= 6; j++) {  // Columns
 
@@ -221,19 +209,16 @@ int Neck::drawGuitarNeck(float windowScale) {
             DrawEllipse(static_cast<float>(neckRectangle.x - (neckRectangle.width * .53f) + ((neckRectangle.width * .08) * i)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .56f)), static_cast<float>(noteRectangle.width / 2), static_cast<float>(noteRectangle.height / 2), noteColorVec[i][j]);
 
             // Store the container coordinates (only need to once for now)
-            // TODO: If implementing drag on object, will need to update this when position changes.
-            // TODO: Maybe something like "If current location does not match any in the vector, update the entire vector".
             if (!notesLocAdded) {
                 noteLocations[i][j] = {static_cast<float>(neckRectangle.x - (neckRectangle.width * .53f) + ((neckRectangle.width * .08) * i) - (noteRectangle.width / 2)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .56f) - (noteRectangle.height / 2))};
             }
 
-            Vector2 noteNewLoc = {static_cast<float>(neckRectangle.x - (neckRectangle.width * .53f) + ((neckRectangle.width * .08) * i) - (noteRectangle.width / 2)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .56f) - (noteRectangle.height / 2))};
-            // DrawTextEx with above parameters
+            float noteTextSize = (noteRectangle.width > noteRectangle.height) ? static_cast<float>(noteRectangle.height) : static_cast<float>(noteRectangle.width);
+            Vector2 noteNewLoc = {static_cast<float>(neckRectangle.x - (neckRectangle.width * .53f) + ((neckRectangle.width * .08) * i) - (noteRectangle.width / 3)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .56f) - (noteRectangle.height / 2))};
             DrawTextEx(testFont, lowE[i - 1], noteNewLoc, noteTextSize, 0, WHITE);
 
         }
     }
-    notesLocAdded = true;
 
     return 0;
 }
@@ -255,25 +240,29 @@ void Neck::hover(Vector2 mousePos) {
 }
 
 void Neck::clickAndDrag(Vector2 mousePos) {
-    // Allow the guitarNeck container position be transformed when left control and left mouse button are held down
-    if (IsKeyDown(KEY_LEFT_CONTROL) && IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
-        // Make the container follow the mouse position
-        // TODO: Should only have to change the container?? Maybe since initial build is in constructor.
-        container.x = mousePos.x;
-        container.y = mousePos.y;
-        neckRectangle.x = mousePos.x;
-        neckRectangle.y = mousePos.y;
-        fretRectangle.x = mousePos.x;
-        fretRectangle.y = mousePos.y;
-        stringRectangle.x = mousePos.x;
-        stringRectangle.y = mousePos.y;
-        noteRectangle.x = mousePos.x;
-        noteRectangle.y = mousePos.y;
-//        container.x = mousePos.x;
-//        container.y = mousePos.y;
-        //container = {mousePos.x, mousePos.y, container.width, container.height};
+    if (mousePos.x > containerLoc.x - (container.width * .5f) && mousePos.x < containerLoc.x + (container.width * .5f) &&
+        mousePos.y > containerLoc.y - (container.height * .5f) && mousePos.y < containerLoc.y + (container.height * .5f)) {
+        std::cout << "Within Guitar Container Area" << std::endl;
 
+        if (IsKeyDown(KEY_LEFT_CONTROL) && IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
+            // Make the container follow the mouse position
+            // TODO: Should only have to change the container?? Maybe since initial build is in constructor.
+            container.x = mousePos.x;
+            container.y = mousePos.y;
+            neckRectangle.x = mousePos.x;
+            neckRectangle.y = mousePos.y;
+            fretRectangle.x = mousePos.x;
+            fretRectangle.y = mousePos.y;
+            stringRectangle.x = mousePos.x;
+            stringRectangle.y = mousePos.y;
+            noteRectangle.x = mousePos.x;
+            noteRectangle.y = mousePos.y;
+        }
     }
+
+    // Update the container location
+    containerLoc = {container.x, container.y};
+
 }
 
 // To remove textures from memory after program closes, must be after main loop ends

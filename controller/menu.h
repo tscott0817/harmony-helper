@@ -42,6 +42,7 @@ public:
 
     void setBackground(int width, int height);
     void drawTopMenu(int width, int height);
+    bool isHovering(Vector2 mousePos);
 
     // Setters
     void setActiveButton(int activeButton);

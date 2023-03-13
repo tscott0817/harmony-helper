@@ -15,6 +15,8 @@
 int main()
 {
 
+    // Init
+    //----------------------------------------------------------------------------------
     const int screenWidth =  2560;
     const int screenHeight = 1440;
     Color backgroundColor = RAYWHITE;
@@ -23,7 +25,7 @@ int main()
     SetExitKey(KEY_ZERO);  // Frees up escape key for menu, makes '0' exit program
 
 
-    // Object inits
+    // Objects
     //----------------------------------------------------------------------------------
     float guitarWidth = .8f;
     float guitarHeight = .4f;
@@ -31,12 +33,13 @@ int main()
     float guitarPosY = screenHeight * .5f;
 
     Neck guitarNeck(screenWidth, screenHeight, guitarPosX, guitarPosY, guitarWidth, guitarHeight);
-    guitarNeck.stateActive = true; // To decide which object get draw on start of program
+    // guitarNeck.stateActive = true; // To decide which object get draw on start of program
     ModalChart modalChart(screenWidth, screenHeight, screenWidth * .35f, screenHeight * .7f, .6f, .5f);
     Menu menu(screenWidth, screenHeight, 0, screenHeight * .0001f, 1, .05f);
 
 
-    // Main loop
+    // Main Loop
+    //----------------------------------------------------------------------------------
     SetTargetFPS(60);
     while (!WindowShouldClose())
     {
@@ -55,12 +58,13 @@ int main()
             guitarNeck.hover(mousePos);
             guitarNeck.clickAndDrag(mousePos);
         }
+//        guitarNeck.hover(mousePos);
+//        guitarNeck.clickAndDrag(mousePos);
 
         // Check keyboard for escape key press
         if (IsKeyPressed(KEY_ESCAPE)) {
             menu.canDraw = !menu.canDraw;
         }
-
 
         /** Object Drawing Here  **/
         BeginDrawing();
@@ -69,15 +73,6 @@ int main()
         menu.setBackground(screenWidth, screenHeight);  // TODO: Probably don't want this in menu class
 
         /** Determines Which Objects Are Shown **/
-        if (menu.canDraw) {
-            menu.drawTopMenu(screenWidth, screenHeight);  // TODO: Syncing issue between menu and display objects
-            guitarNeck.stateActive = false;  // Disallow hovering on all except menu
-        }
-        else {
-            guitarNeck.stateActive = true;
-        }
-
-
         // Change objects based on menu button clicks
         if (menu.getActiveButton() == 0) {
             guitarNeck.drawGuitarNeck(scale);
@@ -87,8 +82,16 @@ int main()
             modalChart.drawModalChart(scale);
         }
 
+        // Want Menu to be drawn last so it's on top
+        menu.drawTopMenu(screenWidth, screenHeight);
+        if (menu.isHovering(mousePos)){  // Takes care of hovering issue between menu and guitars
+            guitarNeck.stateActive = false;
+        }
+        else {
+            guitarNeck.stateActive = true;
+        }
+
         EndDrawing();
-        //----------------------------------------------------------------------------------
     }
 
     // De-Initialization
@@ -97,7 +100,6 @@ int main()
     modalChart.destroy();
     // menu.destroy();  TODO: From before I used RayGUI
     CloseWindow();        // Close window and OpenGL context
-    //--------------------------------------------------------------------------------------
 
     return 0;
 }

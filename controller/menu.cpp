@@ -61,6 +61,18 @@ void Menu::drawTopMenu(int width, int height) {
 
 }
 
+bool Menu::isHovering(Vector2 mousePos) {
+        if (mousePos.x > container.x && mousePos.x < container.x + (container.width) &&
+            mousePos.y > container.y && mousePos.y < container.y + (container.height)) {
+            std::cout << "Top Menu -> Currently Hovering at Coordinates:" << std::endl;
+            std::cout << container.x << ", " << container.y << std::endl;
+            return true;
+        }
+        else{
+            return false;
+        }
+}
+
 // Setters
 void Menu::setActiveButton(int activeButton){
     this->active = activeButton;

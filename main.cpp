@@ -20,6 +20,7 @@ int main()
     Color backgroundColor = RAYWHITE;
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(screenWidth, screenHeight, "Guitar App");
+    SetExitKey(KEY_ZERO);  // Frees up escape key for menu, makes '0' exit program
 
 
     // Object inits
@@ -30,14 +31,12 @@ int main()
     float guitarPosY = screenHeight * .5f;
 
     Neck guitarNeck(screenWidth, screenHeight, guitarPosX, guitarPosY, guitarWidth, guitarHeight);
+    guitarNeck.stateActive = true; // To decide which object get draw on start of program
     ModalChart modalChart(screenWidth, screenHeight, screenWidth * .35f, screenHeight * .7f, .6f, .5f);
-    // Menu menu(screenWidth, screenHeight, screenWidth * .8f, screenHeight * .7f, .2f, .4f);
     Menu menu(screenWidth, screenHeight, 0, screenHeight * .0001f, 1, .05f);
 
 
-    // DrawText("Use mouse wheel to change font size", 20, 20, 10, GRAY);
-
-    // Main game loop
+    // Main loop
     SetTargetFPS(60);
     while (!WindowShouldClose())
     {
@@ -50,27 +49,43 @@ int main()
         // For mouse interactions
         Vector2 mousePos = GetMousePosition();
         bool leftMouseClicked = IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
-        //guitarNeck.hover(mousePos);
-//        modalChart.hover(mousePos);
-//        menu.hover(mousePos, leftMouseClicked, modalChart);
 
+        /** Object Interactions **/
+        if (guitarNeck.stateActive) {
+            guitarNeck.hover(mousePos);
+            guitarNeck.clickAndDrag(mousePos);
+        }
+
+        // Check keyboard for escape key press
+        if (IsKeyPressed(KEY_ESCAPE)) {
+            menu.canDraw = !menu.canDraw;
+        }
+
+
+        /** Object Drawing Here  **/
         BeginDrawing();
 
         ClearBackground(backgroundColor);
-        menu.setBackground(screenWidth, screenHeight);
-        menu.drawTopMenu(screenWidth, screenHeight);  // TODO: Syncing issue between menu and display objects
+        menu.setBackground(screenWidth, screenHeight);  // TODO: Probably don't want this in menu class
+
+        /** Determines Which Objects Are Shown **/
+        if (menu.canDraw) {
+            menu.drawTopMenu(screenWidth, screenHeight);  // TODO: Syncing issue between menu and display objects
+            guitarNeck.stateActive = false;  // Disallow hovering on all except menu
+        }
+        else {
+            guitarNeck.stateActive = true;
+        }
 
 
-        guitarNeck.drawGuitarNeck(scale);
+        // Change objects based on menu button clicks
+        if (menu.getActiveButton() == 0) {
+            guitarNeck.drawGuitarNeck(scale);
+        }
 
-        // TODO: Create if statement to swap between menus
-
-        // TODO: canDraw value is changed by the menu button here
-//        if (modalChart.canDraw) {
-//            modalChart.drawModalChart(scale);
-//        }
-//        menu.drawMenu(scale);
-
+        if (menu.getActiveButton() == 1) {
+            modalChart.drawModalChart(scale);
+        }
 
         EndDrawing();
         //----------------------------------------------------------------------------------
@@ -80,7 +95,7 @@ int main()
     //--------------------------------------------------------------------------------------
     guitarNeck.destroy();
     modalChart.destroy();
-    // menu.destroy();
+    // menu.destroy();  TODO: From before I used RayGUI
     CloseWindow();        // Close window and OpenGL context
     //--------------------------------------------------------------------------------------
 

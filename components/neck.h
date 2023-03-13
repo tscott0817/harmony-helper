@@ -57,11 +57,14 @@ private:
     Vector2 fontPosition;
     Vector2 textSize;
     int currentFontFilter;
+    Vector2 tempNoteLoc;
     
     const char *lowE[12] = {"E", "F", "F#", "G", "G#", "A", "A#", "B", "C", "C#", "D", "D#"};
 
 
 public:
+
+    bool stateActive;  // TODO: Make this private with a getter/setter;
 
     // Constructors
     Neck(int screenWidth, int screenHeight, float posX, float posY, float width, float height);
@@ -70,6 +73,7 @@ public:
     void initGuitarNeck();
     int drawGuitarNeck(float windowScale);
     void hover(Vector2 mousePos);
+    void clickAndDrag(Vector2 mousePos);
     void destroy();
 
 };

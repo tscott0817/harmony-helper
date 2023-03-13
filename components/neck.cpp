@@ -5,14 +5,15 @@
 // TODO: Not sure that I want the screen width and height here, could just declare in main, but I do need it for positioning, so might be best to pass in here
 Neck::Neck(int screenWidth, int screenHeight, float posX, float posY, float width, float height) {
 
+    stateActive = false;
+
     /** The parent container **/
-    containerImage = LoadImage("../blue_background.png");     // Loaded in CPU memory (RAM)
+    containerImage = LoadImage("../images/blue_background.png");     // Loaded in CPU memory (RAM)
     containerTexture = LoadTextureFromImage(containerImage);  // Image converted to texture, GPU memory (VRAM)
     UnloadImage(containerImage);   // Once image has been converted to texture and uploaded to VRAM, it can be unloaded from RAM
 
     // Only change the position and size of neckContainer (Make this the params the user can change, drop down menu)
-    container = {posX, posY,
-                 static_cast<float>(screenWidth * width), static_cast<float>(screenHeight * height)};  // @params: x-pos, y-pos, width, height
+    container = {posX, posY, static_cast<float>(screenWidth * width), static_cast<float>(screenHeight * height)};  // @params: x-pos, y-pos, width, height
 
     containerCenter = {container.width / 2, container.height / 2};
 
@@ -23,7 +24,7 @@ Neck::Neck(int screenWidth, int screenHeight, float posX, float posY, float widt
 
     // Use the container position +/- some integer to move child objects
     // Use the size of the container * some float to resize child object
-    neckRectangle = {container.x, container.y, container.width, container.height}; // TODO: Fill container with neck (Currently have padding for testing)
+    neckRectangle = {container.x, container.y, container.width, container.height * .9f}; // TODO: Fill container with neck (Currently have padding for testing)
     neckCenter = {static_cast<float>(neckRectangle.width / 2), static_cast<float>(neckRectangle.height / 2)};
 
     /** Frets **/
@@ -64,7 +65,7 @@ Neck::Neck(int screenWidth, int screenHeight, float posX, float posY, float widt
 
     // Setup texture scaling filter
     SetTextureFilter(testFont.texture, TEXTURE_FILTER_POINT);
-    currentFontFilter = 0;      // TEXTURE_FILTER_POINT
+    currentFontFilter = 2;      // TEXTURE_FILTER_POINT
 
 
     hoverColor = Color{190, 33, 55, 200};
@@ -214,7 +215,7 @@ int Neck::drawGuitarNeck(float windowScale) {
 
             // Calculate the diagnonal line of the noteRectangle
             float diagonal = sqrt(pow(noteRectangle.width, 2) + pow(noteRectangle.height, 2));
-            //DrawRectangle(static_cast<int>(neckRectangle.x - (neckRectangle.width * .53f) + ((neckRectangle.width * .08) * i) - (noteRectangle.width / 2)), static_cast<int>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .56f) - (noteRectangle.height / 2)), noteRectangle.width, noteRectangle.height, BLACK);
+            DrawRectangle(static_cast<float>(neckRectangle.x - (neckRectangle.width * .53f) + ((neckRectangle.width * .08) * i) - (noteRectangle.width / 2)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .56f) - (noteRectangle.height / 2)), noteRectangle.width, noteRectangle.height, BLACK);
 
             // Using DrawEllipse, draw and ellipse that fills and scales with the noteRectangle
             DrawEllipse(static_cast<float>(neckRectangle.x - (neckRectangle.width * .53f) + ((neckRectangle.width * .08) * i)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .56f)), static_cast<float>(noteRectangle.width / 2), static_cast<float>(noteRectangle.height / 2), noteColorVec[i][j]);
@@ -223,29 +224,21 @@ int Neck::drawGuitarNeck(float windowScale) {
             // TODO: If implementing drag on object, will need to update this when position changes.
             // TODO: Maybe something like "If current location does not match any in the vector, update the entire vector".
             if (!notesLocAdded) {
-                // TODO: Make my own circle struct, just using rectangle right now
-                noteLocations[i][j] = {static_cast<float>(neckRectangle.x - (neckRectangle.width * .555f) + ((neckRectangle.width * .08) * i)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .495f))};
+                noteLocations[i][j] = {static_cast<float>(neckRectangle.x - (neckRectangle.width * .53f) + ((neckRectangle.width * .08) * i) - (noteRectangle.width / 2)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .56f) - (noteRectangle.height / 2))};
             }
 
-            // Create a Vector2 that will keep the (0,0) coordinate of a DrawTextEx directly in the center of the noteRectangle
-            // TODO: Might want to do this not use locations and instead use the noteRectangle (so it doesn't have to update each frame)
-            Vector2 noteTextSizeVec = {static_cast<float>(noteLocations[i][j].x + (noteRectangle.width * .325f)), static_cast<float>(noteLocations[i][j].y - (noteRectangle.height * .1f))};
+            Vector2 noteNewLoc = {static_cast<float>(neckRectangle.x - (neckRectangle.width * .53f) + ((neckRectangle.width * .08) * i) - (noteRectangle.width / 2)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .56f) - (noteRectangle.height / 2))};
             // DrawTextEx with above parameters
-            DrawTextEx(testFont, lowE[i - 1], noteTextSizeVec, noteTextSize, 0, WHITE);
+            DrawTextEx(testFont, lowE[i - 1], noteNewLoc, noteTextSize, 0, WHITE);
+
         }
     }
     notesLocAdded = true;
-
-    /** Text Tests **/
-    DrawTextEx(testFont, testText, fontPosition, fontSize, 0, BLACK);
-
-
 
     return 0;
 }
 
 void Neck::hover(Vector2 mousePos) {
-    //std::cout << mousePos.x << ", " << mousePos.y << std::endl;
     for (int i = 0; i < noteLocations.size(); i++) {
         for (int j = 0; j < noteLocations[i].size(); j++) {
             if (mousePos.x > noteLocations[i][j].x && mousePos.x < noteLocations[i][j].x + (noteRectangle.width) &&
@@ -258,6 +251,28 @@ void Neck::hover(Vector2 mousePos) {
             }
 
         }
+    }
+}
+
+void Neck::clickAndDrag(Vector2 mousePos) {
+    // Allow the guitarNeck container position be transformed when left control and left mouse button are held down
+    if (IsKeyDown(KEY_LEFT_CONTROL) && IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
+        // Make the container follow the mouse position
+        // TODO: Should only have to change the container?? Maybe since initial build is in constructor.
+        container.x = mousePos.x;
+        container.y = mousePos.y;
+        neckRectangle.x = mousePos.x;
+        neckRectangle.y = mousePos.y;
+        fretRectangle.x = mousePos.x;
+        fretRectangle.y = mousePos.y;
+        stringRectangle.x = mousePos.x;
+        stringRectangle.y = mousePos.y;
+        noteRectangle.x = mousePos.x;
+        noteRectangle.y = mousePos.y;
+//        container.x = mousePos.x;
+//        container.y = mousePos.y;
+        //container = {mousePos.x, mousePos.y, container.width, container.height};
+
     }
 }
 

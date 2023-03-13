@@ -19,7 +19,7 @@ private:
     int tempVal;
     // GUI init
     //----------------------------------------------------------------------------------
-    int active;
+    int active; // TODO: Will need one of these for each button
     bool editMode;
 
     Rectangle container;
@@ -35,13 +35,19 @@ private:
 
 public:
 
+    bool canDraw;  // TODO: Make this private with a getter/setter
+
     // Menu constructor
     Menu(int screenWidth, int screenHeight, float posX, float posY, float width, float height);
 
     void setBackground(int width, int height);
     void drawTopMenu(int width, int height);
 
+    // Setters
+    void setActiveButton(int activeButton);
 
+    // Getters
+    int getActiveButton();
 
 };
 

@@ -82,6 +82,16 @@ Neck::Neck(int screenWidth, int screenHeight, float posX, float posY, float widt
         noteLocations.push_back(tempLoc);
         noteColorVec.push_back(tempColor);
     }
+
+    // Initialize the connection point to be the center top of the container
+    connectImage = LoadImage("../images/fret.png");
+    connectTexture = LoadTextureFromImage(connectImage);
+    UnloadImage(connectImage);
+    connectRectangle = {container.x, container.y - (container.height * .55f), static_cast<float>(container.width * .02f), static_cast<float>(container.width * .02f)};
+    connectCenter = {static_cast<float>(connectRectangle.width / 2), static_cast<float>(connectRectangle.height / 2)};
+    canDrawConnection = false;
+    // make bezierEnd center on connectin point
+    bezierEnd = {connectRectangle.x, connectRectangle.y};
 }
 
 int Neck::drawGuitarNeck(float windowScale) {
@@ -95,6 +105,12 @@ int Neck::drawGuitarNeck(float windowScale) {
     // Get the location of the container
     containerLoc = {container.x, container.y};  // TODO: Want to update location only when container is moved, not every frame
     std::cout << "Guitar Container Coordinates: " << containerLoc.x << ", " << containerLoc.y << std::endl;
+
+    // Draw the connection point
+    DrawTexturePro(connectTexture,
+                   connectRectangle,
+                   (Rectangle) {connectRectangle.x, connectRectangle.y, connectRectangle.width, connectRectangle.height},
+                   connectCenter, 0, WHITE);
 
 
     /** Neck **/
@@ -250,6 +266,11 @@ void Neck::clickAndDrag(Vector2 mousePos) {
             // TODO: Should only have to change the container?? Maybe since initial build is in constructor.
             container.x = mousePos.x;
             container.y = mousePos.y;
+            // TODO: Not sure why these have to be different?
+            connectRectangle.x = container.x;
+            connectRectangle.y = container.y - (container.height * .55f);
+            bezierStart.x = container.x;
+            bezierStart.y = container.y - (container.height * .55f);
             neckRectangle.x = mousePos.x;
             neckRectangle.y = mousePos.y;
             fretRectangle.x = mousePos.x;
@@ -264,6 +285,29 @@ void Neck::clickAndDrag(Vector2 mousePos) {
     // Update the container location
     containerLoc = {container.x, container.y};
 
+}
+
+void Neck::attachConnection(Vector2 mousePos) {
+    // Check if mouse is within the area of the connection point
+    if (mousePos.x > connectRectangle.x - (connectRectangle.width * .5f) && mousePos.x < connectRectangle.x + (connectRectangle.width * .5f) &&
+        mousePos.y > connectRectangle.y - (connectRectangle.height * .5f) && mousePos.y < connectRectangle.y + (connectRectangle.height * .5f)) {
+        DrawRectangle(25, 25, 100, 100, RED);
+//        if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) canDrawConnection = true; bezierStart = GetMousePosition();
+        if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) canDrawConnection = true; bezierStart = {connectRectangle.x, connectRectangle.y};
+
+    }
+}
+
+void Neck::drawConnection() {  // TODO: Take in objects to connect to? OR make separate connector class.
+    Vector2 mousePos = GetMousePosition();
+    if (mousePos.x == container.x && mousePos.y == container.y) {
+        canDrawConnection = false;
+    }
+
+    if (canDrawConnection) {
+        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) bezierEnd = mousePos;
+    }
+    DrawLineBezier(bezierStart, bezierEnd, 2.0f, RED);
 }
 
 // To remove textures from memory after program closes, must be after main loop ends

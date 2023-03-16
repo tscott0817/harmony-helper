@@ -59,6 +59,7 @@ int main()
         if (guitarNeck.stateActive) {
             guitarNeck.hover(mousePos);
             guitarNeck.clickAndDrag(mousePos);
+            guitarNeck.attachConnection(mousePos);
         }
 
         // Check keyboard for escape key press
@@ -71,6 +72,7 @@ int main()
 
         ClearBackground(backgroundColor);
         menu.setBackground(screenWidth, screenHeight);  // TODO: Probably don't want this in menu class
+        guitarNeck.drawConnection();
 
         /** Determines Which Objects Are Shown **/
         // TODO: Don't want in main

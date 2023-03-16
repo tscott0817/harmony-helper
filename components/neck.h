@@ -61,6 +61,23 @@ private:
 
     Vector2 containerLoc;
     bool containerLocAdded;
+
+    // Connection Point
+    Image connectImage;
+    Texture2D connectTexture;
+    Rectangle connectRectangle;
+    Vector2 connectCenter;
+    Vector2 connectLoc;
+    bool connectLocAdded;
+
+//    Vector2 start = { 0, 0 };
+//    Vector2 bezierStart;
+//    //Vector2 end = { (float)screenWidth, (float)screenHeight };
+//    Vector2 bezierEnd;
+    Vector2 bezierEndPrevious;
+    bool canDrawConnection;
+
+
     
     const char *lowE[12] = {"E", "F", "F#", "G", "G#", "A", "A#", "B", "C", "C#", "D", "D#"};
 
@@ -69,6 +86,8 @@ public:
 
     bool stateActive;  // TODO: Make this private with a getter/setter;
     bool canDraw;
+    Vector2 bezierStart;
+    Vector2 bezierEnd;
     // Constructors
     Neck(int screenWidth, int screenHeight, float posX, float posY, float width, float height);
 
@@ -77,6 +96,8 @@ public:
     int drawGuitarNeck(float windowScale);
     void hover(Vector2 mousePos);
     void clickAndDrag(Vector2 mousePos);
+    void attachConnection(Vector2 mousePos);
+    void drawConnection();
     void destroy();
 
 };

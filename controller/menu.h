@@ -55,6 +55,15 @@ private:
 
     int currentButton;
 
+    const char *testText;
+    const char *noteName;
+    Font testFont;
+    float fontSize;
+    Vector2 fontPosition;
+    Vector2 textSize;
+    const char *buttonText[2] = {"Guitar", "Piano"};
+
+
 
 
 public:

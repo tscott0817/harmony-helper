@@ -11,7 +11,6 @@
 #define MIN(a, b) ((a)<(b)? (a) : (b))
 #define MAX(a, b) ((a)>(b)? (a) : (b))
 
-
 int main()
 {
 
@@ -31,6 +30,9 @@ int main()
     float guitarHeight = .4f;
     float guitarPosX = screenWidth * .5f;  // The ( * 0.5f) are basically scalars for the guitar's position
     float guitarPosY = screenHeight * .5f;
+
+    bool canDrawGuitar = true;
+    bool canClickButtOne = true;
 
     Neck guitarNeck(screenWidth, screenHeight, guitarPosX, guitarPosY, guitarWidth, guitarHeight);
     // guitarNeck.stateActive = true; // To decide which object get draw on start of program
@@ -58,8 +60,6 @@ int main()
             guitarNeck.hover(mousePos);
             guitarNeck.clickAndDrag(mousePos);
         }
-//        guitarNeck.hover(mousePos);
-//        guitarNeck.clickAndDrag(mousePos);
 
         // Check keyboard for escape key press
         if (IsKeyPressed(KEY_ESCAPE)) {
@@ -73,18 +73,34 @@ int main()
         menu.setBackground(screenWidth, screenHeight);  // TODO: Probably don't want this in menu class
 
         /** Determines Which Objects Are Shown **/
-        // Change objects based on menu button clicks
-        if (menu.getActiveButton() == 0) {
-            guitarNeck.drawGuitarNeck(scale);
+        // TODO: Don't want in main
+        if (menu.getActiveButtons()[0] == 0) {
+            guitarNeck.canDraw = false;
+        }
+        if (menu.getActiveButtons()[0] == 1) {
+            guitarNeck.canDraw = true;
+        }
+        if (menu.getActiveButtons()[1] == 0) {
+            modalChart.canDraw = false;
+        }
+        if (menu.getActiveButtons()[1] == 1) {
+            modalChart.canDraw = true;
         }
 
-        if (menu.getActiveButton() == 1) {
+        // Draw Objects
+        if (guitarNeck.canDraw) {
+            guitarNeck.drawGuitarNeck(scale);
+        }
+        if (modalChart.canDraw) {
             modalChart.drawModalChart(scale);
         }
 
         // Want Menu to be drawn last so it's on top
         menu.drawTopMenu(screenWidth, screenHeight);
-        if (menu.isHovering(mousePos)){  // Takes care of hovering issue between menu and guitars
+        menu.hover(mousePos);
+
+        // TODO: Do the same for every object, stop hover interactions if using RayGUI
+        if (menu.isHovering){  // Takes care of hovering issue between menu and guitars
             guitarNeck.stateActive = false;
         }
         else {

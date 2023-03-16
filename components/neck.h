@@ -68,7 +68,7 @@ private:
 public:
 
     bool stateActive;  // TODO: Make this private with a getter/setter;
-
+    bool canDraw;
     // Constructors
     Neck(int screenWidth, int screenHeight, float posX, float posY, float width, float height);
 

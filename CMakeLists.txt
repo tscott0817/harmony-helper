@@ -30,7 +30,7 @@ endif()
 
 # set( GRID-SRC main.cpp components/resources/shaders/Shader.cpp)
 
-add_executable(${PROJECT_NAME} main.cpp raygui.h components/neck.h components/neck.cpp components/modal_chart.h components/modal_chart.cpp controller/menu.h controller/menu.cpp)
+add_executable(${PROJECT_NAME} main.cpp raygui.h components/neck.h components/neck.cpp components/modal_chart.h components/modal_chart.cpp controller/menu.h controller/menu.cpp objectHandler.h)
 
 #set(raylib_VERBOSE 1)
 target_link_libraries(${PROJECT_NAME} raylib)

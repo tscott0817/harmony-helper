@@ -5,6 +5,7 @@ Neck::Neck(int screenWidth, int screenHeight, float posX, float posY, float widt
 
     /** State Managing **/
     stateActive = false;  // TODO: May use to 'pause'
+    canDraw = false;
 
     /** The parent container **/
     containerImage = LoadImage("../images/blue_background.png");     // Loaded in CPU memory (RAM)

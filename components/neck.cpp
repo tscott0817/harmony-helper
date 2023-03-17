@@ -10,6 +10,7 @@ Neck::Neck(int screenWidth, int screenHeight, float posX, float posY, float widt
     /** State Managing **/
     stateActive = false;  // TODO: May use to 'pause'
     canDraw = false;
+    canDrawConnection = false;
 
     /** Parent Container **/
     containerImage = LoadImage("../images/blue_background.png");     // Loaded in CPU memory (RAM)
@@ -82,7 +83,6 @@ Neck::Neck(int screenWidth, int screenHeight, float posX, float posY, float widt
     UnloadImage(connectImage);
     connectRectangle = {container.x, container.y - (container.height * .55f), static_cast<float>(container.width * .02f), static_cast<float>(container.width * .02f)};
     connectCenter = {static_cast<float>(connectRectangle.width / 2), static_cast<float>(connectRectangle.height / 2)};
-    canDrawConnection = false;
 
     /** Bezier Curve **/
     bezierEnd = {connectRectangle.x, connectRectangle.y};
@@ -212,6 +212,7 @@ int Neck::drawGuitarNeck(float windowScale) {
             DrawEllipse(static_cast<float>(neckRectangle.x - (neckRectangle.width * .53f) + ((neckRectangle.width * .08) * i)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .56f)), static_cast<float>(noteRectangle.width / 2), static_cast<float>(noteRectangle.height / 2), noteColorVec[i][j]);
 
             // Store the container coordinates (only need to once for now)
+            // TODO: Always true for now
             if (!notesLocAdded) {
                 noteLocations[i][j] = {static_cast<float>(neckRectangle.x - (neckRectangle.width * .53f) + ((neckRectangle.width * .08) * i) - (noteRectangle.width / 2)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .56f) - (noteRectangle.height / 2))};
             }
@@ -230,8 +231,6 @@ void Neck::hover(Vector2 mousePos) {
         for (int j = 0; j < noteLocations[i].size(); j++) {
             if (mousePos.x > noteLocations[i][j].x && mousePos.x < noteLocations[i][j].x + (noteRectangle.width) &&
                 mousePos.y > noteLocations[i][j].y && mousePos.y < noteLocations[i][j].y + (noteRectangle.height)) {
-                std::cout << "Guitar Neck -> Currently Hovering at Coordinates:" << std::endl;
-                std::cout << noteLocations[i][j].x << ", " << noteLocations[i][j].y << std::endl;
                 noteColorVec[i][j] = hoverColor;
             } else {
                 noteColorVec[i][j] = rootColor;
@@ -243,7 +242,6 @@ void Neck::hover(Vector2 mousePos) {
 void Neck::clickAndDrag(Vector2 mousePos) {
     if (mousePos.x > containerLoc.x - (container.width * .5f) && mousePos.x < containerLoc.x + (container.width * .5f) &&
         mousePos.y > containerLoc.y - (container.height * .5f) && mousePos.y < containerLoc.y + (container.height * .5f)) {
-        std::cout << "Within Guitar Container Area" << std::endl;
 
         if (IsKeyDown(KEY_LEFT_CONTROL) && IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
             // TODO: Should only have to change the container?? Maybe since initial build is in constructor.
@@ -284,7 +282,6 @@ void Neck::drawConnection() {  // TODO: Take in objects to connect to? OR make s
     if (mousePos.x == container.x && mousePos.y == container.y) {
         canDrawConnection = false;
     }
-
     if (canDrawConnection) {
         if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) bezierEnd = mousePos;
     }

@@ -16,6 +16,8 @@ private:
     Texture2D containerTexture;
     Rectangle container;
     Vector2 containerCenter;
+    Vector2 containerLoc;
+    bool containerLocAdded;
 
     Image neckImage;
     Texture2D neckTexture;
@@ -58,9 +60,6 @@ private:
     Vector2 textSize;
     int currentFontFilter;
     Vector2 tempNoteLoc;
-
-    Vector2 containerLoc;
-    bool containerLocAdded;
 
     // Connection Point
     Image connectImage;

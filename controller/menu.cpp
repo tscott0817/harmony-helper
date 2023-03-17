@@ -4,19 +4,19 @@
 // Create constructor for menu
 Menu::Menu(int screenWidth, int screenHeight, float posX, float posY, float width, float height) {
 
+    /** Init **/
     active = 0;
     editMode = false;
     blackBackground = {0, 0, 0, 150};
     canDraw = true;
 
-    // Only change the position and size of neckContainer (Make this the params the user can change, drop down menu)
-    // container = {posX, posY, static_cast<float>(screenWidth * width), static_cast<float>(screenHeight * height)};  // @params: x-pos, y-pos, width, height
+    /** Parent Container **/
     container = {posX, posY, static_cast<float>(screenWidth * width), static_cast<float>(screenHeight * height)};  // @params: x-pos, y-pos, width, height
     containerCenter = {container.width / 2, container.height / 2};
     containerTexture = LoadTexture("../images/plaid.png");
 
-    // Use the container position +/- some integer to move child objects
-    // Use the size of the container * some float to resize child object
+
+    /** Buttons **/
     buttonOneRec = {container.x + (container.width * .0005f), container.y + (container.height * .06f), container.width * .1f, container.height * .9f}; // TODO: Fill container with neck (Currently have padding for testing)
     buttonOneCenter = {static_cast<float>(buttonOneRec.width / 2), static_cast<float>(buttonOneRec.height / 2)};
 
@@ -25,11 +25,14 @@ Menu::Menu(int screenWidth, int screenHeight, float posX, float posY, float widt
 
     buttonLocAdded = false;
 
-    // TODO: Just filling to 100 for room, but don't want to hardcode this 100
+    /** Colors **/
     baseColor = BLUE;
     currentColor = BLUE;
     hoverColor = RED;
     activeColor = {34, 61, 156, 255};
+
+    /** Vector Inits **/
+    // TODO: Just filling to 100 for room, but don't want to hardcode this 100
     for (int i = 0; i < 100; i++) {
         buttonLocations.push_back({0, 0});
         buttonColorVec.push_back(baseColor);
@@ -78,27 +81,12 @@ void Menu::drawTopMenu(int width, int height) {
     float buttonTwoTextSize = (buttonTwoRec.width > buttonTwoRec.height) ? static_cast<float>(buttonTwoRec.height) : static_cast<float>(buttonTwoRec.width);
     Vector2 buttonTwoNewLoc = {buttonTwoRec.x + (buttonTwoRec.width * .25f), buttonTwoRec.y};
     DrawTextEx(testFont, "Piano", buttonTwoNewLoc, buttonTwoTextSize, 0, WHITE);
-
-
-
-
-    //----------------------------------------------------------------------------------
-    // Check all possible events that require GuiLock
-//    if (editMode) GuiLock();
-//    // NOTE: GuiDropdownBox must draw after any other control that can be covered on unfolding
-//    GuiUnlock();
-//    GuiSetStyle(DROPDOWNBOX, TEXT_ALIGNMENT, TEXT_ALIGN_CENTER);
-//    if (GuiDropdownBox((Rectangle){ buttonOneRec.x, buttonOneRec.y + (container.height * .06f), buttonOneRec.width, buttonOneRec.height }, "Guitar;Piano;THREE;FOUR;FIVE;SIX", &active, editMode)) editMode = !editMode;
-//    if (!buttonLocAdded) {
-//        buttonLocations[0] = {buttonOneRec.x, buttonOneRec.y + (container.height * .06f)};
-//    }
-    // listViewExActive = GuiListViewEx((Rectangle){ 165, 180, 140, 200 }, listViewExList, 8, &listViewExFocus, &listViewExScrollIndex, listViewExActive);
 }
 
 // TODO: Implement hovering color change
 void Menu::hover(Vector2 mousePos) {
     for (int i = 0; i < buttonLocations.size(); i++) {
-        // If button currently inactive
+        // For individual buttons
         if (mousePos.x > buttonLocations[i].x && mousePos.x < buttonLocations[i].x + (buttonOneRec.width) &&
             mousePos.y > buttonLocations[i].y && mousePos.y < buttonLocations[i].y + (buttonOneRec.height)) {
             currentButton = i;
@@ -108,6 +96,15 @@ void Menu::hover(Vector2 mousePos) {
         }
         else {
             buttonColorVec[currentButton] = buttonColorVec[currentButton];
+            isHovering = false;
+        }
+
+        // For entire menu bar
+        if (mousePos.x > container.x && mousePos.x < container.x + (container.width) &&
+            mousePos.y > container.y && mousePos.y < container.y + (container.height)) {
+            isHovering = true;
+        }
+        else {
             isHovering = false;
         }
     }

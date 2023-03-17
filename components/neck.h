@@ -13,32 +13,32 @@ private:
 
     // TODO: Need to collect these all in structs
     Image containerImage;
-    Image neckImage;
-    Image fretImage;
-    Image stringImage;
-    Image noteImage;
-
     Texture2D containerTexture;
-    Texture2D neckTexture;
-    Texture2D fretTexture;
-    Texture2D stringTexture;
-    Texture2D noteTexture;
-
     Rectangle container;
-    Rectangle neckRectangle;
-    Rectangle fretRectangle;
-    Rectangle stringRectangle;
-    Rectangle noteRectangle;
-
-    //Circle noteCircle;
     Vector2 containerCenter;
+
+    Image neckImage;
+    Texture2D neckTexture;
+    Rectangle neckRectangle;
     Vector2 neckCenter;
+
+    Image fretImage;
+    Texture2D fretTexture;
+    Rectangle fretRectangle;
     Vector2 fretCenter;
+
+    Image stringImage;
+    Texture2D stringTexture;
+    Rectangle stringRectangle;
     Vector2 stringCenter;
+
+    Image noteImage;
+    Texture2D noteTexture;
+    Rectangle noteRectangle;
     Vector2 noteCenter;
 
-    std::vector<std::vector<Vector2>> noteLocations;
     bool notesLocAdded;
+    std::vector<std::vector<Vector2>> noteLocations;
     std::vector<std::vector<Color>> noteColorVec;
 
     // Neck Colors
@@ -69,25 +69,18 @@ private:
     Vector2 connectCenter;
     Vector2 connectLoc;
     bool connectLocAdded;
-
-//    Vector2 start = { 0, 0 };
-//    Vector2 bezierStart;
-//    //Vector2 end = { (float)screenWidth, (float)screenHeight };
-//    Vector2 bezierEnd;
-    Vector2 bezierEndPrevious;
     bool canDrawConnection;
 
+    Vector2 bezierStart;
+    Vector2 bezierEnd;
+    bool stateActive;  // TODO: Make this private with a getter/setter;
+    bool canDraw;
 
-    
     const char *lowE[12] = {"E", "F", "F#", "G", "G#", "A", "A#", "B", "C", "C#", "D", "D#"};
 
 
 public:
 
-    bool stateActive;  // TODO: Make this private with a getter/setter;
-    bool canDraw;
-    Vector2 bezierStart;
-    Vector2 bezierEnd;
     // Constructors
     Neck(int screenWidth, int screenHeight, float posX, float posY, float width, float height);
 
@@ -99,6 +92,16 @@ public:
     void attachConnection(Vector2 mousePos);
     void drawConnection();
     void destroy();
+
+    // Getters
+    bool getStateActive();
+    bool getCanDraw();
+    bool getCanDrawConnection();
+
+    // Setters
+    void setStateActive(bool state);
+    void setCanDraw(bool state);
+    void setCanDrawConnection(bool state);
 
 };
 

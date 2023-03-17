@@ -104,9 +104,11 @@ void Menu::hover(Vector2 mousePos) {
             currentButton = i;
             //buttonColorVec[currentButton] = hoverColor;
             click(currentButton);
+            isHovering = true;
         }
         else {
             buttonColorVec[currentButton] = buttonColorVec[currentButton];
+            isHovering = false;
         }
     }
 }

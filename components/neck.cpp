@@ -3,28 +3,26 @@
 
 Neck::Neck(int screenWidth, int screenHeight, float posX, float posY, float width, float height) {
 
+    /** Window Init **/
+    this->screenWidth = screenWidth;
+    this->screenHeight = screenHeight;
+
     /** State Managing **/
     stateActive = false;  // TODO: May use to 'pause'
     canDraw = false;
 
-    /** The parent container **/
+    /** Parent Container **/
     containerImage = LoadImage("../images/blue_background.png");     // Loaded in CPU memory (RAM)
     containerTexture = LoadTextureFromImage(containerImage);  // Image converted to texture, GPU memory (VRAM)
     UnloadImage(containerImage);   // Once image has been converted to texture and uploaded to VRAM, it can be unloaded from RAM
-
-    // Only change the position and size of neckContainer (Make this the params the user can change, drop down menu)
-    container = {posX, posY, static_cast<float>(screenWidth * width), static_cast<float>(screenHeight * height)};  // @params: x-pos, y-pos, width, height
-
+    container = {posX, posY, static_cast<float>(this->screenWidth * width), static_cast<float>(this->screenHeight * height)};
     containerCenter = {container.width / 2, container.height / 2};
     containerLocAdded = false;
 
     /** Neck **/
-    neckImage = LoadImage("../images/wood_dark.png");     // Loaded in CPU memory (RAM)
-    neckTexture = LoadTextureFromImage(neckImage);  // Image converted to texture, GPU memory (VRAM)
-    UnloadImage(neckImage);   // Once image has been converted to texture and uploaded to VRAM, it can be unloaded from RAM
-
-    // Use the container position +/- some integer to move child objects
-    // Use the size of the container * some float to resize child object
+    neckImage = LoadImage("../images/wood_dark.png");
+    neckTexture = LoadTextureFromImage(neckImage);
+    UnloadImage(neckImage);
     neckRectangle = {container.x, container.y, container.width, container.height * .9f}; // TODO: Fill container with neck (Currently have padding for testing)
     neckCenter = {static_cast<float>(neckRectangle.width / 2), static_cast<float>(neckRectangle.height / 2)};
 
@@ -39,31 +37,26 @@ Neck::Neck(int screenWidth, int screenHeight, float posX, float posY, float widt
     stringImage = LoadImage("../images/silver.png");
     stringTexture = LoadTextureFromImage(stringImage);
     UnloadImage(stringImage);
-
     stringRectangle = {neckRectangle.x, neckRectangle.y, neckRectangle.width, neckRectangle.height * .02f};
     stringCenter = {static_cast<float>(stringRectangle.width / 2), static_cast<float>(stringRectangle.height / 2)};
 
     /** Note Containers **/
-    // Create a rectangle for the note containers
     noteRectangle = {neckRectangle.x, neckRectangle.y, neckRectangle.width * .05f, neckRectangle.height * .15f};
-    // noteCenter = {static_cast<float>(noteRectangle.width / 2), static_cast<float>(noteRectangle.height / 2)};
-
     notesLocAdded = false;
+
+    /** Text and Font **/
     testText = "Test Text";
     noteName = "X";
     testFont = LoadFontEx("../resources/OpenSans-Light.ttf", 200, nullptr, 100);
-
-    // Generate mipmap levels to use trilinear filtering
-    // NOTE: On 2D drawing it won't be noticeable, it looks like FILTER_BILINEAR
-    GenTextureMipmaps(&testFont.texture);
     fontSize = (float)testFont.baseSize;
     fontPosition = { 500.0f, 1200.0f};
     textSize = { 10.0f, 10.0f };
 
-    // Setup texture scaling filter
+    // Generate mipmap levels to use trilinear filtering
+    GenTextureMipmaps(&testFont.texture);
     SetTextureFilter(testFont.texture, TEXTURE_FILTER_TRILINEAR);
 
-    // Colors
+    /** Colors **/
     hoverColor = Color{190, 33, 55, 200};
     rootColor = Color{0, 121, 241, 200};
     secondColor = MAROON;
@@ -71,8 +64,8 @@ Neck::Neck(int screenWidth, int screenHeight, float posX, float posY, float widt
     fourthColor = YELLOW;
     fifthColor = PURPLE;
 
-    // TODO: Just filling to 100 for room, but don't want to hardcode this 100
-    for (int i = 0; i < 100; i++) {
+    /** Vector Inits **/
+    for (int i = 0; i < 100; i++) {      // TODO: Just filling to 100 for space right now
         std::vector<Vector2> tempLoc;
         std::vector<Color> tempColor;
         for (int j = 0; j < 100; j++) {
@@ -83,15 +76,17 @@ Neck::Neck(int screenWidth, int screenHeight, float posX, float posY, float widt
         noteColorVec.push_back(tempColor);
     }
 
-    // Initialize the connection point to be the center top of the container
+    /** Connection Point **/
     connectImage = LoadImage("../images/fret.png");
     connectTexture = LoadTextureFromImage(connectImage);
     UnloadImage(connectImage);
     connectRectangle = {container.x, container.y - (container.height * .55f), static_cast<float>(container.width * .02f), static_cast<float>(container.width * .02f)};
     connectCenter = {static_cast<float>(connectRectangle.width / 2), static_cast<float>(connectRectangle.height / 2)};
     canDrawConnection = false;
-    // make bezierEnd center on connectin point
+
+    /** Bezier Curve **/
     bezierEnd = {connectRectangle.x, connectRectangle.y};
+    bezierStart = {connectRectangle.x, connectRectangle.y};
 }
 
 int Neck::drawGuitarNeck(float windowScale) {
@@ -101,17 +96,13 @@ int Neck::drawGuitarNeck(float windowScale) {
                    container,
                    (Rectangle) {container.x, container.y, container.width, container.height},  /** Params = (x-pos, y-pos, height, width) **/
                    containerCenter, 0, WHITE);
-
-    // Get the location of the container
     containerLoc = {container.x, container.y};  // TODO: Want to update location only when container is moved, not every frame
-    std::cout << "Guitar Container Coordinates: " << containerLoc.x << ", " << containerLoc.y << std::endl;
 
-    // Draw the connection point
+    /** Connection Point **/
     DrawTexturePro(connectTexture,
                    connectRectangle,
                    (Rectangle) {connectRectangle.x, connectRectangle.y, connectRectangle.width, connectRectangle.height},
                    connectCenter, 0, WHITE);
-
 
     /** Neck **/
     DrawTexturePro(neckTexture,
@@ -217,12 +208,7 @@ int Neck::drawGuitarNeck(float windowScale) {
     /** Note Containers **/
     for (int i = 1; i <= 12; i++) {  // Rows
         for (int j = 1; j <= 6; j++) {  // Columns
-
-            // Calculate the diagnonal line of the noteRectangle
-            float diagonal = sqrt(pow(noteRectangle.width, 2) + pow(noteRectangle.height, 2));
             DrawRectangle(static_cast<float>(neckRectangle.x - (neckRectangle.width * .53f) + ((neckRectangle.width * .08) * i) - (noteRectangle.width / 2)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .56f) - (noteRectangle.height / 2)), noteRectangle.width, noteRectangle.height, BLACK);
-
-            // Using DrawEllipse, draw and ellipse that fills and scales with the noteRectangle
             DrawEllipse(static_cast<float>(neckRectangle.x - (neckRectangle.width * .53f) + ((neckRectangle.width * .08) * i)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .56f)), static_cast<float>(noteRectangle.width / 2), static_cast<float>(noteRectangle.height / 2), noteColorVec[i][j]);
 
             // Store the container coordinates (only need to once for now)
@@ -233,13 +219,12 @@ int Neck::drawGuitarNeck(float windowScale) {
             float noteTextSize = (noteRectangle.width > noteRectangle.height) ? static_cast<float>(noteRectangle.height) : static_cast<float>(noteRectangle.width);
             Vector2 noteNewLoc = {static_cast<float>(neckRectangle.x - (neckRectangle.width * .53f) + ((neckRectangle.width * .08) * i) - (noteRectangle.width / 3)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .56f) - (noteRectangle.height / 2))};
             DrawTextEx(testFont, lowE[i - 1], noteNewLoc, noteTextSize, 0, WHITE);
-
         }
     }
-
     return 0;
 }
 
+// TODO: Makes this inherited from a based uiObject class
 void Neck::hover(Vector2 mousePos) {
     for (int i = 0; i < noteLocations.size(); i++) {
         for (int j = 0; j < noteLocations[i].size(); j++) {
@@ -251,7 +236,6 @@ void Neck::hover(Vector2 mousePos) {
             } else {
                 noteColorVec[i][j] = rootColor;
             }
-
         }
     }
 }
@@ -262,7 +246,6 @@ void Neck::clickAndDrag(Vector2 mousePos) {
         std::cout << "Within Guitar Container Area" << std::endl;
 
         if (IsKeyDown(KEY_LEFT_CONTROL) && IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
-            // Make the container follow the mouse position
             // TODO: Should only have to change the container?? Maybe since initial build is in constructor.
             container.x = mousePos.x;
             container.y = mousePos.y;
@@ -281,10 +264,8 @@ void Neck::clickAndDrag(Vector2 mousePos) {
             noteRectangle.y = mousePos.y;
         }
     }
-
     // Update the container location
     containerLoc = {container.x, container.y};
-
 }
 
 void Neck::attachConnection(Vector2 mousePos) {
@@ -307,8 +288,20 @@ void Neck::drawConnection() {  // TODO: Take in objects to connect to? OR make s
     if (canDrawConnection) {
         if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) bezierEnd = mousePos;
     }
-    DrawLineBezier(bezierStart, bezierEnd, 2.0f, RED);
+    if (canDraw) {
+        DrawLineBezier(bezierStart, bezierEnd, 2.0f, RED);
+    }
 }
+
+// Getters
+bool Neck::getStateActive() { return stateActive; }
+bool Neck::getCanDraw() { return canDraw; }
+bool Neck::getCanDrawConnection() { return canDrawConnection;}
+
+// Setters
+void Neck::setStateActive(bool state) { stateActive = state; }
+void Neck::setCanDraw(bool state) { canDraw = state; }
+void Neck::setCanDrawConnection(bool state) { canDrawConnection = state; }
 
 // To remove textures from memory after program closes, must be after main loop ends
 void Neck::destroy() {

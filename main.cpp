@@ -14,8 +14,7 @@
 int main()
 {
 
-    // Init
-    //----------------------------------------------------------------------------------
+    /** Window Setup **/
     const int screenWidth =  2560;
     const int screenHeight = 1440;
     Color backgroundColor = RAYWHITE;
@@ -23,9 +22,7 @@ int main()
     InitWindow(screenWidth, screenHeight, "Guitar App");
     SetExitKey(KEY_ZERO);  // Frees up escape key for menu, makes '0' exit program
 
-
-    // Objects
-    //----------------------------------------------------------------------------------
+    /** Object Inits **/
     float guitarWidth = .8f;
     float guitarHeight = .4f;
     float guitarPosX = screenWidth * .5f;  // The ( * 0.5f) are basically scalars for the guitar's position
@@ -35,18 +32,13 @@ int main()
     bool canClickButtOne = true;
 
     Neck guitarNeck(screenWidth, screenHeight, guitarPosX, guitarPosY, guitarWidth, guitarHeight);
-    // guitarNeck.stateActive = true; // To decide which object get draw on start of program
     ModalChart modalChart(screenWidth, screenHeight, screenWidth * .35f, screenHeight * .7f, .6f, .5f);
     Menu menu(screenWidth, screenHeight, 0, screenHeight * .0001f, 1, .05f);
 
-
-    // Main Loop
-    //----------------------------------------------------------------------------------
+    /** Main Loop **/
     SetTargetFPS(60);
     while (!WindowShouldClose())
     {
-
-        // Compute required framebuffer scaling
         // TODO: This can be used to resize objects dynamically with the window size,
         // TODO: Needs to be called each frame, so I think it should be param for object methods
         float scale = MIN((float)GetScreenWidth()/screenWidth, (float)GetScreenHeight()/screenHeight);
@@ -56,7 +48,7 @@ int main()
         bool leftMouseClicked = IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
 
         /** Object Interactions **/
-        if (guitarNeck.stateActive) {
+        if (guitarNeck.getStateActive()) {
             guitarNeck.hover(mousePos);
             guitarNeck.clickAndDrag(mousePos);
             guitarNeck.attachConnection(mousePos);
@@ -66,21 +58,15 @@ int main()
         if (IsKeyPressed(KEY_ESCAPE)) {
             menu.canDraw = !menu.canDraw;
         }
-
-        /** Object Drawing Here  **/
-        BeginDrawing();
-
-        ClearBackground(backgroundColor);
-        menu.setBackground(screenWidth, screenHeight);  // TODO: Probably don't want this in menu class
-        guitarNeck.drawConnection();
+        menu.hover(mousePos);
 
         /** Determines Which Objects Are Shown **/
         // TODO: Don't want in main
         if (menu.getActiveButtons()[0] == 0) {
-            guitarNeck.canDraw = false;
+            guitarNeck.setCanDraw(false);
         }
         if (menu.getActiveButtons()[0] == 1) {
-            guitarNeck.canDraw = true;
+            guitarNeck.setCanDraw(true);
         }
         if (menu.getActiveButtons()[1] == 0) {
             modalChart.canDraw = false;
@@ -89,8 +75,21 @@ int main()
             modalChart.canDraw = true;
         }
 
+        /** Object Drawing Here  **/
+        BeginDrawing();
+
+        ClearBackground(backgroundColor);
+        menu.setBackground(screenWidth, screenHeight);  // TODO: Probably don't want this in menu class
+        if (menu.isHovering) {
+            guitarNeck.setCanDrawConnection(false);
+        }
+        else {
+            guitarNeck.setCanDrawConnection(true);
+        }
+        guitarNeck.drawConnection();
+
         // Draw Objects
-        if (guitarNeck.canDraw) {
+        if (guitarNeck.getCanDraw()) {
             guitarNeck.drawGuitarNeck(scale);
         }
         if (modalChart.canDraw) {
@@ -99,14 +98,13 @@ int main()
 
         // Want Menu to be drawn last so it's on top
         menu.drawTopMenu(screenWidth, screenHeight);
-        menu.hover(mousePos);
 
         // TODO: Do the same for every object, stop hover interactions if using RayGUI
         if (menu.isHovering){  // Takes care of hovering issue between menu and guitars
-            guitarNeck.stateActive = false;
+            guitarNeck.setStateActive(false);
         }
         else {
-            guitarNeck.stateActive = true;
+            guitarNeck.setStateActive(true);
         }
 
         EndDrawing();

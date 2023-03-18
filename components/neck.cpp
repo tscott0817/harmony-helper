@@ -267,30 +267,6 @@ void Neck::clickAndDrag(Vector2 mousePos) {
     containerLoc = {container.x, container.y};
 }
 
-void Neck::attachConnection(Vector2 mousePos) {
-    // Check if mouse is within the area of the connection point
-    if (mousePos.x > connectRectangle.x - (connectRectangle.width * .5f) && mousePos.x < connectRectangle.x + (connectRectangle.width * .5f) &&
-        mousePos.y > connectRectangle.y - (connectRectangle.height * .5f) && mousePos.y < connectRectangle.y + (connectRectangle.height * .5f)) {
-        DrawRectangle(25, 25, 100, 100, RED);
-//        if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) canDrawConnection = true; bezierStart = GetMousePosition();
-        if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) canDrawConnection = true; bezierStart = {connectRectangle.x, connectRectangle.y};
-
-    }
-}
-
-void Neck::drawConnection() {  // TODO: Take in objects to connect to? OR make separate connector class.
-    Vector2 mousePos = GetMousePosition();
-    if (mousePos.x == container.x && mousePos.y == container.y) {
-        canDrawConnection = false;
-    }
-    if (canDrawConnection) {
-        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) bezierEnd = mousePos;
-    }
-    if (canDraw) {
-        DrawLineBezier(bezierStart, bezierEnd, 2.0f, RED);
-    }
-}
-
 // Getters
 bool Neck::getStateActive() { return stateActive; }
 bool Neck::getCanDraw() { return canDraw; }

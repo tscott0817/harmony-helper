@@ -89,8 +89,6 @@ public:
     int drawGuitarNeck(float windowScale);
     void hover(Vector2 mousePos);
     void clickAndDrag(Vector2 mousePos);
-    void attachConnection(Vector2 mousePos);
-    void drawConnection();
     void destroy();
 
     // Getters

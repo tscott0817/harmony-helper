@@ -170,9 +170,15 @@ void Piano::clickAndDrag(Vector2 mousePos) {
 bool Piano::getCanDraw() {
     return canDraw;
 }
+Rectangle Piano::getConnectionRectangle() {
+    return connectRectangle;
+}
 
 void Piano::setCanDraw(bool canDraw) {
     this->canDraw = canDraw;
+}
+void Piano::setConnectionRectangle(Rectangle connectRectangle) {
+    this->connectRectangle = connectRectangle;
 }
 
 void Piano::destroy() {

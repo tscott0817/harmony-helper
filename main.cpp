@@ -12,8 +12,8 @@
 #define MIN(a, b) ((a)<(b)? (a) : (b))
 #define MAX(a, b) ((a)>(b)? (a) : (b))
 
-void attachConnection(Vector2 mousePos, Vector2 &bezierStart, Rectangle startPos, Rectangle endPos, bool &canDrawConnection);
-void drawConnection(Vector2 bezierStart, Vector2 &bezierEnd, Rectangle container, bool canDrawConnection, bool canDraw);
+void attachConnection(Vector2 mousePos, Vector2 &bezierStart, Vector2 &bezierEnd, Rectangle startPos, Rectangle endPos, bool &canDrawConnection);
+void drawConnection(Vector2 bezierStart, Vector2 &bezierEnd, Rectangle endConnector, Rectangle container, bool canDrawConnection, bool canDraw, bool menuActive, bool &stopBezier);
 
 int main()
 {
@@ -46,6 +46,8 @@ int main()
     Vector2 bezierStart = {guitarNeck.getConnectionRec().x, guitarNeck.getConnectionRec().y};
     Vector2 bezierEnd = {0,0};
     bool canDrawConnection = false;
+    bool menuActive = false;
+    bool stopBezier = false;
 
     /** Main Loop **/
     SetTargetFPS(60);
@@ -66,7 +68,7 @@ int main()
         }
         piano.hover(mousePos);  // TODO: Want same if check as guitar
         piano.clickAndDrag(mousePos);
-        attachConnection(mousePos, bezierStart, guitarNeck.getConnectionRec(), guitarNeck.getConnectionRec(), canDrawConnection);
+        attachConnection(mousePos, bezierStart, bezierEnd, guitarNeck.getConnectionRec(), guitarNeck.getConnectionRec(), canDrawConnection);
 
         // Check keyboard for escape key press
         if (IsKeyPressed(KEY_ESCAPE)) {
@@ -78,10 +80,14 @@ int main()
         // TODO: Don't want in main
         if (menu.isHovering) {
             // guitarNeck.setCanDrawConnection(false);
-            canDrawConnection = false;
+            menuActive = true;
+        }
+        else {
+            menuActive = false;
         }
         if (menu.getActiveButtons()[0] == 0) {
             guitarNeck.setCanDraw(false);
+            canDrawConnection = false;  // TODO: Tied to guitarNeck, but want to remove if any object attached is destroyed
         }
         if (menu.getActiveButtons()[0] == 1) {
             guitarNeck.setCanDraw(true);
@@ -107,7 +113,7 @@ int main()
             piano.drawPiano(scale);
         }
         if (canDrawConnection) {
-            drawConnection(bezierStart, bezierEnd, guitarNeck.getContainer(), guitarNeck.getCanDrawConnection(), guitarNeck.getCanDraw());
+            drawConnection(bezierStart, bezierEnd, piano.getConnectionRectangle(), guitarNeck.getContainer(), guitarNeck.getCanDrawConnection(), guitarNeck.getCanDraw(), menuActive, stopBezier);
         }
         // Want Menu to be drawn last so it's on top
         menu.drawTopMenu(screenWidth, screenHeight);
@@ -132,18 +138,22 @@ int main()
     return 0;
 }
 
-void attachConnection(Vector2 mousePos, Vector2 &bezierStart, Rectangle startPos, Rectangle endPos, bool &canDrawConnection) {
+void attachConnection(Vector2 mousePos, Vector2 &bezierStart, Vector2 &bezierEnd, Rectangle startPos, Rectangle endPos, bool &canDrawConnection) {
     // Check if mouse is within the area of the connection point
     if (mousePos.x > startPos.x - (startPos.width * .5f) && mousePos.x < startPos.x + (startPos.width * .5f) &&
         mousePos.y > startPos.y - (startPos.height * .5f) && mousePos.y < startPos.y + (startPos.height * .5f)) {
         DrawRectangle(25, 25, 100, 100, RED);
 //        if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) canDrawConnection = true; bezierStart = GetMousePosition();
-        if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) canDrawConnection = true; bezierStart = {startPos.x, startPos.y};
+        if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
+            canDrawConnection = true;
+            bezierStart = {startPos.x, startPos.y};
+            bezierEnd = {mousePos.x, mousePos.y};
+        }
 
     }
 }
 
-void drawConnection(Vector2 bezierStart, Vector2 &bezierEnd, Rectangle container, bool canDrawConnection, bool canDrawBezier) {  // TODO: Take in objects to connect to? OR make separate connector class.
+void drawConnection(Vector2 bezierStart, Vector2 &bezierEnd, Rectangle endConnector, Rectangle container, bool canDrawConnection, bool canDrawBezier, bool menuActive, bool &stopBezier) {  // TODO: Take in objects to connect to? OR make separate connector class.
     Vector2 mousePos = GetMousePosition();
     bezierStart.x = container.x;
     bezierStart.y = container.y - (container.height * .55f);
@@ -155,10 +165,23 @@ void drawConnection(Vector2 bezierStart, Vector2 &bezierEnd, Rectangle container
     else {
         canDrawConnection = true;
     }
-    if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && canDrawConnection) {
+    if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && canDrawConnection && !menuActive && !stopBezier) {
         bezierEnd = mousePos;
         mouseHeld = true;
         DrawLineBezier(bezierStart, bezierEnd, 2.0f, RED);
+    }
+
+    // If mouse is in the area of the end connector, draw the bezier curve at the center of the end connector
+    if (mousePos.x > endConnector.x - (endConnector.width * .5f) && mousePos.x < endConnector.x + (endConnector.width * .5f) &&
+        mousePos.y > endConnector.y - (endConnector.height * .5f) && mousePos.y < endConnector.y + (endConnector.height * .5f) && !stopBezier) {
+        stopBezier = true;
+    }
+
+    // If attachment to end point has been made, keep points are respective positions
+    if (stopBezier) {
+        //bezierEnd = {endConnector.x, endConnector.y};
+        bezierEnd = {endConnector.x + (endConnector.width * .25f), endConnector.y - (endConnector.height * .5f)};
+
     }
     if (!mouseHeld) {
         DrawLineBezier(bezierStart, bezierEnd, 2.0f, RED);

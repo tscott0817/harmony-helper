@@ -2,11 +2,12 @@
 #define GUITAR_APP_NECK_H
 
 #include "raylib.h"
+#include "uiObjects.h"
 #include <iostream>
 #include <vector>
 #include <memory>
 
-class Neck {
+class Neck : public UIObjects {
 private:
     int screenWidth;
     int screenHeight;
@@ -96,11 +97,15 @@ public:
     bool getStateActive();
     bool getCanDraw();
     bool getCanDrawConnection();
+    Rectangle getContainer();
+//    Vector2 getConnectionPos();
+    Rectangle getConnectionRec();
 
     // Setters
     void setStateActive(bool state);
     void setCanDraw(bool state);
     void setCanDrawConnection(bool state);
+    void setConnectionPos(Rectangle pos);
 
 };
 

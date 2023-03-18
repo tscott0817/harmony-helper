@@ -17,7 +17,7 @@ Neck::Neck(int screenWidth, int screenHeight, float posX, float posY, float widt
     containerTexture = LoadTextureFromImage(containerImage);  // Image converted to texture, GPU memory (VRAM)
     UnloadImage(containerImage);   // Once image has been converted to texture and uploaded to VRAM, it can be unloaded from RAM
     container = {posX, posY, static_cast<float>(this->screenWidth * width), static_cast<float>(this->screenHeight * height)};
-    containerCenter = {container.width / 2, container.height / 2};
+    containerCenter = {container.width * .5f, container.height * .5f};
     containerLocAdded = false;
 
     /** Neck **/
@@ -25,21 +25,21 @@ Neck::Neck(int screenWidth, int screenHeight, float posX, float posY, float widt
     neckTexture = LoadTextureFromImage(neckImage);
     UnloadImage(neckImage);
     neckRectangle = {container.x, container.y, container.width, container.height * .9f}; // TODO: Fill container with neck (Currently have padding for testing)
-    neckCenter = {static_cast<float>(neckRectangle.width / 2), static_cast<float>(neckRectangle.height / 2)};
+    neckCenter = {static_cast<float>(neckRectangle.width * .5f), static_cast<float>(neckRectangle.height * .5f)};
 
     /** Frets **/
     fretImage = LoadImage("../images/fret.png");
     fretTexture = LoadTextureFromImage(fretImage);
     UnloadImage(fretImage);
     fretRectangle = {neckRectangle.x, neckRectangle.y, static_cast<float>(neckRectangle.width * .01), neckRectangle.height};
-    fretCenter = {static_cast<float>(fretRectangle.width / 2), static_cast<float>(fretRectangle.height / 2)};
+    fretCenter = {static_cast<float>(fretRectangle.width * .5f), static_cast<float>(fretRectangle.height * .5f)};
 
     /** Strings **/
     stringImage = LoadImage("../images/silver.png");
     stringTexture = LoadTextureFromImage(stringImage);
     UnloadImage(stringImage);
     stringRectangle = {neckRectangle.x, neckRectangle.y, neckRectangle.width, neckRectangle.height * .02f};
-    stringCenter = {static_cast<float>(stringRectangle.width / 2), static_cast<float>(stringRectangle.height / 2)};
+    stringCenter = {static_cast<float>(stringRectangle.width * .5f), static_cast<float>(stringRectangle.height * .5f)};
 
     /** Note Containers **/
     noteRectangle = {neckRectangle.x, neckRectangle.y, neckRectangle.width * .05f, neckRectangle.height * .15f};
@@ -245,6 +245,7 @@ void Neck::clickAndDrag(Vector2 mousePos) {
 
         if (IsKeyDown(KEY_LEFT_CONTROL) && IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
             // TODO: Should only have to change the container?? Maybe since initial build is in constructor.
+            // TODO: Probably reset them all to their constructor values, think mousePos works only because relative to container
             container.x = mousePos.x;
             container.y = mousePos.y;
             // TODO: Not sure why these have to be different?
@@ -294,11 +295,16 @@ void Neck::drawConnection() {  // TODO: Take in objects to connect to? OR make s
 bool Neck::getStateActive() { return stateActive; }
 bool Neck::getCanDraw() { return canDraw; }
 bool Neck::getCanDrawConnection() { return canDrawConnection;}
+Rectangle Neck::getContainer() { return container; }
+//Vector2 Neck::getConnectionPos() { return {connectRectangle.x, connectRectangle.y};}
+Rectangle Neck::getConnectionRec() { return connectRectangle;}
 
 // Setters
 void Neck::setStateActive(bool state) { stateActive = state; }
 void Neck::setCanDraw(bool state) { canDraw = state; }
 void Neck::setCanDrawConnection(bool state) { canDrawConnection = state; }
+//void Neck::setConnectionPos(Vector2 pos) { connectRectangle.x = pos.x; connectRectangle.y = pos.y;}
+void Neck::setConnectionPos(Rectangle rec) { connectRectangle = rec;}
 
 // To remove textures from memory after program closes, must be after main loop ends
 void Neck::destroy() {

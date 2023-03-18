@@ -28,7 +28,7 @@ Piano::Piano(int screenWidth, int screenHeight, float posX, float posY, float wi
     connectImage = LoadImage("../images/fret.png");
     connectTexture = LoadTextureFromImage(connectImage);
     UnloadImage(connectImage);
-    connectRectangle = {container.x, container.y - (container.height * .55f), static_cast<float>(container.width * .02f), static_cast<float>(container.width * .02f)};
+    connectRectangle = {container.x  - (container.width * .55f), container.y, static_cast<float>(container.width * .02f), static_cast<float>(container.width * .02f)};
     connectCenter = {static_cast<float>(connectRectangle.width * .5f), static_cast<float>(connectRectangle.height )};
 
     /** Colors **/
@@ -105,7 +105,8 @@ void Piano::drawPiano(float windowScale) {
 
 // TODO: Makes this inherited from a based uiObject class
 void Piano::hover(Vector2 mousePos) {
-    for (int i = 0; i < keyWhiteLocations.size(); i++) {
+    // Black Keys
+    for (int i = 0; i < keyBlackLocations.size(); i++) {
         if (mousePos.x > keyBlackLocations[i].x &&
             mousePos.x < keyBlackLocations[i].x + (keyBlackRectangle.width) &&
             mousePos.y > keyBlackLocations[i].y &&
@@ -115,8 +116,12 @@ void Piano::hover(Vector2 mousePos) {
         }
         else {
             keyBlackColorVec[i] = blackKeyColor;
-            whiteKeyHover = true;
+//            whiteKeyHover = true;
         }
+    }
+
+    // White Keys
+    for (int i = 0; i < keyWhiteLocations.size(); i++) {
         if (whiteKeyHover) {
             if (mousePos.x > keyWhiteLocations[i].x &&
                 mousePos.x < keyWhiteLocations[i].x + (keyWhiteRectangle.width) &&
@@ -141,12 +146,21 @@ void Piano::clickAndDrag(Vector2 mousePos) {
             container.x = mousePos.x;
             container.y = mousePos.y;
             // TODO: Not sure why these have to be different?
-            connectRectangle.x = container.x;
-            connectRectangle.y = container.y - (container.height * .55f);
-            keyWhiteRectangle.x = mousePos.x;
-            keyWhiteRectangle.y = mousePos.y;
-            keyBlackRectangle.x = mousePos.x;
-            keyBlackRectangle.y = mousePos.y;
+//            connectRectangle.x = container.x;
+//            connectRectangle.y = container.y - (container.height * .55f);
+            connectRectangle.x = container.x - (container.width * .55f);
+            connectRectangle.y = container.y;
+            keyWhiteRectangle.x = container.x;
+            keyWhiteRectangle.y = container.y + (container.height * .125f);
+            keyBlackRectangle.x = container.x;
+            keyBlackRectangle.y = container.y + (container.height * .125f);
+            whiteKeyHover = false;
+            blackKeyHover = false;
+        }
+        // TODO: Don't think I like this here
+        else {
+            whiteKeyHover = true;
+            blackKeyHover = true;
         }
     }
     // Update the container location

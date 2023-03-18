@@ -140,14 +140,10 @@ void Piano::hover(Vector2 mousePos) {
 void Piano::clickAndDrag(Vector2 mousePos) {
     if (mousePos.x > containerLoc.x - (container.width * .5f) && mousePos.x < containerLoc.x + (container.width * .5f) &&
         mousePos.y > containerLoc.y - (container.height * .5f) && mousePos.y < containerLoc.y + (container.height * .5f)) {
-
         if (IsKeyDown(KEY_LEFT_CONTROL) && IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
             // TODO: Should only have to change the container?? Maybe since initial build is in constructor.
             container.x = mousePos.x;
             container.y = mousePos.y;
-            // TODO: Not sure why these have to be different?
-//            connectRectangle.x = container.x;
-//            connectRectangle.y = container.y - (container.height * .55f);
             connectRectangle.x = container.x - (container.width * .55f);
             connectRectangle.y = container.y;
             keyWhiteRectangle.x = container.x;
@@ -167,26 +163,18 @@ void Piano::clickAndDrag(Vector2 mousePos) {
     containerLoc = {container.x, container.y};
 }
 
-bool Piano::getCanDraw() {
-    return canDraw;
-}
-Rectangle Piano::getConnectionRectangle() {
-    return connectRectangle;
-}
+/** Getters **/
+bool Piano::getCanDraw() {return canDraw;}
+Rectangle Piano::getContainer() {return container;}
+Rectangle Piano::getConnectionRectangle() {return connectRectangle;}
 
-void Piano::setCanDraw(bool canDraw) {
-    this->canDraw = canDraw;
-}
-void Piano::setConnectionRectangle(Rectangle connectRectangle) {
-    this->connectRectangle = connectRectangle;
-}
+/** Setters **/
+void Piano::setCanDraw(bool canDraw) {this->canDraw = canDraw;}
+void Piano::setConnectionRectangle(Rectangle connectRectangle) {this->connectRectangle = connectRectangle;}
 
-void Piano::destroy() {
-    UnloadTexture(containerTexture);
-}
-
-Piano::~Piano() {
-    UnloadTexture(containerTexture);
-}
+/** Destruct **/
+// TODO: Not sure which is best approach
+void Piano::destroy() {UnloadTexture(containerTexture);}
+Piano::~Piano() {UnloadTexture(containerTexture);}
 
 

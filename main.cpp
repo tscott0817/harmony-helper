@@ -69,6 +69,7 @@ int main()
         piano.hover(mousePos);  // TODO: Want same if check as guitar
         piano.clickAndDrag(mousePos);
         attachConnection(mousePos, bezierStart, bezierEnd, guitarNeck.getConnectionRec(), guitarNeck.getConnectionRec(), canDrawConnection);
+        //attachConnection(mousePos, bezierStart, bezierEnd, piano.getConnectionRectangle(), guitarNeck.getConnectionRec(), canDrawConnection);
 
         // Check keyboard for escape key press
         if (IsKeyPressed(KEY_ESCAPE)) {
@@ -114,6 +115,8 @@ int main()
         }
         if (canDrawConnection) {
             drawConnection(bezierStart, bezierEnd, piano.getConnectionRectangle(), guitarNeck.getContainer(), guitarNeck.getCanDrawConnection(), guitarNeck.getCanDraw(), menuActive, stopBezier);
+            //drawConnection(bezierStart, bezierEnd, guitarNeck.getConnectionRec(), piano.getContainer(), guitarNeck.getCanDrawConnection(), guitarNeck.getCanDraw(), menuActive, stopBezier);
+
         }
         // Want Menu to be drawn last so it's on top
         menu.drawTopMenu(screenWidth, screenHeight);
@@ -139,17 +142,14 @@ int main()
 }
 
 void attachConnection(Vector2 mousePos, Vector2 &bezierStart, Vector2 &bezierEnd, Rectangle startPos, Rectangle endPos, bool &canDrawConnection) {
-    // Check if mouse is within the area of the connection point
     if (mousePos.x > startPos.x - (startPos.width * .5f) && mousePos.x < startPos.x + (startPos.width * .5f) &&
         mousePos.y > startPos.y - (startPos.height * .5f) && mousePos.y < startPos.y + (startPos.height * .5f)) {
         DrawRectangle(25, 25, 100, 100, RED);
-//        if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) canDrawConnection = true; bezierStart = GetMousePosition();
         if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
             canDrawConnection = true;
             bezierStart = {startPos.x, startPos.y};
             bezierEnd = {mousePos.x, mousePos.y};
         }
-
     }
 }
 
@@ -170,18 +170,14 @@ void drawConnection(Vector2 bezierStart, Vector2 &bezierEnd, Rectangle endConnec
         mouseHeld = true;
         DrawLineBezier(bezierStart, bezierEnd, 2.0f, RED);
     }
-
-    // If mouse is in the area of the end connector, draw the bezier curve at the center of the end connector
+    // If mouse is in the area of the end connector, allow attachment
     if (mousePos.x > endConnector.x - (endConnector.width * .5f) && mousePos.x < endConnector.x + (endConnector.width * .5f) &&
         mousePos.y > endConnector.y - (endConnector.height * .5f) && mousePos.y < endConnector.y + (endConnector.height * .5f) && !stopBezier) {
         stopBezier = true;
     }
-
     // If attachment to end point has been made, keep points are respective positions
     if (stopBezier) {
-        //bezierEnd = {endConnector.x, endConnector.y};
-        bezierEnd = {endConnector.x + (endConnector.width * .25f), endConnector.y - (endConnector.height * .5f)};
-
+        bezierEnd = {endConnector.x, endConnector.y - (endConnector.height * .5f)};
     }
     if (!mouseHeld) {
         DrawLineBezier(bezierStart, bezierEnd, 2.0f, RED);

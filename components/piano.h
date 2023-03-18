@@ -71,7 +71,9 @@ public:
 
     // Getters
     bool getCanDraw();
+    Rectangle getContainer();
     Rectangle getConnectionRectangle();
+
 
     // Setters
     void setCanDraw(bool canDraw);

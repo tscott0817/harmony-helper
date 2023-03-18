@@ -267,7 +267,7 @@ void Neck::clickAndDrag(Vector2 mousePos) {
     containerLoc = {container.x, container.y};
 }
 
-// Getters
+/** Getter **/
 bool Neck::getStateActive() { return stateActive; }
 bool Neck::getCanDraw() { return canDraw; }
 bool Neck::getCanDrawConnection() { return canDrawConnection;}
@@ -275,7 +275,7 @@ Rectangle Neck::getContainer() { return container; }
 //Vector2 Neck::getConnectionPos() { return {connectRectangle.x, connectRectangle.y};}
 Rectangle Neck::getConnectionRec() { return connectRectangle;}
 
-// Setters
+/** Setters **/
 void Neck::setStateActive(bool state) { stateActive = state; }
 void Neck::setCanDraw(bool state) { canDraw = state; }
 void Neck::setCanDrawConnection(bool state) { canDrawConnection = state; }

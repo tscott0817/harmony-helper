@@ -137,6 +137,16 @@ void Piano::hover(Vector2 mousePos) {
     }
 }
 
+bool Piano::connectionHover(Vector2 mousePos) {
+    if (mousePos.x > connectRectangle.x - (connectRectangle.width * .5f) && mousePos.x < connectRectangle.x + (connectRectangle.width * .5f) &&
+        mousePos.y > connectRectangle.y - (connectRectangle.height * .5f) && mousePos.y < connectRectangle.y + (connectRectangle.height * .5f)) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
 void Piano::clickAndDrag(Vector2 mousePos) {
     if (mousePos.x > containerLoc.x - (container.width * .5f) && mousePos.x < containerLoc.x + (container.width * .5f) &&
         mousePos.y > containerLoc.y - (container.height * .5f) && mousePos.y < containerLoc.y + (container.height * .5f)) {
@@ -166,11 +176,13 @@ void Piano::clickAndDrag(Vector2 mousePos) {
 /** Getters **/
 bool Piano::getCanDraw() {return canDraw;}
 Rectangle Piano::getContainer() {return container;}
-Rectangle Piano::getConnectionRectangle() {return connectRectangle;}
+Rectangle Piano::getConnectionRec() {return connectRectangle;}
+bool Piano::getCanDrawConnection() { return canDrawConnection;}
 
 /** Setters **/
 void Piano::setCanDraw(bool canDraw) {this->canDraw = canDraw;}
 void Piano::setConnectionRectangle(Rectangle connectRectangle) {this->connectRectangle = connectRectangle;}
+void Piano::setCanDrawConnection(bool state) {this->canDrawConnection = state;}
 
 /** Destruct **/
 // TODO: Not sure which is best approach

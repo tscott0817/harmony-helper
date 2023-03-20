@@ -9,16 +9,6 @@
 
 class Neck : public UIObjects {
 private:
-    int screenWidth;
-    int screenHeight;
-
-    // TODO: Need to collect these all in structs
-    Image containerImage;
-    Texture2D containerTexture;
-    Rectangle container;
-    Vector2 containerCenter;
-    Vector2 containerLoc;
-    bool containerLocAdded;
 
     Image neckImage;
     Texture2D neckTexture;
@@ -44,14 +34,6 @@ private:
     std::vector<std::vector<Vector2>> noteLocations;
     std::vector<std::vector<Color>> noteColorVec;
 
-    // Neck Colors
-    Color hoverColor;
-    Color rootColor;
-    Color secondColor;
-    Color thirdColor;
-    Color fourthColor;
-    Color fifthColor;
-
     // Text and Font
     const char *testText;
     const char *noteName;
@@ -69,15 +51,12 @@ private:
     Vector2 connectCenter;
     Vector2 connectLoc;
     bool connectLocAdded;
-    bool canDrawConnection;
 
     Vector2 bezierStart;
     Vector2 bezierEnd;
     bool stateActive;  // TODO: Make this private with a getter/setter;
-    bool canDraw;
 
     const char *lowE[12] = {"E", "F", "F#", "G", "G#", "A", "A#", "B", "C", "C#", "D", "D#"};
-
 
 public:
 
@@ -87,7 +66,8 @@ public:
     // Guitar Methods
     void initGuitarNeck();
     int drawGuitarNeck(float windowScale);
-    void hover(Vector2 mousePos);
+    void hover(Vector2 mousePos) override;
+    bool connectionHover(Vector2 mousePos);
     void clickAndDrag(Vector2 mousePos);
     void destroy();
 
@@ -96,14 +76,13 @@ public:
     bool getCanDraw();
     bool getCanDrawConnection();
     Rectangle getContainer();
-//    Vector2 getConnectionPos();
     Rectangle getConnectionRec();
 
     // Setters
     void setStateActive(bool state);
     void setCanDraw(bool state);
     void setCanDrawConnection(bool state);
-    void setConnectionPos(Rectangle pos);
+    void setConnectionRec(Rectangle pos);
 
 };
 

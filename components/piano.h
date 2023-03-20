@@ -1,22 +1,14 @@
 #ifndef GUITAR_APP_PIANO_H
 #define GUITAR_APP_PIANO_H
 #include "raylib.h"
+#include "uiObjects.h"
 #include <iostream>
 #include <vector>
 #include <memory>
 
-class Piano {
+class Piano : public UIObjects {
 
 private:
-    int screenWidth;
-    int screenHeight;
-
-    Image containerImage;
-    Texture2D containerTexture;
-    Rectangle container;
-    Vector2 containerCenter;
-    Vector2 containerLoc;
-    bool containerLocAdded;
 
     Image keyWhiteImage;
     Texture2D keyWhiteTexture;
@@ -38,14 +30,6 @@ private:
     Vector2 connectCenter;
     Vector2 connectLoc;
     bool connectLocAdded;
-    bool canDrawConnection;
-
-    Color hoverColor;
-    Color rootColor;
-    Color secondColor;
-    Color thirdColor;
-    Color fourthColor;
-    Color fifthColor;
 
     bool notesLocAdded;
     std::vector<Vector2> keyWhiteLocations;
@@ -57,27 +41,26 @@ private:
     Color whiteKeyColor;
     Color blackKeyColor;
 
-
-
-    bool canDraw;
-
 public:
     Piano(int screenWidth, int screenHeight, float posX, float posY, float width, float height);
     ~Piano();
 
     void drawPiano(float windowScale);
-    void hover(Vector2 mousePos);
+    void hover(Vector2 mousePos) override;
+    bool connectionHover(Vector2 mousePos);
     void clickAndDrag(Vector2 mousePos);
 
     // Getters
     bool getCanDraw();
     Rectangle getContainer();
-    Rectangle getConnectionRectangle();
+    Rectangle getConnectionRec();
+    bool getCanDrawConnection();
 
 
     // Setters
     void setCanDraw(bool canDraw);
     void setConnectionRectangle(Rectangle connectRectangle);
+    void setCanDrawConnection(bool state);
 
     void destroy();
 

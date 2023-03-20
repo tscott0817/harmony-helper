@@ -239,6 +239,15 @@ void Neck::hover(Vector2 mousePos) {
     }
 }
 
+bool Neck::connectionHover(Vector2 mousePos) {
+    if (mousePos.x > connectRectangle.x && mousePos.x < connectRectangle.x + (connectRectangle.width) &&
+        mousePos.y > connectRectangle.y && mousePos.y < connectRectangle.y + (connectRectangle.height)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 void Neck::clickAndDrag(Vector2 mousePos) {
     if (mousePos.x > containerLoc.x - (container.width * .5f) && mousePos.x < containerLoc.x + (container.width * .5f) &&
         mousePos.y > containerLoc.y - (container.height * .5f) && mousePos.y < containerLoc.y + (container.height * .5f)) {
@@ -280,7 +289,7 @@ void Neck::setStateActive(bool state) { stateActive = state; }
 void Neck::setCanDraw(bool state) { canDraw = state; }
 void Neck::setCanDrawConnection(bool state) { canDrawConnection = state; }
 //void Neck::setConnectionPos(Vector2 pos) { connectRectangle.x = pos.x; connectRectangle.y = pos.y;}
-void Neck::setConnectionPos(Rectangle rec) { connectRectangle = rec;}
+void Neck::setConnectionRec(Rectangle rec) { connectRectangle = rec;}
 
 // To remove textures from memory after program closes, must be after main loop ends
 void Neck::destroy() {

@@ -53,7 +53,7 @@ Piano::Piano(int screenWidth, int screenHeight, float posX, float posY, float wi
     notesLocAdded = false;
 }
 
-void Piano::drawPiano(float windowScale) {
+void Piano::draw(float windowScale) {
 
     /** Parent Container **/
     DrawTexturePro(containerTexture,
@@ -103,7 +103,7 @@ void Piano::drawPiano(float windowScale) {
 
 }
 
-// TODO: Makes this inherited from a based uiObject class
+// TODO: Makes this inherited from a based Instrument class
 void Piano::hover(Vector2 mousePos) {
     // Black Keys
     for (int i = 0; i < keyBlackLocations.size(); i++) {
@@ -178,11 +178,13 @@ bool Piano::getCanDraw() {return canDraw;}
 Rectangle Piano::getContainer() {return container;}
 Rectangle Piano::getConnectionRec() {return connectRectangle;}
 bool Piano::getCanDrawConnection() { return canDrawConnection;}
+bool Piano::getStateActive() {return active;}
 
 /** Setters **/
 void Piano::setCanDraw(bool canDraw) {this->canDraw = canDraw;}
-void Piano::setConnectionRectangle(Rectangle connectRectangle) {this->connectRectangle = connectRectangle;}
+//void Piano::setConnectionRec(Rectangle connectRectangle) {this->connectRectangle = connectRectangle;}
 void Piano::setCanDrawConnection(bool state) {this->canDrawConnection = state;}
+void Piano::setStateActive(bool state) {this->active = state;}
 
 /** Destruct **/
 // TODO: Not sure which is best approach

@@ -1,14 +1,14 @@
 #include "cmath"
-#include "neck.h"
+#include "guitar.h"
 
-Neck::Neck(int screenWidth, int screenHeight, float posX, float posY, float width, float height) {
+Guitar::Guitar(int screenWidth, int screenHeight, float posX, float posY, float width, float height) {
 
     /** Window Init **/
     this->screenWidth = screenWidth;
     this->screenHeight = screenHeight;
 
     /** State Managing **/
-    stateActive = false;  // TODO: May use to 'pause'
+    active = false;  // TODO: May use to 'pause'
     canDraw = false;
     canDrawConnection = false;
 
@@ -89,7 +89,7 @@ Neck::Neck(int screenWidth, int screenHeight, float posX, float posY, float widt
     bezierStart = {connectRectangle.x, connectRectangle.y};
 }
 
-int Neck::drawGuitarNeck(float windowScale) {
+void Guitar::draw(float windowScale) {
 
     /** Container **/
     DrawTexturePro(containerTexture,
@@ -222,11 +222,10 @@ int Neck::drawGuitarNeck(float windowScale) {
             DrawTextEx(testFont, lowE[i - 1], noteNewLoc, noteTextSize, 0, WHITE);
         }
     }
-    return 0;
 }
 
 // TODO: Makes this inherited from a based uiObject class
-void Neck::hover(Vector2 mousePos) {
+void Guitar::hover(Vector2 mousePos) {
     for (int i = 0; i < noteLocations.size(); i++) {
         for (int j = 0; j < noteLocations[i].size(); j++) {
             if (mousePos.x > noteLocations[i][j].x && mousePos.x < noteLocations[i][j].x + (noteRectangle.width) &&
@@ -239,7 +238,7 @@ void Neck::hover(Vector2 mousePos) {
     }
 }
 
-bool Neck::connectionHover(Vector2 mousePos) {
+bool Guitar::connectionHover(Vector2 mousePos) {
     if (mousePos.x > connectRectangle.x && mousePos.x < connectRectangle.x + (connectRectangle.width) &&
         mousePos.y > connectRectangle.y && mousePos.y < connectRectangle.y + (connectRectangle.height)) {
         return true;
@@ -248,7 +247,7 @@ bool Neck::connectionHover(Vector2 mousePos) {
     }
 }
 
-void Neck::clickAndDrag(Vector2 mousePos) {
+void Guitar::clickAndDrag(Vector2 mousePos) {
     if (mousePos.x > containerLoc.x - (container.width * .5f) && mousePos.x < containerLoc.x + (container.width * .5f) &&
         mousePos.y > containerLoc.y - (container.height * .5f) && mousePos.y < containerLoc.y + (container.height * .5f)) {
 
@@ -277,22 +276,21 @@ void Neck::clickAndDrag(Vector2 mousePos) {
 }
 
 /** Getter **/
-bool Neck::getStateActive() { return stateActive; }
-bool Neck::getCanDraw() { return canDraw; }
-bool Neck::getCanDrawConnection() { return canDrawConnection;}
-Rectangle Neck::getContainer() { return container; }
-//Vector2 Neck::getConnectionPos() { return {connectRectangle.x, connectRectangle.y};}
-Rectangle Neck::getConnectionRec() { return connectRectangle;}
+bool Guitar::getStateActive() { return active; }
+bool Guitar::getCanDraw() { return canDraw; }
+bool Guitar::getCanDrawConnection() { return canDrawConnection;}
+Rectangle Guitar::getContainer() { return container; }
+Rectangle Guitar::getConnectionRec() { return connectRectangle;}
 
 /** Setters **/
-void Neck::setStateActive(bool state) { stateActive = state; }
-void Neck::setCanDraw(bool state) { canDraw = state; }
-void Neck::setCanDrawConnection(bool state) { canDrawConnection = state; }
+void Guitar::setStateActive(bool state) { active = state; }
+void Guitar::setCanDraw(bool state) { canDraw = state; }
+void Guitar::setCanDrawConnection(bool state) { canDrawConnection = state; }
 //void Neck::setConnectionPos(Vector2 pos) { connectRectangle.x = pos.x; connectRectangle.y = pos.y;}
-void Neck::setConnectionRec(Rectangle rec) { connectRectangle = rec;}
+//void Neck::setConnectionRec(Rectangle rec) { connectRectangle = rec;}
 
 // To remove textures from memory after program closes, must be after main loop ends
-void Neck::destroy() {
+void Guitar::destroy() {
     UnloadTexture(containerTexture);
     UnloadTexture(neckTexture);
     UnloadTexture(fretTexture);

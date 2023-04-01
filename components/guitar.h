@@ -1,13 +1,13 @@
-#ifndef GUITAR_APP_NECK_H
-#define GUITAR_APP_NECK_H
+#ifndef GUITAR_APP_GUITAR_H
+#define GUITAR_APP_GUITAR_H
 
 #include "raylib.h"
-#include "uiObjects.h"
+#include "instrument.h"
 #include <iostream>
 #include <vector>
 #include <memory>
 
-class Neck : public UIObjects {
+class Guitar : public Instrument {
 private:
 
     Image neckImage;
@@ -44,47 +44,37 @@ private:
     int currentFontFilter;
     Vector2 tempNoteLoc;
 
-    // Connection Point
-    Image connectImage;
-    Texture2D connectTexture;
-    Rectangle connectRectangle;
-    Vector2 connectCenter;
-    Vector2 connectLoc;
-    bool connectLocAdded;
-
     Vector2 bezierStart;
     Vector2 bezierEnd;
-    bool stateActive;  // TODO: Make this private with a getter/setter;
 
     const char *lowE[12] = {"E", "F", "F#", "G", "G#", "A", "A#", "B", "C", "C#", "D", "D#"};
 
 public:
 
     // Constructors
-    Neck(int screenWidth, int screenHeight, float posX, float posY, float width, float height);
+    Guitar(int screenWidth, int screenHeight, float posX, float posY, float width, float height);
 
     // Guitar Methods
-    void initGuitarNeck();
-    int drawGuitarNeck(float windowScale);
+    void draw(float windowScale) override;
     void hover(Vector2 mousePos) override;
     bool connectionHover(Vector2 mousePos);
-    void clickAndDrag(Vector2 mousePos);
-    void destroy();
+    void clickAndDrag(Vector2 mousePos) override;
 
     // Getters
-    bool getStateActive();
-    bool getCanDraw();
-    bool getCanDrawConnection();
-    Rectangle getContainer();
-    Rectangle getConnectionRec();
+    bool getStateActive() override;
+    bool getCanDraw() override;
+    bool getCanDrawConnection() override;
+    Rectangle getContainer() override;
+    Rectangle getConnectionRec() override;
 
     // Setters
-    void setStateActive(bool state);
-    void setCanDraw(bool state);
-    void setCanDrawConnection(bool state);
-    void setConnectionRec(Rectangle pos);
+    void setStateActive(bool state) override;
+    void setCanDraw(bool state) override;
+    void setCanDrawConnection(bool state) override;
+    //void setConnectionRec(Rectangle pos) override;
 
+    void destroy();
 };
 
 
-#endif //GUITAR_APP_NECK_H
+#endif //GUITAR_APP_GUITAR_H

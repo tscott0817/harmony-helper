@@ -1,12 +1,12 @@
 #ifndef GUITAR_APP_PIANO_H
 #define GUITAR_APP_PIANO_H
 #include "raylib.h"
-#include "uiObjects.h"
+#include "instrument.h"
 #include <iostream>
 #include <vector>
 #include <memory>
 
-class Piano : public UIObjects {
+class Piano : public Instrument {
 
 private:
 
@@ -24,13 +24,6 @@ private:
     Vector2 keyBlackLoc;
     bool keyBlackLocAdded;
 
-    Image connectImage;
-    Texture2D connectTexture;
-    Rectangle connectRectangle;
-    Vector2 connectCenter;
-    Vector2 connectLoc;
-    bool connectLocAdded;
-
     bool notesLocAdded;
     std::vector<Vector2> keyWhiteLocations;
     std::vector<Vector2> keyBlackLocations;
@@ -45,22 +38,24 @@ public:
     Piano(int screenWidth, int screenHeight, float posX, float posY, float width, float height);
     ~Piano();
 
-    void drawPiano(float windowScale);
+    void draw(float windowScale) override;
     void hover(Vector2 mousePos) override;
     bool connectionHover(Vector2 mousePos);
-    void clickAndDrag(Vector2 mousePos);
+    void clickAndDrag(Vector2 mousePos) override;
 
     // Getters
-    bool getCanDraw();
-    Rectangle getContainer();
-    Rectangle getConnectionRec();
-    bool getCanDrawConnection();
+    bool getCanDraw() override;
+    Rectangle getContainer() override;
+    Rectangle getConnectionRec() override;
+    bool getCanDrawConnection() override;
+    bool getStateActive() override;
 
 
     // Setters
-    void setCanDraw(bool canDraw);
-    void setConnectionRectangle(Rectangle connectRectangle);
-    void setCanDrawConnection(bool state);
+    void setCanDraw(bool canDraw) override;
+    //void setConnectionRec(Rectangle connectRectangle) override;
+    void setCanDrawConnection(bool state) override;
+    void setStateActive(bool state) override;
 
     void destroy();
 

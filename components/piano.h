@@ -36,7 +36,7 @@ private:
 
 public:
     Piano(int screenWidth, int screenHeight, float posX, float posY, float width, float height);
-    ~Piano();
+    ~Piano() = default;
 
     void draw(float windowScale) override;
     void hover(Vector2 mousePos) override;

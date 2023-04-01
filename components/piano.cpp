@@ -189,6 +189,5 @@ void Piano::setStateActive(bool state) {this->active = state;}
 /** Destruct **/
 // TODO: Not sure which is best approach
 void Piano::destroy() {UnloadTexture(containerTexture);}
-Piano::~Piano() {UnloadTexture(containerTexture);}
 
 

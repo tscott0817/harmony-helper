@@ -53,6 +53,7 @@ public:
 
     // Constructors
     Guitar(int screenWidth, int screenHeight, float posX, float posY, float width, float height);
+    virtual ~Guitar() = default;
 
     // Guitar Methods
     void draw(float windowScale) override;

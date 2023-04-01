@@ -14,28 +14,28 @@ protected:
     int screenHeight;
 
     /** Every Object Gets a Container **/
-    Image containerImage;
-    Texture2D containerTexture;
-    Rectangle container;
-    Vector2 containerCenter;
-    Vector2 containerLoc;
+    Image containerImage{};
+    Texture2D containerTexture{};
+    Rectangle container{};
+    Vector2 containerCenter{};
+    Vector2 containerLoc{};
     bool containerLocAdded;
 
     /** Connection Point **/
-    Image connectImage;
-    Texture2D connectTexture;
-    Rectangle connectRectangle;
-    Vector2 connectCenter;
-    Vector2 connectLoc;
+    Image connectImage{};
+    Texture2D connectTexture{};
+    Rectangle connectRectangle{};
+    Vector2 connectCenter{};
+    Vector2 connectLoc{};
     bool connectLocAdded;
 
     /** Colors **/
-    Color hoverColor;
-    Color rootColor;
-    Color secondColor;
-    Color thirdColor;
-    Color fourthColor;
-    Color fifthColor;
+    Color hoverColor{};
+    Color rootColor{};
+    Color secondColor{};
+    Color thirdColor{};
+    Color fourthColor{};
+    Color fifthColor{};
 
     /** States Each Object Has **/
     bool active;  // TODO: Make this private with a getter/setter;

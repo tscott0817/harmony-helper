@@ -33,7 +33,6 @@ int main()
     float guitarHeight = .35f;
     float guitarPosX = screenWidth * .5f;  // The ( * 0.5f) are basically scalars for the guitar's position
     float guitarPosY = screenHeight * .8f;
-    //Guitar guitarNeck(screenWidth, screenHeight, guitarPosX, guitarPosY, guitarWidth, guitarHeight);
     std::unique_ptr<Guitar> guitarNeck = std::make_unique<Guitar>(screenWidth, screenHeight, guitarPosX, guitarPosY, guitarWidth, guitarHeight);
     instrumentsVec.push_back(std::move(guitarNeck));
 
@@ -41,9 +40,6 @@ int main()
     float pianoHeight = .3f;
     float pianoPosX = screenWidth * .5f;
     float pianoPosY = screenHeight * .3f;
-    //Piano piano(screenWidth, screenHeight, pianoPosX, pianoPosY, pianoWidth, pianoHeight);
-    //instrumentsVec.push_back(piano);
-    //instrumentsVec.push_back(std::make_unique<Piano>(piano));
     std::unique_ptr<Piano> piano = std::make_unique<Piano>(screenWidth, screenHeight, pianoPosX, pianoPosY, pianoWidth, pianoHeight);
     instrumentsVec.push_back(std::move(piano));
 
@@ -52,7 +48,6 @@ int main()
     Menu menu(screenWidth, screenHeight, 0, screenHeight * .0001f, 1, .05f);
 
     /** Bezier Curve Tests **/
-    //Vector2 bezierStart = {guitarNeck.getConnectionRec().x, guitarNeck.getConnectionRec().y};
     Vector2 bezierStart = {instrumentsVec[0]->getConnectionRec().x, instrumentsVec[0]->getConnectionRec().y};
     Vector2 bezierEnd = {0,0};
     Vector2 bezierStartPiano = {instrumentsVec[1]->getConnectionRec().x, instrumentsVec[1]->getConnectionRec().y};
@@ -74,15 +69,13 @@ int main()
         bool leftMouseClicked = IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
 
         /** Object Interactions **/
-        if (instrumentsVec[0]->getStateActive()) {
-            instrumentsVec[0]->hover(mousePos);
-            instrumentsVec[0]->clickAndDrag(mousePos);
-
+        for (int i = 0; i < instrumentsVec.size(); i++) {
+            if (instrumentsVec[i]->getStateActive()) {
+                instrumentsVec[i]->hover(mousePos);
+                instrumentsVec[i]->clickAndDrag(mousePos);
+            }
         }
-        //piano.hover(mousePos);  // TODO: Want same if check as guitar
-        //piano.clickAndDrag(mousePos);
-        instrumentsVec[1]->hover(mousePos);
-        instrumentsVec[1]->clickAndDrag(mousePos);
+
         attachConnection(mousePos, bezierStart, bezierEnd, instrumentsVec[0]->getConnectionRec(), instrumentsVec[1]->getConnectionRec(), canDrawConnection);
         
         // Check keyboard for escape key press
@@ -101,21 +94,13 @@ int main()
             menuActive = false;
         }
         // Guitar buttons
-        if (menu.getActiveButtons()[0] == 0) {
-            instrumentsVec[0]->setCanDraw(false);
-            canDrawConnection = false;  // TODO: Tied to guitarNeck, but want to remove if any object attached is destroyed
-        }
-        if (menu.getActiveButtons()[0] == 1) {
-            instrumentsVec[0]->setCanDraw(true);
-        }
-        // Piano buttons
-        if (menu.getActiveButtons()[1] == 0) {
-            //piano.setCanDraw(false);
-            instrumentsVec[1]->setCanDraw(false);
-        }
-        if (menu.getActiveButtons()[1] == 1) {
-            //piano.setCanDraw(true);
-            instrumentsVec[1]->setCanDraw(true);
+        for (int i = 0; i < instrumentsVec.size(); i++) {
+            if (menu.getActiveButtons()[i] == 0) {
+                instrumentsVec[i]->setCanDraw(false);
+            }
+            if (menu.getActiveButtons()[i] == 1) {
+                instrumentsVec[i]->setCanDraw(true);
+            }
         }
 
         /** Object Drawing Here  **/
@@ -125,12 +110,10 @@ int main()
         menu.setBackground(screenWidth, screenHeight);  // TODO: Probably don't want this in menu class
 
         // Draw Objects
-        if (instrumentsVec[0]->getCanDraw()) {
-            instrumentsVec[0]->draw(scale);
-        }
-        if (instrumentsVec[1]->getCanDraw()) {
-            //piano.draw(scale);
-            instrumentsVec[1]->draw(scale);
+        for (int i = 0; i < instrumentsVec.size(); i++) {
+            if (instrumentsVec[i]->getCanDraw()) {
+                instrumentsVec[i]->draw(scale);
+            }
         }
         if (canDrawConnection) {
             drawConnection(bezierStart, bezierEnd, instrumentsVec[0]->getContainer(), instrumentsVec[0]->getConnectionRec(), instrumentsVec[1]->getConnectionRec(), instrumentsVec[0]->getCanDrawConnection(), instrumentsVec[0]->getCanDraw(), menuActive, stopBezier);
@@ -142,9 +125,11 @@ int main()
         // TODO: Do the same for every object, stop hover interactions if using RayGUI
         if (menu.isHovering){  // Takes care of hovering issue between menu and guitars
             instrumentsVec[0]->setStateActive(false);
+            instrumentsVec[1]->setStateActive(false);
         }
         else {
             instrumentsVec[0]->setStateActive(true);
+            instrumentsVec[1]->setStateActive(true);
         }
         EndDrawing();
     }

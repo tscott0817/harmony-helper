@@ -31,8 +31,9 @@ endif()
 # set( GRID-SRC main.cpp components/resources/shaders/Shader.cpp)
 
 add_executable(${PROJECT_NAME} main.cpp raygui.h
-        components/guitar.h components/guitar.cpp components/modal_chart.h components/modal_chart.cpp components/piano.h components/piano.cpp
-                               controller/menu.h controller/menu.cpp components/instrument.h components/instrument.cpp)
+                               components/guitar.h components/guitar.cpp components/modal_chart.h components/modal_chart.cpp
+                               components/piano.h components/piano.cpp controller/menu.h controller/menu.cpp
+                               components/instrument.h components/instrument.cpp)
 
 #set(raylib_VERBOSE 1)
 target_link_libraries(${PROJECT_NAME} raylib)

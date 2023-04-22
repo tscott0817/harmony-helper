@@ -44,7 +44,7 @@ Menu::Menu(int screenWidth, int screenHeight, float posX, float posY, float widt
     /** GUI Stuff **/
     GuiSetStyle(DEFAULT, TEXT_SIZE, 40);  // Default text size
 
-    testFont = LoadFontEx("../resources/OpenSans-Light.ttf", 200, nullptr, 100);
+    testFont = LoadFontEx("../resources/fonts/OpenSans-Light.ttf", 200, nullptr, 100);
     GenTextureMipmaps(&testFont.texture);
     fontSize = (float)testFont.baseSize;
     fontPosition = { 500.0f, 1200.0f};

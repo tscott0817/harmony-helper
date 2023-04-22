@@ -8,6 +8,9 @@
 #include "components/modal_chart.h"
 #include "controller/menu.h"
 
+// For window resizing
+//#define MIN(a, b) ((a)<(b)? (a) : (b))
+//#define MAX(a, b) ((a)>(b)? (a) : (b))
 constexpr int MIN(int a, int b) {
     return (a < b) ? a : b;
 }
@@ -16,6 +19,9 @@ constexpr int MAX(int a, int b) {
     return (a > b) ? a : b;
 }
 
+
+void attachConnection(Vector2 mousePos, Vector2 &bezierStart, Vector2 &bezierEnd, Rectangle startPos, Rectangle endPos, bool &canDrawConnection);
+void drawConnection(Vector2 bezierStart, Vector2 &bezierEnd, Rectangle container, Rectangle startConnector, Rectangle endConnector, bool canDrawConnectionInst, bool &canDrawBezier, bool menuActive, bool &stopBezier);
 
 int main()
 {
@@ -48,9 +54,14 @@ int main()
     ModalChart modalChart(screenWidth, screenHeight, screenWidth * .35f, screenHeight * .7f, .6f, .5f);
     Menu menu(screenWidth, screenHeight, 0, screenHeight * .0001f, 1, .05f);
 
-
-    // Used to stop hovering at same time as over objects
+    /** Bezier Curve Tests **/
+    Vector2 bezierStart = {instrumentsVec[0]->getConnectionRec().x, instrumentsVec[0]->getConnectionRec().y};
+    Vector2 bezierEnd = {0,0};
+    Vector2 bezierStartPiano = {instrumentsVec[1]->getConnectionRec().x, instrumentsVec[1]->getConnectionRec().y};
+    Vector2 bezierEndPiano = {0,0};
+    bool canDrawConnection = false;
     bool menuActive = false;
+    bool stopBezier = false;
 
     InitAudioDevice();  // Need to enable audio
     Sound soundTest = LoadSound("../resources/audio/key13.ogg");
@@ -75,12 +86,13 @@ int main()
         for (int i = 0; i < instrumentsVec.size(); i++) {
             if (instrumentsVec[i]->getStateActive()) {
                 instrumentsVec[i]->hover(mousePos);
-                instrumentsVec[i]->clickColorHold(mousePos);
                 instrumentsVec[i]->clickAndDrag(mousePos);
                 instrumentsVec[i]->playSound(mousePos);
             }
         }
 
+        attachConnection(mousePos, bezierStart, bezierEnd, instrumentsVec[0]->getConnectionRec(), instrumentsVec[1]->getConnectionRec(), canDrawConnection);
+        
         // Check keyboard for escape key press
         if (IsKeyPressed(KEY_ESCAPE)) {
             menu.canDraw = !menu.canDraw;
@@ -117,6 +129,11 @@ int main()
                 instrumentsVec[i]->draw(scale);
             }
         }
+        if (canDrawConnection) {
+            std::cout << "Drawing Connection" << std::endl;
+            drawConnection(bezierStart, bezierEnd, instrumentsVec[0]->getContainer(), instrumentsVec[0]->getConnectionRec(), instrumentsVec[1]->getConnectionRec(), instrumentsVec[0]->getCanDrawConnection(), canDrawConnection, menuActive, stopBezier);
+
+        }
         // Want Menu to be drawn last so it's on top
         menu.drawTopMenu(screenWidth, screenHeight);
 
@@ -145,4 +162,50 @@ int main()
     CloseWindow();        // Close window and OpenGL context
 
     return 0;
+}
+
+// TODO: Maybe make connection its own class, starting to clutter main
+void attachConnection(Vector2 mousePos, Vector2 &bezierStart, Vector2 &bezierEnd, Rectangle startPos, Rectangle endPos, bool& canDrawConnection) {
+    if (mousePos.x > startPos.x - (startPos.width * .5f) && mousePos.x < startPos.x + (startPos.width * .5f) &&
+        mousePos.y > startPos.y - (startPos.height * .5f) && mousePos.y < startPos.y + (startPos.height * .5f)) {
+        DrawRectangle(25, 25, 100, 100, RED);
+        if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
+            canDrawConnection = true;
+            bezierStart = {startPos.x, startPos.y};
+            bezierEnd = {mousePos.x, mousePos.y};
+        }
+    }
+}
+
+// Bezier end pointer since it's being modified
+void drawConnection(Vector2 bezierStart, Vector2 &bezierEnd, Rectangle container, Rectangle startConnector, Rectangle endConnector, bool canDrawConnectionInst, bool &canDrawBezier, bool menuActive, bool &stopBezier) {  // TODO: Take in objects to connect to? OR make separate connector class.
+    Vector2 mousePos = GetMousePosition();  // TODO: Maybe pass in
+    bezierStart.x = startConnector.x;
+    bezierStart.y = startConnector.y;
+    bool mouseHeld = false;
+    
+//    if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && canDrawBezier && !menuActive && !stopBezier) {
+//        bezierEnd = mousePos;
+//        mouseHeld = true;
+//        DrawLineBezier(bezierStart, bezierEnd, 2.0f, RED);
+//    }
+    if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && canDrawBezier && !stopBezier) {
+        bezierEnd = mousePos;
+        mouseHeld = true;
+        DrawLineBezier(bezierStart, bezierEnd, 2.0f, RED);
+    }
+    // If mouse is in the area of the end connector, allow attachment
+    if (mousePos.x > endConnector.x - (endConnector.width * .5f) && mousePos.x < endConnector.x + (endConnector.width * .5f) &&
+        mousePos.y > endConnector.y - (endConnector.height * .5f) && mousePos.y < endConnector.y + (endConnector.height * .5f) && !stopBezier) {
+        stopBezier = true;
+    }
+    // If attachment to end point has been made, keep points at respective positions
+    if (stopBezier) {
+        // bezierEnd = {endConnector.x, endConnector.y - (endConnector.height * .5f)};
+        bezierEnd.x = endConnector.x;
+        bezierEnd.y = endConnector.y;
+    }
+    if (!mouseHeld) {
+        DrawLineBezier(bezierStart, bezierEnd, 2.0f, RED);  // Keep bezier at end point when mouse not held anymore
+    }
 }

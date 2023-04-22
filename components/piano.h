@@ -34,6 +34,21 @@ private:
     Color whiteKeyColor;
     Color blackKeyColor;
 
+    Sound F;
+    Sound Fs;
+    Sound G;
+    Sound Gs;
+    Sound A;
+    Sound As;
+    Sound B;
+    Sound C;
+    Sound Cs;
+    Sound D;
+    Sound Ds;
+    Sound E;
+    std::vector<Sound> notesVec;
+
+
 public:
     Piano(int screenWidth, int screenHeight, float posX, float posY, float width, float height);
     ~Piano() = default;
@@ -42,6 +57,7 @@ public:
     void hover(Vector2 mousePos) override;
     bool connectionHover(Vector2 mousePos);
     void clickAndDrag(Vector2 mousePos) override;
+    void playSound(Vector2 mousePos) override;
 
     // Getters
     bool getCanDraw() override;
@@ -57,7 +73,7 @@ public:
     void setCanDrawConnection(bool state) override;
     void setStateActive(bool state) override;
 
-    void destroy();
+    void destroy() override;
 
 };
 

@@ -8,7 +8,7 @@ Piano::Piano(int screenWidth, int screenHeight, float posX, float posY, float wi
     containerImage = LoadImage("../images/blue_background.png");     // Loaded in CPU memory (RAM)
     containerTexture = LoadTextureFromImage(containerImage);  // Image converted to texture, GPU memory (VRAM)
     UnloadImage(containerImage);   // Once image has been converted to texture and uploaded to VRAM, it can be unloaded from RAM
-    container = {posX, posY, static_cast<float>(this->screenWidth * width), static_cast<float>(this->screenHeight * height)};
+    container = {static_cast<float>(this->screenWidth * posX), static_cast<float>(this->screenHeight * posY), static_cast<float>(this->screenWidth * width), static_cast<float>(this->screenHeight * height)};
     containerCenter = {container.width * .5f, container.height * .5f};
     containerLocAdded = false;
 
@@ -51,6 +51,9 @@ Piano::Piano(int screenWidth, int screenHeight, float posX, float posY, float wi
         keyBlackLocations.push_back({0, 0});
     }
     notesLocAdded = false;
+
+    F = LoadSound("../resources/audio/CantinaBand3.wav");
+    notesVec.push_back(F);
 }
 
 void Piano::draw(float windowScale) {
@@ -60,6 +63,13 @@ void Piano::draw(float windowScale) {
                    container,
                    (Rectangle) {container.x, container.y, container.width, container.height},  /** Params = (x-pos, y-pos, height, width) **/
                    containerCenter, 0, WHITE);
+
+    // TODO: Not currently implementing connection points
+//    /** Connection Point **/
+//    DrawTexturePro(connectTexture,
+//                   connectRectangle,
+//                   (Rectangle) {connectRectangle.x, connectRectangle.y, connectRectangle.width, connectRectangle.height},
+//                   connectCenter, 0, WHITE);
 
     /** White Keys **/
     DrawRectangle(keyWhiteRectangle.x - (keyWhiteRectangle.width * .5f) - (container.width * .39f), keyWhiteRectangle.y - (keyWhiteRectangle.height * .5f), keyWhiteRectangle.width, keyWhiteRectangle.height, keyWhiteColorVec[0]);
@@ -95,11 +105,6 @@ void Piano::draw(float windowScale) {
     }
 //    notesLocAdded = true;  // TODO: Maybe put this in if statement above
 
-    /** Connection Point **/
-    DrawTexturePro(connectTexture,
-                   connectRectangle,
-                   (Rectangle) {connectRectangle.x, connectRectangle.y, connectRectangle.width, connectRectangle.height},
-                   connectCenter, 0, WHITE);
 
 }
 
@@ -133,6 +138,32 @@ void Piano::hover(Vector2 mousePos) {
             else {
                 keyWhiteColorVec[i] = whiteKeyColor;
             }
+        }
+    }
+}
+
+// play sound
+void Piano::playSound(Vector2 mousePos) {
+    // Black Keys
+    // check if left click
+
+    for (int i = 0; i < keyBlackLocations.size(); i++) {
+        if (mousePos.x > keyBlackLocations[i].x &&
+            mousePos.x < keyBlackLocations[i].x + (keyBlackRectangle.width) &&
+            mousePos.y > keyBlackLocations[i].y &&
+            mousePos.y < keyBlackLocations[i].y + (keyBlackRectangle.height) && IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+            std::cout << "Black Key Play sound" << i << " pressed" << std::endl;
+        }
+    }
+
+    // White Keys
+    for (int i = 0; i < keyWhiteLocations.size(); i++) {
+        if (mousePos.x > keyWhiteLocations[i].x &&
+            mousePos.x < keyWhiteLocations[i].x + (keyWhiteRectangle.width) &&
+            mousePos.y > keyWhiteLocations[i].y &&
+            mousePos.y < keyWhiteLocations[i].y + (keyWhiteRectangle.height) && IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+            std::cout << "White Key Play sound" << i << " pressed" << std::endl;
+            PlaySound(F);
         }
     }
 }
@@ -188,6 +219,6 @@ void Piano::setStateActive(bool state) {this->active = state;}
 
 /** Destruct **/
 // TODO: Not sure which is best approach
-void Piano::destroy() {UnloadTexture(containerTexture);}
+void Piano::destroy() {UnloadTexture(containerTexture); UnloadSound(F);}
 
 

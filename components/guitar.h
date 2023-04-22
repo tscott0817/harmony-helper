@@ -34,6 +34,10 @@ private:
     std::vector<std::vector<Vector2>> noteLocations;
     std::vector<std::vector<Color>> noteColorVec;
 
+    // Track Clicking
+    //bool noteClicked;
+    std::vector<std::vector<int>> noteClickedBoolVec;  // TODO: Read more about why vector<bool> is bad practice.
+
     // Text and Font
     const char *testText;
     const char *noteName;
@@ -47,7 +51,15 @@ private:
     Vector2 bezierStart;
     Vector2 bezierEnd;
 
-    const char *lowE[12] = {"E", "F", "F#", "G", "G#", "A", "A#", "B", "C", "C#", "D", "D#"};
+    const char *lowE[12] = {"F", "Gb", "G", "Ab", "A", "Bb", "B", "C", "Db", "D", "Eb", "E"};
+    const char *a[12] = {"Bb", "B", "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A"};
+    const char *d[12] = {"Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B", "C", "Db", "D"};
+    const char *g[12] = {"Ab", "A", "Bb", "B", "C", "Db", "D", "Eb", "E", "F", "Gb", "G"};
+    const char *b[12] = {"C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"};
+    const char *highE[12] = {"F", "Gb", "G", "Ab", "A", "Bb", "B", "C", "Db", "D", "Eb", "E"};
+    std::vector<const char **> noteTextVec;
+
+
 
 public:
 
@@ -58,6 +70,7 @@ public:
     // Guitar Methods
     void draw(float windowScale) override;
     void hover(Vector2 mousePos) override;
+    void clickColorHold(Vector2 mousePos) override;
     bool connectionHover(Vector2 mousePos);
     void clickAndDrag(Vector2 mousePos) override;
 

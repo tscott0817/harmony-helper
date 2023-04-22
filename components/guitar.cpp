@@ -16,7 +16,7 @@ Guitar::Guitar(int screenWidth, int screenHeight, float posX, float posY, float 
     containerImage = LoadImage("../images/blue_background.png");     // Loaded in CPU memory (RAM)
     containerTexture = LoadTextureFromImage(containerImage);  // Image converted to texture, GPU memory (VRAM)
     UnloadImage(containerImage);   // Once image has been converted to texture and uploaded to VRAM, it can be unloaded from RAM
-    container = {posX, posY, static_cast<float>(this->screenWidth * width), static_cast<float>(this->screenHeight * height)};
+    container = {static_cast<float>(this->screenWidth * posX), static_cast<float>(this->screenHeight * posY), static_cast<float>(this->screenWidth * width), static_cast<float>(this->screenHeight * height)};
     containerCenter = {container.width * .5f, container.height * .5f};
     containerLocAdded = false;
 
@@ -40,6 +40,13 @@ Guitar::Guitar(int screenWidth, int screenHeight, float posX, float posY, float 
     UnloadImage(stringImage);
     stringRectangle = {neckRectangle.x, neckRectangle.y, neckRectangle.width, neckRectangle.height * .02f};
     stringCenter = {static_cast<float>(stringRectangle.width * .5f), static_cast<float>(stringRectangle.height * .5f)};
+    // Fill stringVec with each const char
+    noteTextVec.emplace_back(lowE);
+    noteTextVec.emplace_back(a);
+    noteTextVec.emplace_back(d);
+    noteTextVec.emplace_back(g);
+    noteTextVec.emplace_back(b);
+    noteTextVec.emplace_back(highE);
 
     /** Note Containers **/
     noteRectangle = {neckRectangle.x, neckRectangle.y, neckRectangle.width * .05f, neckRectangle.height * .15f};
@@ -48,7 +55,7 @@ Guitar::Guitar(int screenWidth, int screenHeight, float posX, float posY, float 
     /** Text and Font **/
     testText = "Test Text";
     noteName = "X";
-    testFont = LoadFontEx("../resources/OpenSans-Light.ttf", 200, nullptr, 100);
+    testFont = LoadFontEx("../resources/fonts/OpenSans-Light.ttf", 200, nullptr, 100);
     fontSize = (float)testFont.baseSize;
     fontPosition = { 500.0f, 1200.0f};
     textSize = { 10.0f, 10.0f };
@@ -60,6 +67,7 @@ Guitar::Guitar(int screenWidth, int screenHeight, float posX, float posY, float 
     /** Colors **/
     hoverColor = Color{190, 33, 55, 200};
     rootColor = Color{0, 121, 241, 200};
+    clickColor = Color{0, 200, 0, 200};
     secondColor = MAROON;
     thirdColor = GREEN;
     fourthColor = YELLOW;
@@ -69,24 +77,28 @@ Guitar::Guitar(int screenWidth, int screenHeight, float posX, float posY, float 
     for (int i = 0; i < 100; i++) {      // TODO: Just filling to 100 for space right now
         std::vector<Vector2> tempLoc;
         std::vector<Color> tempColor;
+        std::vector<int> tempClicked;
         for (int j = 0; j < 100; j++) {
-            tempLoc.push_back({0, 0});
+            // TODO: Replace all with emplace_back
+            tempLoc.emplace_back(Vector2{0, 0});  // With emplace_back, need to specify type
             tempColor.push_back(rootColor);
+            tempClicked.push_back(0);
         }
         noteLocations.push_back(tempLoc);
         noteColorVec.push_back(tempColor);
+        noteClickedBoolVec.push_back(tempClicked);
     }
 
-    /** Connection Point **/
-    connectImage = LoadImage("../images/fret.png");
-    connectTexture = LoadTextureFromImage(connectImage);
-    UnloadImage(connectImage);
-    connectRectangle = {container.x, container.y - (container.height * .55f), static_cast<float>(container.width * .02f), static_cast<float>(container.width * .02f)};
-    connectCenter = {static_cast<float>(connectRectangle.width / 2), static_cast<float>(connectRectangle.height / 2)};
-
-    /** Bezier Curve **/
-    bezierEnd = {connectRectangle.x, connectRectangle.y};
-    bezierStart = {connectRectangle.x, connectRectangle.y};
+//    /** Connection Point **/
+//    connectImage = LoadImage("../images/fret.png");
+//    connectTexture = LoadTextureFromImage(connectImage);
+//    UnloadImage(connectImage);
+//    connectRectangle = {container.x, container.y - (container.height * .55f), static_cast<float>(container.width * .02f), static_cast<float>(container.width * .02f)};
+//    connectCenter = {static_cast<float>(connectRectangle.width / 2), static_cast<float>(connectRectangle.height / 2)};
+//
+//    /** Bezier Curve **/
+//    bezierEnd = {connectRectangle.x, connectRectangle.y};
+//    bezierStart = {connectRectangle.x, connectRectangle.y};
 }
 
 void Guitar::draw(float windowScale) {
@@ -98,11 +110,12 @@ void Guitar::draw(float windowScale) {
                    containerCenter, 0, WHITE);
     containerLoc = {container.x, container.y};  // TODO: Want to update location only when container is moved, not every frame
 
-    /** Connection Point **/
-    DrawTexturePro(connectTexture,
-                   connectRectangle,
-                   (Rectangle) {connectRectangle.x, connectRectangle.y, connectRectangle.width, connectRectangle.height},
-                   connectCenter, 0, WHITE);
+    // TODO: Not currently implementing connection points
+//    /** Connection Point **/
+//    DrawTexturePro(connectTexture,
+//                   connectRectangle,
+//                   (Rectangle) {connectRectangle.x, connectRectangle.y, connectRectangle.width, connectRectangle.height},
+//                   connectCenter, 0, WHITE);
 
     /** Neck **/
     DrawTexturePro(neckTexture,
@@ -219,7 +232,11 @@ void Guitar::draw(float windowScale) {
 
             float noteTextSize = (noteRectangle.width > noteRectangle.height) ? static_cast<float>(noteRectangle.height) : static_cast<float>(noteRectangle.width);
             Vector2 noteNewLoc = {static_cast<float>(neckRectangle.x - (neckRectangle.width * .53f) + ((neckRectangle.width * .08) * i) - (noteRectangle.width / 3)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .56f) - (noteRectangle.height / 2))};
-            DrawTextEx(testFont, lowE[i - 1], noteNewLoc, noteTextSize, 0, WHITE);
+//            DrawTextEx(testFont, lowE[i - 1], noteNewLoc, noteTextSize, 0, WHITE);
+
+            // Draw text using the stringVec, each const char *[] is a string
+            DrawTextEx(testFont, noteTextVec[j-1][i-1], noteNewLoc, noteTextSize, 0, WHITE);
+
         }
     }
 }
@@ -229,13 +246,36 @@ void Guitar::hover(Vector2 mousePos) {
     for (int i = 0; i < noteLocations.size(); i++) {
         for (int j = 0; j < noteLocations[i].size(); j++) {
             if (mousePos.x > noteLocations[i][j].x && mousePos.x < noteLocations[i][j].x + (noteRectangle.width) &&
-                mousePos.y > noteLocations[i][j].y && mousePos.y < noteLocations[i][j].y + (noteRectangle.height)) {
+                mousePos.y > noteLocations[i][j].y && mousePos.y < noteLocations[i][j].y + (noteRectangle.height) &&
+                noteClickedBoolVec[i][j] == 0) {
                 noteColorVec[i][j] = hoverColor;
-            } else {
+            }
+            else if (noteClickedBoolVec[i][j] == 0) {
                 noteColorVec[i][j] = rootColor;
             }
         }
     }
+}
+
+void Guitar::clickColorHold(Vector2 mousePos) {
+    for (int i = 0; i < noteLocations.size(); i++) {
+        for (int j = 0; j < noteLocations[i].size(); j++) {
+            if (mousePos.x > noteLocations[i][j].x && mousePos.x < noteLocations[i][j].x + (noteRectangle.width) &&
+                mousePos.y > noteLocations[i][j].y && mousePos.y < noteLocations[i][j].y + (noteRectangle.height) &&
+                IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && noteClickedBoolVec[i][j] == 0) {
+                noteClickedBoolVec[i][j] = 1;
+                noteColorVec[i][j] = clickColor;
+            }
+
+            else if (mousePos.x > noteLocations[i][j].x && mousePos.x < noteLocations[i][j].x + (noteRectangle.width) &&
+                mousePos.y > noteLocations[i][j].y && mousePos.y < noteLocations[i][j].y + (noteRectangle.height) &&
+                IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && noteClickedBoolVec[i][j] == 1) {
+                noteClickedBoolVec[i][j] = 0;
+                noteColorVec[i][j] = rootColor;
+            }
+        }
+    }
+
 }
 
 bool Guitar::connectionHover(Vector2 mousePos) {

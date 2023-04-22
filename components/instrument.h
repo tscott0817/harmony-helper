@@ -13,7 +13,7 @@ protected:
     int screenWidth;
     int screenHeight;
 
-    /** Every Object Gets a Container **/
+    /** Every Instrument is Held in a Container **/
     Image containerImage{};
     Texture2D containerTexture{};
     Rectangle container{};
@@ -21,6 +21,7 @@ protected:
     Vector2 containerLoc{};
     bool containerLocAdded;
 
+    // TODO: Not sure if i will end up doing the bezier, might just stack instr in rows
     /** Connection Point **/
     Image connectImage{};
     Texture2D connectTexture{};
@@ -30,8 +31,9 @@ protected:
     bool connectLocAdded;
 
     /** Colors **/
-    Color hoverColor{};
     Color rootColor{};
+    Color hoverColor{};
+    Color clickColor{};
     Color secondColor{};
     Color thirdColor{};
     Color fourthColor{};
@@ -45,8 +47,10 @@ protected:
 public:
 
     virtual void hover(Vector2 mousePos);
+    virtual void clickColorHold(Vector2 mousePos);
     virtual void draw(float windowScale);
     virtual void clickAndDrag(Vector2 mousePos);
+    virtual void playSound(Vector2 mousePos);
 
     // Getters
     virtual bool getStateActive();
@@ -60,6 +64,8 @@ public:
     virtual void setCanDraw(bool state);
     virtual void setCanDrawConnection(bool state);
 //    virtual void setConnectionRec(Rectangle pos);
+
+    virtual void destroy();
 
 };
 

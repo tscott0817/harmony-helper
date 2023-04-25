@@ -57,7 +57,7 @@ public:
     void hover(Vector2 mousePos) override;
     bool connectionHover(Vector2 mousePos);
     void clickAndDrag(Vector2 mousePos) override;
-    void playSound(Vector2 mousePos) override;
+    //void playSound(Vector2 mousePos) override;
 
     // Getters
     bool getCanDraw() override;
@@ -65,6 +65,7 @@ public:
     Rectangle getConnectionRec() override;
     bool getCanDrawConnection() override;
     bool getStateActive() override;
+    std::vector<std::string> getSelectedNotes() override;
 
 
     // Setters
@@ -72,6 +73,9 @@ public:
     //void setConnectionRec(Rectangle connectRectangle) override;
     void setCanDrawConnection(bool state) override;
     void setStateActive(bool state) override;
+//    void addSelectNote(const std::string &notes) override;
+    void addSelectNote(std::vector<std::string> newVec) override;
+
 
     void destroy() override;
 

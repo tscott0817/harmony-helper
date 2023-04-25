@@ -44,13 +44,21 @@ protected:
     bool canDraw;
     bool canDrawConnection;
 
+    /** Track Currently Selected  **/
+    // TODO: Maybe just hold string that can be used to search. Like 'if the current note is selected'
+    std::vector<std::string> selectedNotesVec;  // Hold index of each note that is selected,
+
+
 public:
 
+    // Constructors
+    Instrument();
     virtual void hover(Vector2 mousePos);
     virtual void clickColorHold(Vector2 mousePos);
+    virtual void soundTests();
     virtual void draw(float windowScale);
     virtual void clickAndDrag(Vector2 mousePos);
-    virtual void playSound(Vector2 mousePos);
+    //virtual void playSound(Vector2 mousePos);
 
     // Getters
     virtual bool getStateActive();
@@ -58,12 +66,15 @@ public:
     virtual bool getCanDrawConnection();
     virtual Rectangle getContainer();
     virtual Rectangle getConnectionRec();
+    virtual std::vector<std::string> getSelectedNotes();
 
     // Setters
     virtual void setStateActive(bool state);
     virtual void setCanDraw(bool state);
     virtual void setCanDrawConnection(bool state);
 //    virtual void setConnectionRec(Rectangle pos);
+//    virtual void addSelectNote(const std::string &notes);
+    virtual void addSelectNote(std::vector<std::string> newVec);
 
     virtual void destroy();
 

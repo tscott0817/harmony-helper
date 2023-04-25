@@ -33,9 +33,6 @@ private:
     bool notesLocAdded;
     std::vector<std::vector<Vector2>> noteLocations;
     std::vector<std::vector<Color>> noteColorVec;
-
-    // Track Clicking
-    //bool noteClicked;
     std::vector<std::vector<int>> noteClickedBoolVec;  // TODO: Read more about why vector<bool> is bad practice.
 
     // Text and Font
@@ -59,6 +56,9 @@ private:
     const char *highE[12] = {"F", "Gb", "G", "Ab", "A", "Bb", "B", "C", "Db", "D", "Eb", "E"};
     std::vector<const char **> noteTextVec;
 
+    // Audio
+    Sound testSound;
+
 
 
 public:
@@ -71,6 +71,7 @@ public:
     void draw(float windowScale) override;
     void hover(Vector2 mousePos) override;
     void clickColorHold(Vector2 mousePos) override;
+    void soundTests() override;
     bool connectionHover(Vector2 mousePos);
     void clickAndDrag(Vector2 mousePos) override;
 
@@ -80,12 +81,16 @@ public:
     bool getCanDrawConnection() override;
     Rectangle getContainer() override;
     Rectangle getConnectionRec() override;
+    std::vector<std::string> getSelectedNotes() override;
 
     // Setters
     void setStateActive(bool state) override;
     void setCanDraw(bool state) override;
     void setCanDrawConnection(bool state) override;
     //void setConnectionRec(Rectangle pos) override;
+//    void addSelectNote(const std::string &notes) override;
+    void addSelectNote(std::vector<std::string> newVec) override;
+
 
     void destroy();
 };

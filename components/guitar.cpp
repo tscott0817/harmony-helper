@@ -1,5 +1,6 @@
 #include "cmath"
 #include "guitar.h"
+#include <algorithm>
 
 Guitar::Guitar(int screenWidth, int screenHeight, float posX, float posY, float width, float height) {
 
@@ -88,6 +89,11 @@ Guitar::Guitar(int screenWidth, int screenHeight, float posX, float posY, float 
         noteColorVec.push_back(tempColor);
         noteClickedBoolVec.push_back(tempClicked);
     }
+    // TODO: The filepath will not play sound, but is same the above font filepath, so it should?
+//    testSound = LoadSound("../resources/audio/key13.ogg");
+//    testSound = LoadSound("C:/Users/tyler/Dev/guitar-app/resources/audio/key13.ogg");
+    testSound = LoadSound("C:/Users/tyler/Dev/guitar-app/resources/audio/key13.ogg");
+
 
 //    /** Connection Point **/
 //    connectImage = LoadImage("../images/fret.png");
@@ -98,6 +104,7 @@ Guitar::Guitar(int screenWidth, int screenHeight, float posX, float posY, float 
 //
 //    /** Bezier Curve **/
 //    bezierEnd = {connectRectangle.x, connectRectangle.y};
+//    bezierStart = {connectRectangle.x, connectRectangle.y};
 //    bezierStart = {connectRectangle.x, connectRectangle.y};
 }
 
@@ -263,8 +270,16 @@ void Guitar::clickColorHold(Vector2 mousePos) {
             if (mousePos.x > noteLocations[i][j].x && mousePos.x < noteLocations[i][j].x + (noteRectangle.width) &&
                 mousePos.y > noteLocations[i][j].y && mousePos.y < noteLocations[i][j].y + (noteRectangle.height) &&
                 IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && noteClickedBoolVec[i][j] == 0) {
+                //PlaySound(testSound);
                 noteClickedBoolVec[i][j] = 1;
                 noteColorVec[i][j] = clickColor;
+
+                // Check if the note is already in the vector
+                // If not then insert it
+                if (std::find(selectedNotesVec.begin(), selectedNotesVec.end(), noteTextVec[j-1][i-1]) == selectedNotesVec.end()) {
+                    std::cout << "Pushing back note: " << noteTextVec[j-1][i-1]<< std::endl;
+                    selectedNotesVec.emplace_back(noteTextVec[j-1][i-1]);
+                }
             }
 
             else if (mousePos.x > noteLocations[i][j].x && mousePos.x < noteLocations[i][j].x + (noteRectangle.width) &&
@@ -275,7 +290,15 @@ void Guitar::clickColorHold(Vector2 mousePos) {
             }
         }
     }
+}
 
+void Guitar::soundTests() {
+    // TODO: Just test, remove
+//    testSound = LoadSound("C:/Users/tyler/Dev/guitar-app/resources/audio/key13.ogg");
+    if (IsKeyPressed(KEY_SPACE)){
+        PlaySound(testSound);
+        std::cout << "Playing Sound From Guitar Class" << std::endl;
+    }
 }
 
 bool Guitar::connectionHover(Vector2 mousePos) {
@@ -321,6 +344,7 @@ bool Guitar::getCanDraw() { return canDraw; }
 bool Guitar::getCanDrawConnection() { return canDrawConnection;}
 Rectangle Guitar::getContainer() { return container; }
 Rectangle Guitar::getConnectionRec() { return connectRectangle;}
+std::vector<std::string> Guitar::getSelectedNotes(){ return selectedNotesVec; }
 
 /** Setters **/
 void Guitar::setStateActive(bool state) { active = state; }
@@ -328,6 +352,7 @@ void Guitar::setCanDraw(bool state) { canDraw = state; }
 void Guitar::setCanDrawConnection(bool state) { canDrawConnection = state; }
 //void Neck::setConnectionPos(Vector2 pos) { connectRectangle.x = pos.x; connectRectangle.y = pos.y;}
 //void Neck::setConnectionRec(Rectangle rec) { connectRectangle = rec;}
+//void Guitar::addSelectNote(const std::string &notes) {selectedNotesVec.push_back(notes);}
 
 // To remove textures from memory after program closes, must be after main loop ends
 void Guitar::destroy() {
@@ -335,4 +360,9 @@ void Guitar::destroy() {
     UnloadTexture(neckTexture);
     UnloadTexture(fretTexture);
     UnloadTexture(stringTexture);
+    UnloadSound(testSound);
+}
+
+void Guitar::addSelectNote(std::vector<std::string> newVec) {
+    selectedNotesVec = newVec;
 }

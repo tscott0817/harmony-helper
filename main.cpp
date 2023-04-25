@@ -28,7 +28,7 @@ int main()
     SetExitKey(KEY_ZERO);  // Frees up escape key for menu, makes '0' exit program
 
     /** Object Inits **/
-    std::vector<std::unique_ptr<Instrument>> instrumentsVec;
+    std::vector<std::unique_ptr<Instrument>> instrumentsVec;  // Holds all instruments
 
     float guitarWidth = .7f;
     float guitarHeight = .35f;
@@ -52,9 +52,9 @@ int main()
     // Used to stop hovering at same time as over objects
     bool menuActive = false;
 
-    InitAudioDevice();  // Need to enable audio
-    Sound soundTest = LoadSound("../resources/audio/key13.ogg");
+    std::vector<std::string> currNotesVec;
 
+    InitAudioDevice();  // TODO: Not sure if best here in main, or if each class should have one
     /** Main Loop **/
     SetTargetFPS(60);
     while (!WindowShouldClose())
@@ -62,22 +62,34 @@ int main()
         // TODO: This can be used to resize objects dynamically with the window size,
         // TODO: Needs to be called each frame, so I think it should be param for object methods
         float scale = MIN((float)GetScreenWidth()/screenWidth, (float)GetScreenHeight()/screenHeight);
-        if (IsKeyPressed(KEY_SPACE)){
-            PlaySound(soundTest);
-            std::cout << "Playing sound" << std::endl;
-        }
 
         // For mouse interactions
         Vector2 mousePos = GetMousePosition();
         bool leftMouseClicked = IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
 
         /** Object Interactions **/
+        currNotesVec = instrumentsVec[0]->getSelectedNotes();
+        std::cout << "Notes Currently Selected" << std::endl;
+        for (int i = 0; i < currNotesVec.size(); i++) {
+            std::cout << currNotesVec[i] << std::endl;
+//            instrumentsVec[1]->addSelectNote(currNotesVec[i]);
+            // Add the current note to the Pianp addSelectNote function
+        }
+        std::cout << "Notes From Piano -> Guitar Selection" << std::endl;
+        // Add each of the currentNotesVec elements to the Piano addSelectNote function
+        for (int i = 0; i < currNotesVec.size(); i++) {
+            instrumentsVec[1]->addSelectNote(currNotesVec);
+            std::cout << instrumentsVec[1]->getSelectedNotes()[i] << std::endl;
+        }
+
+
+
         for (int i = 0; i < instrumentsVec.size(); i++) {
             if (instrumentsVec[i]->getStateActive()) {
-                instrumentsVec[i]->hover(mousePos);
+                //instrumentsVec[i]->hover(mousePos);
+                instrumentsVec[i]->soundTests();
                 instrumentsVec[i]->clickColorHold(mousePos);
                 instrumentsVec[i]->clickAndDrag(mousePos);
-                instrumentsVec[i]->playSound(mousePos);
             }
         }
 
@@ -137,10 +149,10 @@ int main()
     //guitarNeck->destroy();
     //instrumentsVec[0]->destroy();
     //piano.destroy();
-    instrumentsVec[1]->destroy();
+    instrumentsVec[1]->destroy();  // TODO: Loop through entire instrument vec instead
     modalChart.destroy();
     // menu.destroy();  TODO: From before I used RayGUI
-    UnloadSound(soundTest);
+    //UnloadSound(soundTest);
     CloseAudioDevice();
     CloseWindow();        // Close window and OpenGL context
 

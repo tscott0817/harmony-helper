@@ -142,31 +142,31 @@ void Piano::hover(Vector2 mousePos) {
     }
 }
 
-// play sound
-void Piano::playSound(Vector2 mousePos) {
-    // Black Keys
-    // check if left click
-
-    for (int i = 0; i < keyBlackLocations.size(); i++) {
-        if (mousePos.x > keyBlackLocations[i].x &&
-            mousePos.x < keyBlackLocations[i].x + (keyBlackRectangle.width) &&
-            mousePos.y > keyBlackLocations[i].y &&
-            mousePos.y < keyBlackLocations[i].y + (keyBlackRectangle.height) && IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
-            std::cout << "Black Key Play sound" << i << " pressed" << std::endl;
-        }
-    }
-
-    // White Keys
-    for (int i = 0; i < keyWhiteLocations.size(); i++) {
-        if (mousePos.x > keyWhiteLocations[i].x &&
-            mousePos.x < keyWhiteLocations[i].x + (keyWhiteRectangle.width) &&
-            mousePos.y > keyWhiteLocations[i].y &&
-            mousePos.y < keyWhiteLocations[i].y + (keyWhiteRectangle.height) && IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
-            std::cout << "White Key Play sound" << i << " pressed" << std::endl;
-            PlaySound(F);
-        }
-    }
-}
+//// play sound
+//void Piano::playSound(Vector2 mousePos) {
+//    // Black Keys
+//    // check if left click
+//
+//    for (int i = 0; i < keyBlackLocations.size(); i++) {
+//        if (mousePos.x > keyBlackLocations[i].x &&
+//            mousePos.x < keyBlackLocations[i].x + (keyBlackRectangle.width) &&
+//            mousePos.y > keyBlackLocations[i].y &&
+//            mousePos.y < keyBlackLocations[i].y + (keyBlackRectangle.height) && IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+//            std::cout << "Black Key Play sound" << i << " pressed" << std::endl;
+//        }
+//    }
+//
+//    // White Keys
+//    for (int i = 0; i < keyWhiteLocations.size(); i++) {
+//        if (mousePos.x > keyWhiteLocations[i].x &&
+//            mousePos.x < keyWhiteLocations[i].x + (keyWhiteRectangle.width) &&
+//            mousePos.y > keyWhiteLocations[i].y &&
+//            mousePos.y < keyWhiteLocations[i].y + (keyWhiteRectangle.height) && IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+//            std::cout << "White Key Play sound" << i << " pressed" << std::endl;
+//            PlaySound(F);
+//        }
+//    }
+//}
 
 bool Piano::connectionHover(Vector2 mousePos) {
     if (mousePos.x > connectRectangle.x - (connectRectangle.width * .5f) && mousePos.x < connectRectangle.x + (connectRectangle.width * .5f) &&
@@ -210,15 +210,23 @@ Rectangle Piano::getContainer() {return container;}
 Rectangle Piano::getConnectionRec() {return connectRectangle;}
 bool Piano::getCanDrawConnection() { return canDrawConnection;}
 bool Piano::getStateActive() {return active;}
+std::vector<std::string> Piano::getSelectedNotes(){ return selectedNotesVec; }
 
 /** Setters **/
 void Piano::setCanDraw(bool canDraw) {this->canDraw = canDraw;}
 //void Piano::setConnectionRec(Rectangle connectRectangle) {this->connectRectangle = connectRectangle;}
 void Piano::setCanDrawConnection(bool state) {this->canDrawConnection = state;}
 void Piano::setStateActive(bool state) {this->active = state;}
+//void Piano::addSelectNote(const std::string &notes) {selectedNotesVec.push_back(notes);}
+//void Piano::addSelectNote(const std::string &notes) {selectedNotesVec.push_back(notes);}
+
 
 /** Destruct **/
 // TODO: Not sure which is best approach
 void Piano::destroy() {UnloadTexture(containerTexture); UnloadSound(F);}
+
+void Piano::addSelectNote(std::vector<std::string> newVec) {
+    selectedNotesVec = newVec;
+}
 
 

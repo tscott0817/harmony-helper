@@ -113,7 +113,6 @@ void Menu::hover(Vector2 mousePos) {
 void Menu::click(int currentButton) {
     // Check if left mouse clicked
     if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-        std::cout << "Left Clicked" << std::endl;
         if (activeVec[currentButton] == 0) {
             activeVec[currentButton] = 1;
             // currentColor = activeColor;

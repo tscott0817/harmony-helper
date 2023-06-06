@@ -50,12 +50,25 @@ std::vector<std::string> Instrument::getSelectedNotes() {return selectedNotesVec
 void Instrument::setStateActive(bool state) {this->active = state;}
 void Instrument::setCanDraw(bool state) {this->canDraw = state;}
 void Instrument::setCanDrawConnection(bool state) {this->canDrawConnection = state;}
-//void Instrument::addSelectNote(const std::string &notes) {selectedNotesVec.push_back(notes);}
-void Instrument::addSelectNote(std::vector<std::string> newVec) {selectedNotesVec = std::move(newVec);}
+void Instrument::setActiveNotes(std::vector<std::string> newVec) {selectedNotesVec = std::move(newVec);}
+//void Instrument::notesActivate() {std::cout << "Activating Notes" << std::endl;}
+void Instrument::notesActivate() {;}
+
+//void Instrument::addSelectNote(std::vector<std::string> newVec) {selectedNotesVec = std::move(newVec);}
 
 void Instrument::destroy() {
     std::cout << "Destroying Instrument" << std::endl;
 }
+
+//std::vector<std::vector<int>> Instrument::getNoteClickedBoolVec() {
+//    return {};
+//}
+
+//void Instrument::setNoteClickBoolVec(std::vector<std::vector<int>> newVec) {
+//    int x  = 2;  // Placeholder
+//}
+
+
 
 
 

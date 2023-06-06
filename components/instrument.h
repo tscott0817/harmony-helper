@@ -67,14 +67,17 @@ public:
     virtual Rectangle getContainer();
     virtual Rectangle getConnectionRec();
     virtual std::vector<std::string> getSelectedNotes();
+//    virtual std::vector<std::vector<int>> getNoteClickedBoolVec();
 
     // Setters
     virtual void setStateActive(bool state);
     virtual void setCanDraw(bool state);
     virtual void setCanDrawConnection(bool state);
+    virtual void setActiveNotes(std::vector<std::string> newVec);
+    virtual void notesActivate();
+//    virtual void setNoteClickBoolVec(std::vector<std::vector<int>> newVec);
 //    virtual void setConnectionRec(Rectangle pos);
 //    virtual void addSelectNote(const std::string &notes);
-    virtual void addSelectNote(std::vector<std::string> newVec);
 
     virtual void destroy();
 

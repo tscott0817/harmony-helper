@@ -33,6 +33,7 @@ private:
     bool blackKeyHover;
     Color whiteKeyColor;
     Color blackKeyColor;
+    Color blackKeyClickColor;
 
     Sound F;
     Sound Fs;
@@ -48,6 +49,16 @@ private:
     Sound E;
     std::vector<Sound> notesVec;
 
+    std::vector<std::vector<Color>> noteColorVec;
+    std::vector<int> noteClickedBoolVec;
+    std::vector<std::string> activeNotesVec;
+
+    // White keys
+    const char *keysWhite[12] = {"C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"};
+    std::vector<const char **> noteTextVec;
+
+    bool cExists = false;
+
 
 public:
     Piano(int screenWidth, int screenHeight, float posX, float posY, float width, float height);
@@ -56,6 +67,7 @@ public:
     void draw(float windowScale) override;
     void hover(Vector2 mousePos) override;
     bool connectionHover(Vector2 mousePos);
+    void clickColorHold(Vector2 mousePos) override;
     void clickAndDrag(Vector2 mousePos) override;
     //void playSound(Vector2 mousePos) override;
 
@@ -66,6 +78,7 @@ public:
     bool getCanDrawConnection() override;
     bool getStateActive() override;
     std::vector<std::string> getSelectedNotes() override;
+//    std::vector<std::vector<int>> getNoteClickedBoolVec() override;
 
 
     // Setters
@@ -73,8 +86,11 @@ public:
     //void setConnectionRec(Rectangle connectRectangle) override;
     void setCanDrawConnection(bool state) override;
     void setStateActive(bool state) override;
+//    void setNoteClickBoolVec(std::vector<std::vector<int>> newVec) override;
 //    void addSelectNote(const std::string &notes) override;
-    void addSelectNote(std::vector<std::string> newVec) override;
+
+    void setActiveNotes(std::vector<std::string> newVec) override;
+    void notesActivate() override;
 
 
     void destroy() override;

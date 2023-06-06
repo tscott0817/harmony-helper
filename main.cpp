@@ -8,6 +8,13 @@
 #include "components/modal_chart.h"
 #include "controller/menu.h"
 
+
+/**
+ * For window resizing
+ * @param a
+ * @param b
+ * @return
+ */
 constexpr int MIN(int a, int b) {
     return (a < b) ? a : b;
 }
@@ -19,9 +26,15 @@ constexpr int MAX(int a, int b) {
 
 int main()
 {
+
+    // Note manager
+    // Create a vector of all musical notes
+    std::vector<std::string> allNotesVec = {"C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"};
     /** Window Setup **/
-    const int screenWidth =  1920;
-    const int screenHeight = 1080;
+//    const int screenWidth =  1920;  // Only for when using 2k settings
+//    const int screenHeight = 1080;
+    const int screenWidth =  1280;
+    const int screenHeight = 720;
     Color backgroundColor = RAYWHITE;
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(screenWidth, screenHeight, "Guitar App");
@@ -45,7 +58,6 @@ int main()
     instrumentsVec.push_back(std::move(piano));
 
 
-    ModalChart modalChart(screenWidth, screenHeight, screenWidth * .35f, screenHeight * .7f, .6f, .5f);
     Menu menu(screenWidth, screenHeight, 0, screenHeight * .0001f, 1, .05f);
 
 
@@ -53,6 +65,14 @@ int main()
     bool menuActive = false;
 
     std::vector<std::string> currNotesVec;
+    // Fill current notes with empty strings
+    for (int i = 0; i < 50; i++) {
+        currNotesVec.emplace_back("X");
+    }
+    // print current notes
+    for (int i = 0; i < currNotesVec.size(); i++) {
+        std::cout << currNotesVec[i] << std::endl;
+    }
 
     InitAudioDevice();  // TODO: Not sure if best here in main, or if each class should have one
     /** Main Loop **/
@@ -68,28 +88,26 @@ int main()
         bool leftMouseClicked = IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
 
         /** Object Interactions **/
-        currNotesVec = instrumentsVec[0]->getSelectedNotes();
-        std::cout << "Notes Currently Selected" << std::endl;
+        // This is from guitar to Piano
+        currNotesVec = instrumentsVec[0]->getSelectedNotes();  // TODO: Do this for each instrument
+        std::cout << "\nNotes Currently Selected" << std::endl;
         for (int i = 0; i < currNotesVec.size(); i++) {
             std::cout << currNotesVec[i] << std::endl;
-//            instrumentsVec[1]->addSelectNote(currNotesVec[i]);
-            // Add the current note to the Pianp addSelectNote function
-        }
-        std::cout << "Notes From Piano -> Guitar Selection" << std::endl;
-        // Add each of the currentNotesVec elements to the Piano addSelectNote function
-        for (int i = 0; i < currNotesVec.size(); i++) {
-            instrumentsVec[1]->addSelectNote(currNotesVec);
-            std::cout << instrumentsVec[1]->getSelectedNotes()[i] << std::endl;
+
         }
 
+        // use setActiveNotes from Piano to set notes selected in Guitar
+        instrumentsVec[1]->setActiveNotes(currNotesVec);
 
 
+        /** Call most things here **/
         for (int i = 0; i < instrumentsVec.size(); i++) {
             if (instrumentsVec[i]->getStateActive()) {
                 //instrumentsVec[i]->hover(mousePos);
                 instrumentsVec[i]->soundTests();
                 instrumentsVec[i]->clickColorHold(mousePos);
                 instrumentsVec[i]->clickAndDrag(mousePos);
+                instrumentsVec[i]->notesActivate();
             }
         }
 
@@ -116,6 +134,9 @@ int main()
                 instrumentsVec[i]->setCanDraw(true);
             }
         }
+
+        /** Test for note sharing between classes **/
+
 
         /** Object Drawing Here  **/
         BeginDrawing();
@@ -145,13 +166,7 @@ int main()
     }
 
     /** Object Destruction **/
-    //guitarNeck.destroy();
-    //guitarNeck->destroy();
-    //instrumentsVec[0]->destroy();
-    //piano.destroy();
     instrumentsVec[1]->destroy();  // TODO: Loop through entire instrument vec instead
-    modalChart.destroy();
-    // menu.destroy();  TODO: From before I used RayGUI
     //UnloadSound(soundTest);
     CloseAudioDevice();
     CloseWindow();        // Close window and OpenGL context

@@ -82,14 +82,15 @@ public:
     Rectangle getContainer() override;
     Rectangle getConnectionRec() override;
     std::vector<std::string> getSelectedNotes() override;
+//    std::vector<std::vector<int>> getNoteClickedBoolVec() override;
 
     // Setters
     void setStateActive(bool state) override;
     void setCanDraw(bool state) override;
     void setCanDrawConnection(bool state) override;
+//    void setNoteClickBoolVec(std::vector<std::vector<int>> newVec) override;
     //void setConnectionRec(Rectangle pos) override;
 //    void addSelectNote(const std::string &notes) override;
-    void addSelectNote(std::vector<std::string> newVec) override;
 
 
     void destroy();

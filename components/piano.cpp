@@ -1,4 +1,7 @@
 #include "piano.h"
+#include <utility>
+#include <algorithm>
+#include <string>
 
 Piano::Piano(int screenWidth, int screenHeight, float posX, float posY, float width, float height) {
 
@@ -34,12 +37,14 @@ Piano::Piano(int screenWidth, int screenHeight, float posX, float posY, float wi
     /** Colors **/
     hoverColor = RED;
     rootColor = WHITE;
+    clickColor = GREEN;
     secondColor = MAROON;
     thirdColor = GREEN;
     fourthColor = YELLOW;
     fifthColor = PURPLE;
     whiteKeyColor = WHITE;
     blackKeyColor = BLACK;
+    blackKeyClickColor = RED;
     whiteKeyHover = false;
     blackKeyHover = false;
 
@@ -49,6 +54,8 @@ Piano::Piano(int screenWidth, int screenHeight, float posX, float posY, float wi
         keyBlackColorVec.push_back(BLACK);
         keyWhiteLocations.push_back({0, 0});
         keyBlackLocations.push_back({0, 0});
+        noteClickedBoolVec.push_back(0);
+        activeNotesVec.emplace_back("X");
     }
     notesLocAdded = false;
 
@@ -133,7 +140,7 @@ void Piano::hover(Vector2 mousePos) {
                 mousePos.y > keyWhiteLocations[i].y &&
                 mousePos.y < keyWhiteLocations[i].y + (keyWhiteRectangle.height)) {
 //                keyWhiteColorVec[i] = hoverColor;
-                keyWhiteColorVec[i] = GREEN;
+                keyWhiteColorVec[i] = hoverColor;
             }
             else {
                 keyWhiteColorVec[i] = whiteKeyColor;
@@ -151,7 +158,7 @@ void Piano::hover(Vector2 mousePos) {
 //        if (mousePos.x > keyBlackLocations[i].x &&
 //            mousePos.x < keyBlackLocations[i].x + (keyBlackRectangle.width) &&
 //            mousePos.y > keyBlackLocations[i].y &&
-//            mousePos.y < keyBlackLocations[i].y + (keyBlackRectangle.height) && IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+//            mousePos.y < keyBlackLocations[i].y + (keyBlackRectangle.height) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
 //            std::cout << "Black Key Play sound" << i << " pressed" << std::endl;
 //        }
 //    }
@@ -161,7 +168,7 @@ void Piano::hover(Vector2 mousePos) {
 //        if (mousePos.x > keyWhiteLocations[i].x &&
 //            mousePos.x < keyWhiteLocations[i].x + (keyWhiteRectangle.width) &&
 //            mousePos.y > keyWhiteLocations[i].y &&
-//            mousePos.y < keyWhiteLocations[i].y + (keyWhiteRectangle.height) && IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+//            mousePos.y < keyWhiteLocations[i].y + (keyWhiteRectangle.height) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
 //            std::cout << "White Key Play sound" << i << " pressed" << std::endl;
 //            PlaySound(F);
 //        }
@@ -177,6 +184,68 @@ bool Piano::connectionHover(Vector2 mousePos) {
         return false;
     }
 }
+
+void Piano::clickColorHold(Vector2 mousePos) {
+
+    /**
+     *  For click only
+     */
+    for (int i = 0; i < keyWhiteLocations.size(); i++) {
+        if (mousePos.x > keyWhiteLocations[i].x &&
+            mousePos.x < keyWhiteLocations[i].x + (keyWhiteRectangle.width) &&
+            mousePos.y > keyWhiteLocations[i].y &&
+            mousePos.y < keyWhiteLocations[i].y + (keyWhiteRectangle.height) &&
+            IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && noteClickedBoolVec[i] == 0) {
+            noteClickedBoolVec[i] = 1;
+            keyWhiteColorVec[i] = clickColor;
+
+
+        } else if (mousePos.x > keyWhiteLocations[i].x &&
+                   mousePos.x < keyWhiteLocations[i].x + (keyWhiteRectangle.width) &&
+                   mousePos.y > keyWhiteLocations[i].y &&
+                   mousePos.y < keyWhiteLocations[i].y + (keyWhiteRectangle.height) &&
+                   IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && noteClickedBoolVec[i] == 1) {
+
+            noteClickedBoolVec[i] = 0;
+            keyWhiteColorVec[i] = whiteKeyColor;
+
+        }
+    }
+}
+
+    /**
+     *  For press and hold, rather than click and hold
+     *  TODO: Make into out method
+     */
+//    for (int i = 0; i < keyWhiteLocations.size(); i++) {
+//        if (mousePos.x > keyWhiteLocations[i].x &&
+//            mousePos.x < keyWhiteLocations[i].x + (keyWhiteRectangle.width) &&
+//            mousePos.y > keyWhiteLocations[i].y &&
+//            mousePos.y < keyWhiteLocations[i].y + (keyWhiteRectangle.height) &&
+//            IsMouseButtonDown(MOUSE_LEFT_BUTTON) && noteClickedBoolVec[i] == 0) {
+//            noteClickedBoolVec[i] = 1;
+//            keyWhiteColorVec[i] = clickColor;
+//
+////            // Check if the note is already in the vector
+////            // If not then insert it
+////            if (std::find(selectedNotesVec.begin(), selectedNotesVec.end(), noteTextVec[i-1]) == selectedNotesVec.end()) {
+////                std::cout << "Pushing back note: " << noteTextVec[i-1]<< std::endl;
+////                selectedNotesVec.emplace_back(noteTextVec[i-1]);
+////            }
+//        }
+//
+//        else if (mousePos.x > keyWhiteLocations[i].x && mousePos.x < keyWhiteLocations[i].x + (keyWhiteRectangle.width) &&
+//                 mousePos.y > keyWhiteLocations[i].y && mousePos.y < keyWhiteLocations[i].y + (keyWhiteRectangle.height) &&
+//                 IsMouseButtonReleased(MOUSE_LEFT_BUTTON) && noteClickedBoolVec[i] == 1) {
+////            // Print noteBoolVec
+////            for (int note : noteClickedBoolVec) {
+////                std::cout << note << " ";
+////            }
+//            noteClickedBoolVec[i] = 0;
+//            keyWhiteColorVec[i] = rootColor;
+//
+//        }
+//    }
 
 void Piano::clickAndDrag(Vector2 mousePos) {
     if (mousePos.x > containerLoc.x - (container.width * .5f) && mousePos.x < containerLoc.x + (container.width * .5f) &&
@@ -204,6 +273,82 @@ void Piano::clickAndDrag(Vector2 mousePos) {
     containerLoc = {container.x, container.y};
 }
 
+void Piano::notesActivate() {
+    if (std::find(activeNotesVec.begin(), activeNotesVec.end(), "C") != activeNotesVec.end()) {
+        keyWhiteColorVec[0] = clickColor;
+    }
+    else {
+        keyWhiteColorVec[0] = whiteKeyColor;
+    }
+    if (std::find(activeNotesVec.begin(), activeNotesVec.end(), "Db") != activeNotesVec.end()) {
+        keyBlackColorVec[0] = blackKeyClickColor;
+    }
+    else {
+        keyBlackColorVec[0] = blackKeyColor;
+    }
+    if (std::find(activeNotesVec.begin(), activeNotesVec.end(), "D") != activeNotesVec.end()) {
+        keyWhiteColorVec[1] = clickColor;
+    }
+    else {
+        keyWhiteColorVec[1] = whiteKeyColor;
+    }
+    if (std::find(activeNotesVec.begin(), activeNotesVec.end(), "Eb") != activeNotesVec.end()) {
+        keyBlackColorVec[1] = blackKeyClickColor;
+    }
+    else {
+        keyBlackColorVec[1] = blackKeyColor;
+    }
+    if (std::find(activeNotesVec.begin(), activeNotesVec.end(), "E") != activeNotesVec.end()) {
+        keyWhiteColorVec[2] = clickColor;
+    }
+    else {
+        keyWhiteColorVec[2] = whiteKeyColor;
+    }
+    if (std::find(activeNotesVec.begin(), activeNotesVec.end(), "F") != activeNotesVec.end()) {
+        keyWhiteColorVec[3] = clickColor;
+    }
+    else {
+        keyWhiteColorVec[3] = whiteKeyColor;
+    }
+    if (std::find(activeNotesVec.begin(), activeNotesVec.end(), "Gb") != activeNotesVec.end()) {
+        keyBlackColorVec[2] = blackKeyClickColor;
+    }
+    else {
+        keyBlackColorVec[2] = blackKeyColor;
+    }
+    if (std::find(activeNotesVec.begin(), activeNotesVec.end(), "G") != activeNotesVec.end()) {
+        keyWhiteColorVec[4] = clickColor;
+    }
+    else {
+        keyWhiteColorVec[4] = whiteKeyColor;
+    }
+    if (std::find(activeNotesVec.begin(), activeNotesVec.end(), "Ab") != activeNotesVec.end()) {
+        keyBlackColorVec[3] = blackKeyClickColor;
+    }
+    else {
+        keyBlackColorVec[3] = blackKeyColor;
+    }
+    if (std::find(activeNotesVec.begin(), activeNotesVec.end(), "A") != activeNotesVec.end()) {
+        keyWhiteColorVec[5] = clickColor;
+    }
+    else {
+        keyWhiteColorVec[5] = whiteKeyColor;
+    }
+    if (std::find(activeNotesVec.begin(), activeNotesVec.end(), "Bb") != activeNotesVec.end()) {
+        keyBlackColorVec[4] = blackKeyClickColor;
+    }
+    else {
+        keyBlackColorVec[4] = blackKeyColor;
+    }
+    if (std::find(activeNotesVec.begin(), activeNotesVec.end(), "B") != activeNotesVec.end()) {
+        keyWhiteColorVec[6] = clickColor;
+    }
+    else {
+        keyWhiteColorVec[6] = whiteKeyColor;
+    }
+
+}
+
 /** Getters **/
 bool Piano::getCanDraw() {return canDraw;}
 Rectangle Piano::getContainer() {return container;}
@@ -211,12 +356,15 @@ Rectangle Piano::getConnectionRec() {return connectRectangle;}
 bool Piano::getCanDrawConnection() { return canDrawConnection;}
 bool Piano::getStateActive() {return active;}
 std::vector<std::string> Piano::getSelectedNotes(){ return selectedNotesVec; }
+//std::vector<std::vector<int>> Piano::getNoteClickedBoolVec() { return noteClickedBoolVec; }
 
 /** Setters **/
 void Piano::setCanDraw(bool canDraw) {this->canDraw = canDraw;}
 //void Piano::setConnectionRec(Rectangle connectRectangle) {this->connectRectangle = connectRectangle;}
 void Piano::setCanDrawConnection(bool state) {this->canDrawConnection = state;}
 void Piano::setStateActive(bool state) {this->active = state;}
+void Piano::setActiveNotes(std::vector<std::string> newVec) {activeNotesVec = std::move(newVec);}
+//void Piano::setNoteClickBoolVec(std::vector<std::vector<int>> newVec) { noteClickedBoolVec = newVec; }
 //void Piano::addSelectNote(const std::string &notes) {selectedNotesVec.push_back(notes);}
 //void Piano::addSelectNote(const std::string &notes) {selectedNotesVec.push_back(notes);}
 
@@ -225,8 +373,5 @@ void Piano::setStateActive(bool state) {this->active = state;}
 // TODO: Not sure which is best approach
 void Piano::destroy() {UnloadTexture(containerTexture); UnloadSound(F);}
 
-void Piano::addSelectNote(std::vector<std::string> newVec) {
-    selectedNotesVec = newVec;
-}
 
 

@@ -59,6 +59,8 @@ private:
     // Audio
     Sound testSound;
 
+    std::vector<std::string> activeNotesVec;
+
 
 
 public:
@@ -74,6 +76,7 @@ public:
     void soundTests() override;
     bool connectionHover(Vector2 mousePos);
     void clickAndDrag(Vector2 mousePos) override;
+    void notesActivate() override;
 
     // Getters
     bool getStateActive() override;
@@ -83,6 +86,7 @@ public:
     Rectangle getConnectionRec() override;
     std::vector<std::string> getSelectedNotes() override;
 //    std::vector<std::vector<int>> getNoteClickedBoolVec() override;
+    bool isHovering(Vector2 mousePos) override;
 
     // Setters
     void setStateActive(bool state) override;
@@ -91,6 +95,7 @@ public:
 //    void setNoteClickBoolVec(std::vector<std::vector<int>> newVec) override;
     //void setConnectionRec(Rectangle pos) override;
 //    void addSelectNote(const std::string &notes) override;
+    void setActiveNotes(std::vector<std::string> newVec) override;
 
 
     void destroy();

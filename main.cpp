@@ -90,11 +90,12 @@ int main()
         /** Object Interactions **/
         // This is from guitar to Piano
         currNotesVec = instrumentsVec[0]->getSelectedNotes();  // TODO: Do this for each instrument
-        std::cout << "\nNotes Currently Selected" << std::endl;
-        for (int i = 0; i < currNotesVec.size(); i++) {
-            std::cout << currNotesVec[i] << std::endl;
+//        std::cout << "\nNotes Currently Selected" << std::endl;
+//        for (int i = 0; i < currNotesVec.size(); i++) {
+//            std::cout << currNotesVec[i] << std::endl;
+//
+//        }
 
-        }
 
         // use setActiveNotes from Piano to set notes selected in Guitar
         instrumentsVec[1]->setActiveNotes(currNotesVec);
@@ -107,8 +108,16 @@ int main()
                 instrumentsVec[i]->soundTests();
                 instrumentsVec[i]->clickColorHold(mousePos);
                 instrumentsVec[i]->clickAndDrag(mousePos);
-                instrumentsVec[i]->notesActivate();
+                //instrumentsVec[i]->notesActivate();
+                if (!instrumentsVec[i]->isHovering(mousePos)) {
+                    instrumentsVec[i]->notesActivate();
+                }
             }
+
+            // Only run notesActivate() on Instruments that the mouse is not currently hovering over
+//            if (!instrumentsVec[i]->isHovering(mousePos)) {
+//                instrumentsVec[i]->notesActivate();
+//            }
         }
 
         // Check keyboard for escape key press

@@ -54,6 +54,7 @@ public:
     // Constructors
     Instrument();
     virtual void hover(Vector2 mousePos);
+    virtual bool isHovering(Vector2 mousePos);
     virtual void clickColorHold(Vector2 mousePos);
     virtual void soundTests();
     virtual void draw(float windowScale);

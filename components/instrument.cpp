@@ -60,6 +60,10 @@ void Instrument::destroy() {
     std::cout << "Destroying Instrument" << std::endl;
 }
 
+bool Instrument::isHovering(Vector2 mousePos) {
+    return false;
+}
+
 //std::vector<std::vector<int>> Instrument::getNoteClickedBoolVec() {
 //    return {};
 //}

@@ -10,6 +10,7 @@ class Piano : public Instrument {
 
 private:
 
+    Rectangle containerLoc;
     Image keyWhiteImage;
     Texture2D keyWhiteTexture;
     Rectangle keyWhiteRectangle;
@@ -70,6 +71,7 @@ public:
     void clickColorHold(Vector2 mousePos) override;
     void clickAndDrag(Vector2 mousePos) override;
     //void playSound(Vector2 mousePos) override;
+    bool isHovering(Vector2 mousePos) override;
 
     // Getters
     bool getCanDraw() override;

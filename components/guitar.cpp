@@ -1,6 +1,8 @@
 #include "cmath"
 #include "guitar.h"
+#include <utility>
 #include <algorithm>
+#include <string>
 
 Guitar::Guitar(int screenWidth, int screenHeight, float posX, float posY, float width, float height) {
 
@@ -88,6 +90,7 @@ Guitar::Guitar(int screenWidth, int screenHeight, float posX, float posY, float 
         noteLocations.push_back(tempLoc);
         noteColorVec.push_back(tempColor);
         noteClickedBoolVec.push_back(tempClicked);
+        activeNotesVec.emplace_back("X");
     }
     // TODO: The filepath will not play sound, but is same the above font filepath, so it should?
 //    testSound = LoadSound("../resources/audio/key13.ogg");
@@ -263,6 +266,18 @@ void Guitar::hover(Vector2 mousePos) {
     }
 }
 
+bool Guitar::isHovering(Vector2 mousePos) {
+    // return true if hovering over piano container
+    if (mousePos.x > containerLoc.x - (container.width * .5f) && mousePos.x < containerLoc.x + (container.width * .5f) &&
+        mousePos.y > containerLoc.y - (container.height * .5f) && mousePos.y < containerLoc.y + (container.height * .5f)) {
+        std::cout << "Hovering Guitar" << std::endl;
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
 void Guitar::clickColorHold(Vector2 mousePos) {
     for (int i = 0; i < noteLocations.size(); i++) {
         for (int j = 0; j < noteLocations[i].size(); j++) {
@@ -295,11 +310,33 @@ void Guitar::clickColorHold(Vector2 mousePos) {
                         index = k;
                     }
                 }
-                std::cout << "i: " << index << std::endl;
                 selectedNotesVec.erase(selectedNotesVec.begin() + index);
             }
         }
     }
+}
+
+void Guitar::notesActivate() {
+    // print out the work ;active;
+    std::cout << "Active" << std::endl;
+//    if (std::find(activeNotesVec.begin(), activeNotesVec.end(), "C") != activeNotesVec.end()) {
+//        keyWhiteColorVec[0] = clickColor;
+//    }
+//    else {
+//        keyWhiteColorVec[0] = whiteKeyColor;
+//    }
+
+    // If activeNotesVec has a "C" then change the color of all the location of "C" to clickColor
+//    for (int i = 0; i < noteLocations.size(); i++) {
+//        for (int j = 0; j < noteLocations[i].size(); j++) {
+//            if (std::find(activeNotesVec.begin(), activeNotesVec.end(), noteTextVec[j-1][i-1]) != activeNotesVec.end()) {
+//                noteColorVec[i][j] = clickColor;
+//            }
+//            else {
+//                noteColorVec[i][j] = rootColor;
+//            }
+//        }
+//    }
 }
 
 void Guitar::soundTests() {
@@ -365,6 +402,7 @@ void Guitar::setCanDrawConnection(bool state) { canDrawConnection = state; }
 //void Neck::setConnectionPos(Vector2 pos) { connectRectangle.x = pos.x; connectRectangle.y = pos.y;}
 //void Neck::setConnectionRec(Rectangle rec) { connectRectangle = rec;}
 //void Guitar::addSelectNote(const std::string &notes) {selectedNotesVec.push_back(notes);}
+void Guitar::setActiveNotes(std::vector<std::string> newVec) {activeNotesVec = std::move(newVec);}
 
 // To remove textures from memory after program closes, must be after main loop ends
 void Guitar::destroy() {

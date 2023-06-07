@@ -149,6 +149,29 @@ void Piano::hover(Vector2 mousePos) {
     }
 }
 
+bool Piano::isHovering(Vector2 mousePos) {
+//    // return true if hovering over piano container
+//    if (mousePos.x > container.x &&
+//        mousePos.x < container.x + container.width &&
+//        mousePos.y > container.y &&
+//        mousePos.y < container.y + container.height) {
+//        return true;
+//    }
+//    else {
+//        return false;
+//    }
+
+    if (mousePos.x > containerLoc.x - (container.width * .5f) && mousePos.x < containerLoc.x + (container.width * .5f) &&
+        mousePos.y > containerLoc.y - (container.height * .5f) && mousePos.y < containerLoc.y + (container.height * .5f)) {
+        std::cout << "Hovering Piano" << std::endl;
+        return true;
+
+    }
+    else {
+        return false;
+    }
+}
+
 //// play sound
 //void Piano::playSound(Vector2 mousePos) {
 //    // Black Keys
@@ -346,7 +369,6 @@ void Piano::notesActivate() {
     else {
         keyWhiteColorVec[6] = whiteKeyColor;
     }
-
 }
 
 /** Getters **/
@@ -372,6 +394,10 @@ void Piano::setActiveNotes(std::vector<std::string> newVec) {activeNotesVec = st
 /** Destruct **/
 // TODO: Not sure which is best approach
 void Piano::destroy() {UnloadTexture(containerTexture); UnloadSound(F);}
+
+//void Piano::notesActivate() {
+//    Instrument::notesActivate();
+//}
 
 
 

@@ -27,9 +27,6 @@ constexpr int MAX(int a, int b) {
 int main()
 {
 
-    // Note manager
-    // Create a vector of all musical notes
-    std::vector<std::string> allNotesVec = {"C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"};
     /** Window Setup **/
 //    const int screenWidth =  1920;  // Only for when using 2k settings
 //    const int screenHeight = 1080;
@@ -89,16 +86,16 @@ int main()
 
         /** Object Interactions **/
         // This is from guitar to Piano
-        currNotesVec = instrumentsVec[0]->getSelectedNotes();  // TODO: Do this for each instrument
-//        std::cout << "\nNotes Currently Selected" << std::endl;
-//        for (int i = 0; i < currNotesVec.size(); i++) {
-//            std::cout << currNotesVec[i] << std::endl;
-//
-//        }
+        currNotesVec = instrumentsVec[1]->getSelectedNotes();  // TODO: Do this for each instrument
+        std::cout << "\nNotes Currently Selected" << std::endl;
+        for (int i = 0; i < currNotesVec.size(); i++) {
+            std::cout << currNotesVec[i] << std::endl;
+
+        }
 
 
         // use setActiveNotes from Piano to set notes selected in Guitar
-        instrumentsVec[1]->setActiveNotes(currNotesVec);
+        instrumentsVec[0]->setActiveNotes(currNotesVec);
 
 
         /** Call most things here **/
@@ -109,15 +106,11 @@ int main()
                 instrumentsVec[i]->clickColorHold(mousePos);
                 instrumentsVec[i]->clickAndDrag(mousePos);
                 //instrumentsVec[i]->notesActivate();
+                // TODO: Maybe stop all adding until not hovering anymore
                 if (!instrumentsVec[i]->isHovering(mousePos)) {
                     instrumentsVec[i]->notesActivate();
                 }
             }
-
-            // Only run notesActivate() on Instruments that the mouse is not currently hovering over
-//            if (!instrumentsVec[i]->isHovering(mousePos)) {
-//                instrumentsVec[i]->notesActivate();
-//            }
         }
 
         // Check keyboard for escape key press

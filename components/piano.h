@@ -55,10 +55,12 @@ private:
     std::vector<std::string> activeNotesVec;
 
     // White keys
-    const char *keysWhite[12] = {"C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"};
+    const char *keysWhite[7] = {"C",  "D", "E", "F", "G", "A", "B"};
+    const char *keysBlack[5] = {"Db",  "Eb", "Gb", "Ab", "Bb"};
     std::vector<const char **> noteTextVec;
 
     bool cExists = false;
+
 
 
 public:

@@ -319,24 +319,59 @@ void Guitar::clickColorHold(Vector2 mousePos) {
 void Guitar::notesActivate() {
     // print out the work ;active;
     std::cout << "Active" << std::endl;
-//    if (std::find(activeNotesVec.begin(), activeNotesVec.end(), "C") != activeNotesVec.end()) {
-//        keyWhiteColorVec[0] = clickColor;
+    // Using std::find, check if activeNotesVec contains a "C". If it does, then change color of all indices with a "C"
+    if (std::find(activeNotesVec.begin(), activeNotesVec.end(), "C") != activeNotesVec.end()) {
+        // Change the color of all C's
+        noteColorVec[1][5] = clickColor;
+        noteColorVec[3][2] = clickColor;
+        noteColorVec[5][4] = clickColor;
+        noteColorVec[8][1] = clickColor;
+        noteColorVec[8][6] = clickColor;
+        noteColorVec[10][3] = clickColor;
+    }
+    else {
+        noteColorVec[1][5] = rootColor;
+        noteColorVec[3][2] = rootColor;
+        noteColorVec[5][4] = rootColor;
+        noteColorVec[8][1] = rootColor;
+        noteColorVec[8][6] = rootColor;
+        noteColorVec[10][3] = rootColor;
+    }
+//    if (std::find(activeNotesVec.begin(), activeNotesVec.end(), "Db") != activeNotesVec.end()) {
+//        // Change the color of all C's
+//        noteColorVec[2][3] = clickColor;
+//        noteColorVec[4][3] = clickColor;
+//        noteColorVec[6][5] = clickColor;
+//        noteColorVec[9][2] = clickColor;
+//        noteColorVec[9][7] = clickColor;
+//        noteColorVec[11][4] = clickColor;
 //    }
 //    else {
-//        keyWhiteColorVec[0] = whiteKeyColor;
+//        noteColorVec[2][3] = rootColor;
+//        noteColorVec[4][3] = rootColor;
+//        noteColorVec[6][5] = rootColor;
+//        noteColorVec[9][2] = rootColor;
+//        noteColorVec[9][7] = rootColor;
+//        noteColorVec[11][4] = rootColor;
 //    }
+    if (std::find(activeNotesVec.begin(), activeNotesVec.end(), "D") != activeNotesVec.end()) {
+        // Change the color of all C's
+        noteColorVec[3][5] = clickColor;
+        noteColorVec[5][2] = clickColor;
+        noteColorVec[7][4] = clickColor;
+        noteColorVec[10][1] = clickColor;
+        noteColorVec[10][6] = clickColor;
+        noteColorVec[12][3] = clickColor;
+    }
+    else {
+        noteColorVec[3][5] = rootColor;
+        noteColorVec[5][2] = rootColor;
+        noteColorVec[7][4] = rootColor;
+        noteColorVec[10][1] = rootColor;
+        noteColorVec[10][6] = rootColor;
+        noteColorVec[12][3] = rootColor;
+    }
 
-    // If activeNotesVec has a "C" then change the color of all the location of "C" to clickColor
-//    for (int i = 0; i < noteLocations.size(); i++) {
-//        for (int j = 0; j < noteLocations[i].size(); j++) {
-//            if (std::find(activeNotesVec.begin(), activeNotesVec.end(), noteTextVec[j-1][i-1]) != activeNotesVec.end()) {
-//                noteColorVec[i][j] = clickColor;
-//            }
-//            else {
-//                noteColorVec[i][j] = rootColor;
-//            }
-//        }
-//    }
 }
 
 void Guitar::soundTests() {

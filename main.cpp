@@ -84,24 +84,25 @@ int main()
         Vector2 mousePos = GetMousePosition();
         bool leftMouseClicked = IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
 
-        /** Object Interactions **/
-        // This is from guitar to Piano
-        currNotesVec = instrumentsVec[1]->getSelectedNotes();  // TODO: Do this for each instrument
-        std::cout << "\nNotes Currently Selected" << std::endl;
-        for (int i = 0; i < currNotesVec.size(); i++) {
-            std::cout << currNotesVec[i] << std::endl;
-
-        }
-
-
-        // use setActiveNotes from Piano to set notes selected in Guitar
-        instrumentsVec[0]->setActiveNotes(currNotesVec);
-
 
         /** Call most things here **/
         for (int i = 0; i < instrumentsVec.size(); i++) {
+            currNotesVec = instrumentsVec[i]->getSelectedNotes();  // TODO: Do this for each instrument
+            std::cout << "\nNotes Currently Selected" << std::endl;
+            for (int k = 0; k < currNotesVec.size(); k++) {
+                std::cout << currNotesVec[k] << std::endl;
+
+            }
+
+            // Only setActiveNotes if hovering over object
+            //instrumentsVec[i]->setActiveNotes(currNotesVec);
+            for (int j = 0; j < instrumentsVec.size(); j++) {
+                if (j != i) {
+                    instrumentsVec[j]->setActiveNotes(currNotesVec);
+                }
+            }
+
             if (instrumentsVec[i]->getStateActive()) {
-                //instrumentsVec[i]->hover(mousePos);
                 instrumentsVec[i]->soundTests();
                 instrumentsVec[i]->clickColorHold(mousePos);
                 instrumentsVec[i]->clickAndDrag(mousePos);

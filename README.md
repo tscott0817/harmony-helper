@@ -2,7 +2,7 @@
 This started as a small personal project to help me (a guitarist) with doing covers of songs
 that were originally played on piano. I wanted to be able to easily translate the chords to
 my primary instrument and decided to expand upon it to help other instrumentalists. You can
-use this program to help move your ideas between different instruments.
+use this program to move your ideas between different instruments.
 
 
 ![GUI](https://i.imgur.com/qXHLKgl.png)

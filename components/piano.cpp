@@ -215,35 +215,67 @@ void Piano::clickColorHold(Vector2 mousePos) {
     /**
      *  For click only
      */
-    for (int i = 0; i < keyWhiteLocations.size(); i++) {
-        if (mousePos.x > keyWhiteLocations[i].x &&
-            mousePos.x < keyWhiteLocations[i].x + (keyWhiteRectangle.width) &&
-            mousePos.y > keyWhiteLocations[i].y &&
-            mousePos.y < keyWhiteLocations[i].y + (keyWhiteRectangle.height) &&
-            IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && noteClickedBoolVec[i] == 0) {
-            noteClickedBoolVec[i] = 1;
-            keyWhiteColorVec[i] = clickColor;
-            selectedNotesVec.emplace_back(noteTextVec[0][i]);
+
+    // Only run this loop of mouse is not over a black key, don't use blackKeyHover
+    bool hoveringBlack = false;
+    for (int i = 0; i < keyBlackLocations.size(); i++) {
+        if (mousePos.x > keyBlackLocations[i].x &&
+            mousePos.x < keyBlackLocations[i].x + (keyBlackRectangle.width) &&
+            mousePos.y > keyBlackLocations[i].y &&
+            mousePos.y < keyBlackLocations[i].y + (keyBlackRectangle.height)) {
+            hoveringBlack = true;
+            std::cout << "Hovering Black" << std::endl;
+//            noteClickedBoolVec[i] = 1;
+//            keyBlackColorVec[i] = clickColor;
+//            selectedNotesVec.emplace_back(noteTextVec[1][i]);
+        }
+        else {
+            hoveringBlack = false;
+//            noteClickedBoolVec[i] = 0;
+//            keyBlackColorVec[i] = blackKeyColor;
+//
+//            // TODO: This seems to get the correct index, but feels a bit odd.
+//            int index = 0;
+//            for (int k = 0; k < selectedNotesVec.size(); k++) {
+//                if (selectedNotesVec[k] == noteTextVec[0][i]) {
+//                    index = k;
+//                }
+//            }
+//            selectedNotesVec.erase(selectedNotesVec.begin() + index);
+        }
+    }
+    if (!hoveringBlack) {
+//        std::cout << "Should not see this" << std::endl;
+        for (int i = 0; i < keyWhiteLocations.size(); i++) {
+            if (mousePos.x > keyWhiteLocations[i].x &&
+                mousePos.x < keyWhiteLocations[i].x + (keyWhiteRectangle.width) &&
+                mousePos.y > keyWhiteLocations[i].y &&
+                mousePos.y < keyWhiteLocations[i].y + (keyWhiteRectangle.height) &&
+                IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && noteClickedBoolVec[i] == 0) {
+                noteClickedBoolVec[i] = 1;
+                keyWhiteColorVec[i] = clickColor;
+                selectedNotesVec.emplace_back(noteTextVec[0][i]);
 
 
-        } else if (mousePos.x > keyWhiteLocations[i].x &&
-                   mousePos.x < keyWhiteLocations[i].x + (keyWhiteRectangle.width) &&
-                   mousePos.y > keyWhiteLocations[i].y &&
-                   mousePos.y < keyWhiteLocations[i].y + (keyWhiteRectangle.height) &&
-                   IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && noteClickedBoolVec[i] == 1) {
+            } else if (mousePos.x > keyWhiteLocations[i].x &&
+                       mousePos.x < keyWhiteLocations[i].x + (keyWhiteRectangle.width) &&
+                       mousePos.y > keyWhiteLocations[i].y &&
+                       mousePos.y < keyWhiteLocations[i].y + (keyWhiteRectangle.height) &&
+                       IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && noteClickedBoolVec[i] == 1) {
 
-            noteClickedBoolVec[i] = 0;
-            keyWhiteColorVec[i] = whiteKeyColor;
+                noteClickedBoolVec[i] = 0;
+                keyWhiteColorVec[i] = whiteKeyColor;
 
-            // TODO: This seems to get the correct index, but feels a bit odd.
-            int index = 0;
-            for (int k = 0; k < selectedNotesVec.size(); k++) {
-                if (selectedNotesVec[k] == noteTextVec[0][i]) {
-                    index = k;
+                // TODO: This seems to get the correct index, but feels a bit odd.
+                int index = 0;
+                for (int k = 0; k < selectedNotesVec.size(); k++) {
+                    if (selectedNotesVec[k] == noteTextVec[0][i]) {
+                        index = k;
+                    }
                 }
-            }
-            selectedNotesVec.erase(selectedNotesVec.begin() + index);
+                selectedNotesVec.erase(selectedNotesVec.begin() + index);
 
+            }
         }
     }
 }

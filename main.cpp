@@ -3,10 +3,14 @@
 #include "raygui.h"
 #undef RAYGUI_IMPLEMENTATION  // Avoid including raygui implementation again
 #include <iostream>
+#include <utility>
+#include <algorithm>
+#include <string>
 #include "components/guitar.h"
 #include "components/piano.h"
 #include "components/modal_chart.h"
 #include "controller/menu.h"
+
 
 
 /**
@@ -87,20 +91,41 @@ int main()
 
         /** Call most things here **/
         for (int i = 0; i < instrumentsVec.size(); i++) {
-            currNotesVec = instrumentsVec[i]->getSelectedNotes();  // TODO: Do this for each instrument
+            // Only assign if not at index i
+            for (int j = 0; j < instrumentsVec.size(); j++) {
+                if (j != i) {
+                    currNotesVec = instrumentsVec[j]->getSelectedNotes();
+                }
+            }
+            //currNotesVec = instrumentsVec[i]->getSelectedNotes();  // TODO: Do this for each instrument
+            // Make currNotesVec the combination of currNotesVec and instrumentsVec[i]->getSelectedNotes();
+            // Get the selected notes for the current instrument
+//            std::vector<std::string> selectedNotes = instrumentsVec[i]->getSelectedNotes();
+//
+            // Check for duplicates and append
+            for (const auto& note : instrumentsVec[i]->getSelectedNotes()) {
+                // Check if the note is already present in currNotesVec
+                if (std::find(currNotesVec.begin(), currNotesVec.end(), note) == currNotesVec.end()) {
+                    currNotesVec.emplace_back(note);
+                }
+            }
+
             std::cout << "\nNotes Currently Selected" << std::endl;
             for (int k = 0; k < currNotesVec.size(); k++) {
                 std::cout << currNotesVec[k] << std::endl;
 
             }
 
-            // Only setActiveNotes if hovering over object
             //instrumentsVec[i]->setActiveNotes(currNotesVec);
-            for (int j = 0; j < instrumentsVec.size(); j++) {
-                if (j != i) {
-                    instrumentsVec[j]->setActiveNotes(currNotesVec);
-                }
-            }
+            // Only call setActiveNotes for instruments not being selected on
+//            for (int j = 0; j < instrumentsVec.size(); j++) {
+////                if (j != i) {
+////                    instrumentsVec[j]->setActiveNotes(currNotesVec);
+////                }
+//                //instrumentsVec[j]->setActiveNotes(currNotesVec);
+//            }
+            instrumentsVec[i]->setActiveNotes(currNotesVec);
+            instrumentsVec[i]->notesActivate();
 
             if (instrumentsVec[i]->getStateActive()) {
                 instrumentsVec[i]->soundTests();
@@ -108,10 +133,12 @@ int main()
                 instrumentsVec[i]->clickAndDrag(mousePos);
                 //instrumentsVec[i]->notesActivate();
                 // TODO: Maybe stop all adding until not hovering anymore
-                if (!instrumentsVec[i]->isHovering(mousePos)) {
-                    instrumentsVec[i]->notesActivate();
-                }
+//                if (!instrumentsVec[i]->isHovering(mousePos)) {
+//                    instrumentsVec[i]->notesActivate();
+//                }
+//                instrumentsVec[i]->notesActivate();
             }
+            //instrumentsVec[i]->notesActivate();
         }
 
         // Check keyboard for escape key press

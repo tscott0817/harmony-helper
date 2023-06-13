@@ -1,6 +1,9 @@
 # Musical Chord Translator
-Use this small program to analyze company stocks at any period of time and evaluate to a confidence level as
-to whether the company is likely to perform well or poorly in the future.
+This started as a small personal project to help me (a guitarist) with doing covers of songs
+that were originally played on piano. I wanted to be able to easily translate the chords to
+my primary instrument and decided to expand upon it to help other instrumentalists. You can
+use this program to help move your ideas between different instruments.
+
 
 ![GUI](https://i.imgur.com/qXHLKgl.png)
 

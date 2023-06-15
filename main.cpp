@@ -12,12 +12,28 @@
 #include "controller/menu.h"
 
 
+// TODO: If using webassembly, probably don't need to check OS
+/**
+ * Check OS
+ */
+//#include <Windows.h>
+//
+//#ifdef _WIN32
+//    const std::string operatingSystem = "Windows";
+//#elif __APPLE__
+//    const std::string operatingSystem = "macOS";
+//#elif __linux__
+//    const std::string operatingSystem = "Linux";
+//#elif __unix__ // all unices not caught above
+//    const std::string operatingSystem = "Unix";
+//#else
+//    const std::string operatingSystem = "Unknown";
+//#endif
+
+
 
 /**
  * For window resizing
- * @param a
- * @param b
- * @return
  */
 constexpr int MIN(int a, int b) {
     return (a < b) ? a : b;
@@ -34,6 +50,8 @@ int main()
     /** Window Setup **/
 //    const int screenWidth =  1920;  // Only for when using 2k settings
 //    const int screenHeight = 1080;
+    // TODO: Check user's computer for their screen size and set window size accordingly
+
     const int screenWidth =  1280;
     const int screenHeight = 720;
     Color backgroundColor = RAYWHITE;
@@ -78,6 +96,7 @@ int main()
     InitAudioDevice();  // TODO: Not sure if best here in main, or if each class should have one
     /** Main Loop **/
     SetTargetFPS(60);
+    std::vector<std::string> newNotesVec;  // TODO: Don't like this here
     while (!WindowShouldClose())
     {
         // TODO: This can be used to resize objects dynamically with the window size,
@@ -87,9 +106,7 @@ int main()
         // For mouse interactions
         Vector2 mousePos = GetMousePosition();
         bool leftMouseClicked = IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
-
-
-        /** Call most things here **/
+        
         for (int i = 0; i < instrumentsVec.size(); i++) {
             // Only assign if not at index i
             for (int j = 0; j < instrumentsVec.size(); j++) {
@@ -97,11 +114,7 @@ int main()
                     currNotesVec = instrumentsVec[j]->getSelectedNotes();
                 }
             }
-            //currNotesVec = instrumentsVec[i]->getSelectedNotes();  // TODO: Do this for each instrument
-            // Make currNotesVec the combination of currNotesVec and instrumentsVec[i]->getSelectedNotes();
-            // Get the selected notes for the current instrument
-//            std::vector<std::string> selectedNotes = instrumentsVec[i]->getSelectedNotes();
-//
+
             // Check for duplicates and append
             for (const auto& note : instrumentsVec[i]->getSelectedNotes()) {
                 // Check if the note is already present in currNotesVec
@@ -110,35 +123,28 @@ int main()
                 }
             }
 
-            std::cout << "\nNotes Currently Selected" << std::endl;
-            for (int k = 0; k < currNotesVec.size(); k++) {
-                std::cout << currNotesVec[k] << std::endl;
+            // Add all elements from each iteration of currNotesVec to newNotesVec
+            for (const auto& note : currNotesVec) {
+                // Only add if note is not already in newNotesVec
+                if (std::find(newNotesVec.begin(), newNotesVec.end(), note) == newNotesVec.end()) {
+                    newNotesVec.emplace_back(note);
+                }
+            }
+
+            std::cout << "\nNotes Currently Selected From Index: " << i << std::endl;
+            for (int k = 0; k < newNotesVec.size(); k++) {
+                std::cout << newNotesVec[k] << std::endl;
 
             }
 
-            //instrumentsVec[i]->setActiveNotes(currNotesVec);
-            // Only call setActiveNotes for instruments not being selected on
-//            for (int j = 0; j < instrumentsVec.size(); j++) {
-////                if (j != i) {
-////                    instrumentsVec[j]->setActiveNotes(currNotesVec);
-////                }
-//                //instrumentsVec[j]->setActiveNotes(currNotesVec);
-//            }
-            instrumentsVec[i]->setActiveNotes(currNotesVec);
+            instrumentsVec[i]->setActiveNotes(newNotesVec);
             instrumentsVec[i]->notesActivate();
 
             if (instrumentsVec[i]->getStateActive()) {
                 instrumentsVec[i]->soundTests();
                 instrumentsVec[i]->clickColorHold(mousePos);
                 instrumentsVec[i]->clickAndDrag(mousePos);
-                //instrumentsVec[i]->notesActivate();
-                // TODO: Maybe stop all adding until not hovering anymore
-//                if (!instrumentsVec[i]->isHovering(mousePos)) {
-//                    instrumentsVec[i]->notesActivate();
-//                }
-//                instrumentsVec[i]->notesActivate();
             }
-            //instrumentsVec[i]->notesActivate();
         }
 
         // Check keyboard for escape key press
@@ -148,13 +154,6 @@ int main()
         menu.hover(mousePos);
 
         /** Determines Which Objects Are Shown **/
-        // TODO: Don't want in main
-        if (menu.isHovering) {
-            menuActive = true;
-        }
-        else {
-            menuActive = false;
-        }
         // Menu stuff
         for (int i = 0; i < instrumentsVec.size(); i++) {
             if (menu.getActiveButtons()[i] == 0) {
@@ -164,8 +163,6 @@ int main()
                 instrumentsVec[i]->setCanDraw(true);
             }
         }
-
-        /** Test for note sharing between classes **/
 
 
         /** Object Drawing Here  **/
@@ -196,7 +193,10 @@ int main()
     }
 
     /** Object Destruction **/
-    instrumentsVec[1]->destroy();  // TODO: Loop through entire instrument vec instead
+    for (const auto & inst : instrumentsVec) {
+        inst->destroy();
+    }
+    //instrumentsVec[1]->destroy();  // TODO: Loop through entire instrument vec instead
     //UnloadSound(soundTest);
     CloseAudioDevice();
     CloseWindow();        // Close window and OpenGL context

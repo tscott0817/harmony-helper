@@ -288,6 +288,7 @@ void Guitar::clickColorHold(Vector2 mousePos) {
                 IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && noteClickedBoolVec[i][j] == 0) {
 
                 //PlaySound(testSound);
+                // if note clicked is already active
                 noteClickedBoolVec[i][j] = 1;
                 noteColorVec[i][j] = clickColor;
                 selectedNotesVec.emplace_back(noteTextVec[j-1][i-1]);

@@ -68,6 +68,7 @@ public:
     virtual Rectangle getContainer();
     virtual Rectangle getConnectionRec();
     virtual std::vector<std::string> getSelectedNotes();
+    virtual std::vector<std::string> getActiveNotes();
 //    virtual std::vector<std::vector<int>> getNoteClickedBoolVec();
 
     // Setters

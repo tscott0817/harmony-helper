@@ -82,6 +82,7 @@ public:
     bool getCanDrawConnection() override;
     bool getStateActive() override;
     std::vector<std::string> getSelectedNotes() override;
+    std::vector<std::string> getActiveNotes() override;
 //    std::vector<std::vector<int>> getNoteClickedBoolVec() override;
 
 

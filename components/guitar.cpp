@@ -90,7 +90,7 @@ Guitar::Guitar(int screenWidth, int screenHeight, float posX, float posY, float 
         noteLocations.push_back(tempLoc);
         noteColorVec.push_back(tempColor);
         noteClickedBoolVec.push_back(tempClicked);
-        activeNotesVec.emplace_back("X");
+        //activeNotesVec.emplace_back("X");
     }
     // TODO: The filepath will not play sound, but is same the above font filepath, so it should?
 //    testSound = LoadSound("../resources/audio/key13.ogg");
@@ -291,7 +291,8 @@ void Guitar::clickColorHold(Vector2 mousePos) {
                 // if note clicked is already active
                 noteClickedBoolVec[i][j] = 1;
                 noteColorVec[i][j] = clickColor;
-                selectedNotesVec.emplace_back(noteTextVec[j-1][i-1]);
+                // selectedNotesVec.emplace_back(noteTextVec[j-1][i-1]);
+                activeNotesVec.emplace_back(noteTextVec[j-1][i-1]);
 
             }
 
@@ -304,14 +305,24 @@ void Guitar::clickColorHold(Vector2 mousePos) {
                 noteClickedBoolVec[i][j] = 0;
                 noteColorVec[i][j] = rootColor;
 
-                // TODO: This seems to get the correct index, but feels a bit odd.
-                int index = 0;
-                for (int k = 0; k < selectedNotesVec.size(); k++) {
-                    if (selectedNotesVec[k] == noteTextVec[j-1][i-1]) {
-                        index = k;
+//                // TODO: This seems to get the correct index, but feels a bit odd.
+//                int index = 0;
+//                for (int k = 0; k < selectedNotesVec.size(); k++) {
+//                    if (selectedNotesVec[k] == noteTextVec[j-1][i-1]) {
+//                        index = k;
+//                    }
+//                }
+//                selectedNotesVec.erase(selectedNotesVec.begin() + index);
+
+                // Do the same but with activeNotesVec
+                int index2 = 0;
+                for (int k = 0; k < activeNotesVec.size(); k++) {
+                    if (activeNotesVec[k] == noteTextVec[j-1][i-1]) {
+                        index2 = k;
                     }
                 }
-                selectedNotesVec.erase(selectedNotesVec.begin() + index);
+                activeNotesVec.erase(activeNotesVec.begin() + index2);
+
             }
         }
     }
@@ -511,6 +522,7 @@ bool Guitar::getCanDrawConnection() { return canDrawConnection;}
 Rectangle Guitar::getContainer() { return container; }
 Rectangle Guitar::getConnectionRec() { return connectRectangle;}
 std::vector<std::string> Guitar::getSelectedNotes() { return selectedNotesVec; }
+std::vector<std::string> Guitar::getActiveNotes() { return activeNotesVec; }
 //std::vector<std::vector<int>> Guitar::getNoteClickedBoolVec() { return noteClickedBoolVec; }
 
 /** Setters **/

@@ -55,7 +55,7 @@ Piano::Piano(int screenWidth, int screenHeight, float posX, float posY, float wi
         keyWhiteLocations.push_back({0, 0});
         keyBlackLocations.push_back({0, 0});
         noteClickedBoolVec.push_back(0);
-        activeNotesVec.emplace_back("X");
+        //activeNotesVec.emplace_back("X");
     }
     notesLocAdded = false;
 
@@ -254,7 +254,8 @@ void Piano::clickColorHold(Vector2 mousePos) {
                 IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && noteClickedBoolVec[i] == 0) {
                 noteClickedBoolVec[i] = 1;
                 keyWhiteColorVec[i] = clickColor;
-                selectedNotesVec.emplace_back(noteTextVec[0][i]);
+                // selectedNotesVec.emplace_back(noteTextVec[0][i]);
+                activeNotesVec.emplace_back(noteTextVec[0][i]);
 
 
             } else if (mousePos.x > keyWhiteLocations[i].x &&
@@ -266,15 +267,23 @@ void Piano::clickColorHold(Vector2 mousePos) {
                 noteClickedBoolVec[i] = 0;
                 keyWhiteColorVec[i] = whiteKeyColor;
 
-                // TODO: This seems to get the correct index, but feels a bit odd.
+//                // TODO: This seems to get the correct index, but feels a bit odd.
+//                int index = 0;
+//                for (int k = 0; k < selectedNotesVec.size(); k++) {
+//                    if (selectedNotesVec[k] == noteTextVec[0][i]) {
+//                        index = k;
+//                    }
+//                }
+//                selectedNotesVec.erase(selectedNotesVec.begin() + index);
+
+                // DO the same but with activeNotesVec
                 int index = 0;
-                for (int k = 0; k < selectedNotesVec.size(); k++) {
-                    if (selectedNotesVec[k] == noteTextVec[0][i]) {
+                for (int k = 0; k < activeNotesVec.size(); k++) {
+                    if (activeNotesVec[k] == noteTextVec[0][i]) {
                         index = k;
                     }
                 }
-                selectedNotesVec.erase(selectedNotesVec.begin() + index);
-
+                activeNotesVec.erase(activeNotesVec.begin() + index);
             }
         }
     }
@@ -388,6 +397,7 @@ Rectangle Piano::getConnectionRec() {return connectRectangle;}
 bool Piano::getCanDrawConnection() { return canDrawConnection;}
 bool Piano::getStateActive() {return active;}
 std::vector<std::string> Piano::getSelectedNotes(){ return selectedNotesVec; }
+std::vector<std::string> Piano::getActiveNotes() { return activeNotesVec; }
 //std::vector<std::vector<int>> Piano::getNoteClickedBoolVec() { return noteClickedBoolVec; }
 
 /** Setters **/

@@ -111,33 +111,16 @@ int main()
             // Only assign if not at index i
             for (int j = 0; j < instrumentsVec.size(); j++) {
                 if (j != i) {
-                    currNotesVec = instrumentsVec[j]->getSelectedNotes();
-                }
-            }
-
-            // Check for duplicates and append
-            for (const auto& note : instrumentsVec[i]->getSelectedNotes()) {
-                // Check if the note is already present in currNotesVec
-                if (std::find(currNotesVec.begin(), currNotesVec.end(), note) == currNotesVec.end()) {
-                    currNotesVec.emplace_back(note);
-                }
-            }
-
-            // Add all elements from each iteration of currNotesVec to newNotesVec
-            for (const auto& note : currNotesVec) {
-                // Only add if note is not already in newNotesVec
-                if (std::find(newNotesVec.begin(), newNotesVec.end(), note) == newNotesVec.end()) {
-                    newNotesVec.emplace_back(note);
+                    currNotesVec = instrumentsVec[j]->getActiveNotes();
                 }
             }
 
             std::cout << "\nNotes Currently Selected From Index: " << i << std::endl;
-            for (int k = 0; k < newNotesVec.size(); k++) {
-                std::cout << newNotesVec[k] << std::endl;
-
+            for (const auto& note : instrumentsVec[i]->getSelectedNotes()) {
+                std::cout << note << std::endl;
             }
 
-            instrumentsVec[i]->setActiveNotes(newNotesVec);
+            instrumentsVec[i]->setActiveNotes(currNotesVec);
             instrumentsVec[i]->notesActivate();
 
             if (instrumentsVec[i]->getStateActive()) {

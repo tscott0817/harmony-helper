@@ -64,6 +64,10 @@ bool Instrument::isHovering(Vector2 mousePos) {
     return false;
 }
 
+std::vector<std::string> Instrument::getActiveNotes() {
+    return {};
+}
+
 //std::vector<std::vector<int>> Instrument::getNoteClickedBoolVec() {
 //    return {};
 //}

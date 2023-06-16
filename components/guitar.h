@@ -92,6 +92,7 @@ public:
     Rectangle getContainer() override;
     Rectangle getConnectionRec() override;
     std::vector<std::string> getSelectedNotes() override;
+    std::vector<std::string> getActiveNotes() override;
 //    std::vector<std::vector<int>> getNoteClickedBoolVec() override;
     bool isHovering(Vector2 mousePos) override;
 

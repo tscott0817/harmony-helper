@@ -73,21 +73,15 @@ void Instrument::appendActiveNotes(std::string appendedNote) {
 }
 
 
-// TODO: This seems weird
+// TODO: This seems weird, but get undefined regerence otherwise
 std::vector<std::string> Instrument::sharedNotesVec;
 void Instrument::addNoteShared(const std::string& note) {
     // Only add if not currently in sharedNotesVec
     if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), note) == sharedNotesVec.end()) {
         sharedNotesVec.emplace_back(note);
         std::cout << "Note added to Share Notes Vec: " << note << std::endl;
+        printNotesShared();
     }
-}
-
-void Instrument::printNotesShared() {
-    for (const auto& item : sharedNotesVec) {
-        std::cout << item << " ";
-    }
-    std::cout << std::endl;
 }
 
 void Instrument::removeNoteShared(const std::string& note) {
@@ -98,6 +92,16 @@ void Instrument::removeNoteShared(const std::string& note) {
     } else {
         std::cout << "Note not found in Share Notes Vec: " << note << std::endl;
     }
+    printNotesShared();
+}
+
+
+void Instrument::printNotesShared() {
+    std::cout << "Full sharedNotesVec: ";
+    for (const auto& item : sharedNotesVec) {
+        std::cout << item << " ";
+    }
+    std::cout << "\n" << std::endl;
 }
 
 std::vector<std::string> Instrument::getNotesShared() {return sharedNotesVec;}

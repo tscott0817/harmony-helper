@@ -83,16 +83,6 @@ int main()
     // Used to stop hovering at same time as over objects
     bool menuActive = false;
 
-    std::vector<std::string> currNotesVec;
-    // Fill current notes with empty strings
-//    for (int i = 0; i < 50; i++) {
-//        currNotesVec.emplace_back("X");
-//    }
-    // print current notes
-    for (int i = 0; i < currNotesVec.size(); i++) {
-        std::cout << currNotesVec[i] << std::endl;
-    }
-
     InitAudioDevice();  // TODO: Not sure if best here in main, or if each class should have one
     /** Main Loop **/
     SetTargetFPS(60);
@@ -107,21 +97,9 @@ int main()
         Vector2 mousePos = GetMousePosition();
         bool leftMouseClicked = IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
 
-        // Print shareNotesVec from Instrument base class
-        // std::cout << "Shared Notes: " << std::endl;
-        // for (int i = 0; i < instrumentsVec[0]->getNotesShared().size(); i++) {
-        //     std::cout << instrumentsVec[0]->getNotesShared()[i] << std::endl;
-        // }
-
+        /** Handles appropriate instrument functions to call **/
         for (int i = 0; i < instrumentsVec.size(); i++) {
 
-//            std::cout << "Instrument " << i << " notes: " << std::endl;
-//            for (int j = 0; j < instrumentsVec[i]->getNotesShared().size(); j++) {
-//                std::cout << instrumentsVec[i]->getNotesShared()[j] << std::endl;
-//            }
-            // currNotesVec = instrumentsVec[i]->getNotesShared();
-
-            // instrumentsVec[i]->setActiveNotes(currNotesVec);
             instrumentsVec[i]->notesActivate();
 
             if (instrumentsVec[i]->getStateActive()) {
@@ -147,7 +125,6 @@ int main()
                 instrumentsVec[i]->setCanDraw(true);
             }
         }
-
 
         /** Object Drawing Here  **/
         BeginDrawing();
@@ -180,7 +157,6 @@ int main()
     for (const auto & inst : instrumentsVec) {
         inst->destroy();
     }
-    //instrumentsVec[1]->destroy();  // TODO: Loop through entire instrument vec instead
     //UnloadSound(soundTest);
     CloseAudioDevice();
     CloseWindow();        // Close window and OpenGL context

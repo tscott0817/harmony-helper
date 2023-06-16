@@ -152,17 +152,6 @@ void Piano::hover(Vector2 mousePos) {
 }
 
 bool Piano::isHovering(Vector2 mousePos) {
-//    // return true if hovering over piano container
-//    if (mousePos.x > container.x &&
-//        mousePos.x < container.x + container.width &&
-//        mousePos.y > container.y &&
-//        mousePos.y < container.y + container.height) {
-//        return true;
-//    }
-//    else {
-//        return false;
-//    }
-
     if (mousePos.x > containerLoc.x - (container.width * .5f) && mousePos.x < containerLoc.x + (container.width * .5f) &&
         mousePos.y > containerLoc.y - (container.height * .5f) && mousePos.y < containerLoc.y + (container.height * .5f)) {
         std::cout << "Hovering Piano" << std::endl;
@@ -173,32 +162,6 @@ bool Piano::isHovering(Vector2 mousePos) {
         return false;
     }
 }
-
-//// play sound
-//void Piano::playSound(Vector2 mousePos) {
-//    // Black Keys
-//    // check if left click
-//
-//    for (int i = 0; i < keyBlackLocations.size(); i++) {
-//        if (mousePos.x > keyBlackLocations[i].x &&
-//            mousePos.x < keyBlackLocations[i].x + (keyBlackRectangle.width) &&
-//            mousePos.y > keyBlackLocations[i].y &&
-//            mousePos.y < keyBlackLocations[i].y + (keyBlackRectangle.height) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-//            std::cout << "Black Key Play sound" << i << " pressed" << std::endl;
-//        }
-//    }
-//
-//    // White Keys
-//    for (int i = 0; i < keyWhiteLocations.size(); i++) {
-//        if (mousePos.x > keyWhiteLocations[i].x &&
-//            mousePos.x < keyWhiteLocations[i].x + (keyWhiteRectangle.width) &&
-//            mousePos.y > keyWhiteLocations[i].y &&
-//            mousePos.y < keyWhiteLocations[i].y + (keyWhiteRectangle.height) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-//            std::cout << "White Key Play sound" << i << " pressed" << std::endl;
-//            PlaySound(F);
-//        }
-//    }
-//}
 
 bool Piano::connectionHover(Vector2 mousePos) {
     if (mousePos.x > connectRectangle.x - (connectRectangle.width * .5f) && mousePos.x < connectRectangle.x + (connectRectangle.width * .5f) &&
@@ -231,17 +194,6 @@ void Piano::clickColorHold(Vector2 mousePos) {
         }
         else {
             hoveringBlack = false;
-//            noteClickedBoolVec[i] = 0;
-//            keyBlackColorVec[i] = blackKeyColor;
-//
-//            // TODO: This seems to get the correct index, but feels a bit odd.
-//            int index = 0;
-//            for (int k = 0; k < selectedNotesVec.size(); k++) {
-//                if (selectedNotesVec[k] == noteTextVec[0][i]) {
-//                    index = k;
-//                }
-//            }
-//            selectedNotesVec.erase(selectedNotesVec.begin() + index);
         }
     }
     if (!hoveringBlack) {
@@ -254,9 +206,6 @@ void Piano::clickColorHold(Vector2 mousePos) {
                 IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && noteClickedBoolVec[i] == 0) {
                 noteClickedBoolVec[i] = 1;
                 keyWhiteColorVec[i] = clickColor;
-                // selectedNotesVec.emplace_back(noteTextVec[0][i]);
-                // activeNotesVec.emplace_back(noteTextVec[0][i]);
-                // sharedNotesVec.emplace_back(noteTextVec[0][i]);
                 addNoteShared(noteTextVec[0][i]);
 
 
@@ -268,35 +217,7 @@ void Piano::clickColorHold(Vector2 mousePos) {
 
                 noteClickedBoolVec[i] = 0;
                 keyWhiteColorVec[i] = whiteKeyColor;
-
-//                // TODO: This seems to get the correct index, but feels a bit odd.
-//                int index = 0;
-//                for (int k = 0; k < selectedNotesVec.size(); k++) {
-//                    if (selectedNotesVec[k] == noteTextVec[0][i]) {
-//                        index = k;
-//                    }
-//                }
-//                selectedNotesVec.erase(selectedNotesVec.begin() + index);
-
-                // DO the same but with activeNotesVec
-//                int index = 0;
-//                for (int k = 0; k < activeNotesVec.size(); k++) {
-//                    if (activeNotesVec[k] == noteTextVec[0][i]) {
-//                        index = k;
-//                    }
-//                }
-//                activeNotesVec.erase(activeNotesVec.begin() + index);
-
-                // Do the same but with sharedNotesVec
-//                int index = 0;
-//                for (int k = 0; k < sharedNotesVec.size(); k++) {
-//                    if (sharedNotesVec[k] == noteTextVec[0][i]) {
-//                        index = k;
-//                    }
-//                }
-//                sharedNotesVec.erase(sharedNotesVec.begin() + index);
                 removeNoteShared(noteTextVec[0][i]);
-
             }
         }
     }
@@ -329,11 +250,15 @@ void Piano::clickAndDrag(Vector2 mousePos) {
 }
 
 void Piano::notesActivate() {
+
+    // TODO: Will need to make separate noteClickedBoolVec for either black or white keys (2 vecs total)
     if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "C") != sharedNotesVec.end()) {
         keyWhiteColorVec[0] = clickColor;
+        noteClickedBoolVec[0] = 1;
     }
     else {
         keyWhiteColorVec[0] = whiteKeyColor;
+        noteClickedBoolVec[0] = 0;
     }
     if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "Db") != sharedNotesVec.end()) {
         keyBlackColorVec[0] = blackKeyClickColor;
@@ -343,9 +268,11 @@ void Piano::notesActivate() {
     }
     if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "D") != sharedNotesVec.end()) {
         keyWhiteColorVec[1] = clickColor;
+        noteClickedBoolVec[1] = 1;
     }
     else {
         keyWhiteColorVec[1] = whiteKeyColor;
+        noteClickedBoolVec[1] = 0;
     }
     if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "Eb") != sharedNotesVec.end()) {
         keyBlackColorVec[1] = blackKeyClickColor;
@@ -355,15 +282,19 @@ void Piano::notesActivate() {
     }
     if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "E") != sharedNotesVec.end()) {
         keyWhiteColorVec[2] = clickColor;
+        noteClickedBoolVec[2] = 1;
     }
     else {
         keyWhiteColorVec[2] = whiteKeyColor;
+        noteClickedBoolVec[2] = 0;
     }
     if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "F") != sharedNotesVec.end()) {
         keyWhiteColorVec[3] = clickColor;
+        noteClickedBoolVec[3] = 1;
     }
     else {
         keyWhiteColorVec[3] = whiteKeyColor;
+        noteClickedBoolVec[3] = 0;
     }
     if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "Gb") != sharedNotesVec.end()) {
         keyBlackColorVec[2] = blackKeyClickColor;
@@ -373,9 +304,11 @@ void Piano::notesActivate() {
     }
     if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "G") != sharedNotesVec.end()) {
         keyWhiteColorVec[4] = clickColor;
+        noteClickedBoolVec[4] = 1;
     }
     else {
         keyWhiteColorVec[4] = whiteKeyColor;
+        noteClickedBoolVec[4] = 0;
     }
     if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "Ab") != sharedNotesVec.end()) {
         keyBlackColorVec[3] = blackKeyClickColor;
@@ -385,9 +318,11 @@ void Piano::notesActivate() {
     }
     if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "A") != sharedNotesVec.end()) {
         keyWhiteColorVec[5] = clickColor;
+        noteClickedBoolVec[5] = 1;
     }
     else {
         keyWhiteColorVec[5] = whiteKeyColor;
+        noteClickedBoolVec[5] = 0;
     }
     if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "Bb") != sharedNotesVec.end()) {
         keyBlackColorVec[4] = blackKeyClickColor;
@@ -397,84 +332,12 @@ void Piano::notesActivate() {
     }
     if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "B") != sharedNotesVec.end()) {
         keyWhiteColorVec[6] = clickColor;
+        noteClickedBoolVec[6] = 1;
     }
     else {
         keyWhiteColorVec[6] = whiteKeyColor;
+        noteClickedBoolVec[6] = 0;
     }
-
-
-//    if (std::find(activeNotesVec.begin(), activeNotesVec.end(), "C") != activeNotesVec.end()) {
-//        keyWhiteColorVec[0] = clickColor;
-//    }
-//    else {
-//        keyWhiteColorVec[0] = whiteKeyColor;
-//    }
-//    if (std::find(activeNotesVec.begin(), activeNotesVec.end(), "Db") != activeNotesVec.end()) {
-//        keyBlackColorVec[0] = blackKeyClickColor;
-//    }
-//    else {
-//        keyBlackColorVec[0] = blackKeyColor;
-//    }
-//    if (std::find(activeNotesVec.begin(), activeNotesVec.end(), "D") != activeNotesVec.end()) {
-//        keyWhiteColorVec[1] = clickColor;
-//    }
-//    else {
-//        keyWhiteColorVec[1] = whiteKeyColor;
-//    }
-//    if (std::find(activeNotesVec.begin(), activeNotesVec.end(), "Eb") != activeNotesVec.end()) {
-//        keyBlackColorVec[1] = blackKeyClickColor;
-//    }
-//    else {
-//        keyBlackColorVec[1] = blackKeyColor;
-//    }
-//    if (std::find(activeNotesVec.begin(), activeNotesVec.end(), "E") != activeNotesVec.end()) {
-//        keyWhiteColorVec[2] = clickColor;
-//    }
-//    else {
-//        keyWhiteColorVec[2] = whiteKeyColor;
-//    }
-//    if (std::find(activeNotesVec.begin(), activeNotesVec.end(), "F") != activeNotesVec.end()) {
-//        keyWhiteColorVec[3] = clickColor;
-//    }
-//    else {
-//        keyWhiteColorVec[3] = whiteKeyColor;
-//    }
-//    if (std::find(activeNotesVec.begin(), activeNotesVec.end(), "Gb") != activeNotesVec.end()) {
-//        keyBlackColorVec[2] = blackKeyClickColor;
-//    }
-//    else {
-//        keyBlackColorVec[2] = blackKeyColor;
-//    }
-//    if (std::find(activeNotesVec.begin(), activeNotesVec.end(), "G") != activeNotesVec.end()) {
-//        keyWhiteColorVec[4] = clickColor;
-//    }
-//    else {
-//        keyWhiteColorVec[4] = whiteKeyColor;
-//    }
-//    if (std::find(activeNotesVec.begin(), activeNotesVec.end(), "Ab") != activeNotesVec.end()) {
-//        keyBlackColorVec[3] = blackKeyClickColor;
-//    }
-//    else {
-//        keyBlackColorVec[3] = blackKeyColor;
-//    }
-//    if (std::find(activeNotesVec.begin(), activeNotesVec.end(), "A") != activeNotesVec.end()) {
-//        keyWhiteColorVec[5] = clickColor;
-//    }
-//    else {
-//        keyWhiteColorVec[5] = whiteKeyColor;
-//    }
-//    if (std::find(activeNotesVec.begin(), activeNotesVec.end(), "Bb") != activeNotesVec.end()) {
-//        keyBlackColorVec[4] = blackKeyClickColor;
-//    }
-//    else {
-//        keyBlackColorVec[4] = blackKeyColor;
-//    }
-//    if (std::find(activeNotesVec.begin(), activeNotesVec.end(), "B") != activeNotesVec.end()) {
-//        keyWhiteColorVec[6] = clickColor;
-//    }
-//    else {
-//        keyWhiteColorVec[6] = whiteKeyColor;
-//    }
 }
 
 /** Getters **/
@@ -485,11 +348,9 @@ bool Piano::getCanDrawConnection() { return canDrawConnection;}
 bool Piano::getStateActive() {return active;}
 std::vector<std::string> Piano::getSelectedNotes(){ return selectedNotesVec; }
 std::vector<std::string> Piano::getActiveNotes() { return activeNotesVec; }
-//std::vector<std::vector<int>> Piano::getNoteClickedBoolVec() { return noteClickedBoolVec; }
 
 /** Setters **/
 void Piano::setCanDraw(bool canDraw) {this->canDraw = canDraw;}
-//void Piano::setConnectionRec(Rectangle connectRectangle) {this->connectRectangle = connectRectangle;}
 void Piano::setCanDrawConnection(bool state) {this->canDrawConnection = state;}
 void Piano::setStateActive(bool state) {this->active = state;}
 void Piano::setActiveNotes(std::vector<std::string> newVec) {activeNotesVec = std::move(newVec);}
@@ -498,20 +359,12 @@ void Piano::appendActiveNotes(std::string appendedNote) {
     if (std::find(activeNotesVec.begin(), activeNotesVec.end(), appendedNote) == activeNotesVec.end()) {
         activeNotesVec.emplace_back(appendedNote);
     }
-//    activeNotesVec.emplace_back(appendedNote);
 }
-//void Piano::setNoteClickBoolVec(std::vector<std::vector<int>> newVec) { noteClickedBoolVec = newVec; }
-//void Piano::addSelectNote(const std::string &notes) {selectedNotesVec.push_back(notes);}
-//void Piano::addSelectNote(const std::string &notes) {selectedNotesVec.push_back(notes);}
 
 
 /** Destruct **/
 // TODO: Not sure which is best approach
 void Piano::destroy() {UnloadTexture(containerTexture); UnloadSound(F);}
-
-//void Piano::notesActivate() {
-//    Instrument::notesActivate();
-//}
 
 
 

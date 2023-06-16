@@ -329,23 +329,39 @@ void Guitar::notesActivate() {
         noteClickedBoolVec[10][3] = 0;
 
     }
-//    if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "Db") != sharedNotesVec.end()) {
-//        // Change the color of all C's
-//        noteColorVec[2][3] = clickColor;
-//        noteColorVec[4][3] = clickColor;
-//        noteColorVec[6][5] = clickColor;
-//        noteColorVec[9][2] = clickColor;
-//        noteColorVec[9][7] = clickColor;
-//        noteColorVec[11][4] = clickColor;
-//    }
-//    else {
-//        noteColorVec[2][3] = rootColor;
-//        noteColorVec[4][3] = rootColor;
-//        noteColorVec[6][5] = rootColor;
-//        noteColorVec[9][2] = rootColor;
-//        noteColorVec[9][7] = rootColor;
-//        noteColorVec[11][4] = rootColor;
-//    }
+
+    if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "Db") != sharedNotesVec.end()) {
+        // Change the color of all C's
+        noteColorVec[2][5] = clickColor;
+        noteColorVec[4][3] = clickColor;
+        noteColorVec[6][4] = clickColor;
+        noteColorVec[9][1] = clickColor;
+        noteColorVec[9][6] = clickColor;
+        noteColorVec[11][3] = clickColor;
+
+        noteClickedBoolVec[2][5] = 1;
+        noteClickedBoolVec[4][3] = 1;
+        noteClickedBoolVec[6][4] = 1;
+        noteClickedBoolVec[9][1] = 1;
+        noteClickedBoolVec[9][6] = 1;
+        noteClickedBoolVec[11][3] = 1;
+
+    }
+    else {
+        noteColorVec[2][5] = rootColor;
+        noteColorVec[4][3] = rootColor;
+        noteColorVec[6][4] = rootColor;
+        noteColorVec[9][1] = rootColor;
+        noteColorVec[9][6] = rootColor;
+        noteColorVec[11][3] = rootColor;
+
+        noteClickedBoolVec[2][5] = 0;
+        noteClickedBoolVec[4][3] = 0;
+        noteClickedBoolVec[6][4] = 0;
+        noteClickedBoolVec[9][1] = 0;
+        noteClickedBoolVec[9][6] = 0;
+        noteClickedBoolVec[11][3] = 0;
+    }
 
     if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "D") != sharedNotesVec.end()) {
         // Change the color of all C's
@@ -380,6 +396,40 @@ void Guitar::notesActivate() {
         noteClickedBoolVec[12][3] = 0;
 
     }
+
+    if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "Eb") != sharedNotesVec.end()) {
+        // Change the color of all C's
+        noteColorVec[1][3] = clickColor;
+        noteColorVec[4][5] = clickColor;
+        noteColorVec[6][2] = clickColor;
+        noteColorVec[8][4] = clickColor;
+        noteColorVec[11][6] = clickColor;
+        noteColorVec[11][1] = clickColor;
+
+        noteClickedBoolVec[1][3] = 1;
+        noteClickedBoolVec[4][5] = 1;
+        noteClickedBoolVec[6][2] = 1;
+        noteClickedBoolVec[8][4] = 1;
+        noteClickedBoolVec[11][6] = 1;
+        noteClickedBoolVec[11][1] = 1;
+
+    }
+    else {
+        noteColorVec[1][3] = rootColor;
+        noteColorVec[4][5] = rootColor;
+        noteColorVec[6][2] = rootColor;
+        noteColorVec[8][4] = rootColor;
+        noteColorVec[11][6] = rootColor;
+        noteColorVec[11][1] = rootColor;
+
+        noteClickedBoolVec[1][3] = 0;
+        noteClickedBoolVec[4][5] = 0;
+        noteClickedBoolVec[6][2] = 0;
+        noteClickedBoolVec[8][4] = 0;
+        noteClickedBoolVec[11][6] = 0;
+        noteClickedBoolVec[11][1] = 0;
+    }
+
     if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "E") != sharedNotesVec.end()) {
         // Change the color of all C's
         noteColorVec[2][3] = clickColor;
@@ -443,6 +493,38 @@ void Guitar::notesActivate() {
         noteClickedBoolVec[8][2] = 0;
         noteClickedBoolVec[10][4] = 0;
     }
+    if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "Gb") != sharedNotesVec.end()) {
+        // Change the color of all C's
+        noteColorVec[2][1] = clickColor;
+        noteColorVec[2][6] = clickColor;
+        noteColorVec[4][3] = clickColor;
+        noteColorVec[7][5] = clickColor;
+        noteColorVec[9][2] = clickColor;
+        noteColorVec[11][4] = clickColor;
+
+        noteClickedBoolVec[2][1] = 1;
+        noteClickedBoolVec[2][6] = 1;
+        noteClickedBoolVec[4][3] = 1;
+        noteClickedBoolVec[7][5] = 1;
+        noteClickedBoolVec[9][2] = 1;
+        noteClickedBoolVec[11][4] = 1;
+
+    }
+    else {
+        noteColorVec[2][1] = rootColor;
+        noteColorVec[2][6] = rootColor;
+        noteColorVec[4][3] = rootColor;
+        noteColorVec[7][5] = rootColor;
+        noteColorVec[9][2] = rootColor;
+        noteColorVec[11][4] = rootColor;
+
+        noteClickedBoolVec[2][1] = 0;
+        noteClickedBoolVec[2][6] = 0;
+        noteClickedBoolVec[4][3] = 0;
+        noteClickedBoolVec[7][5] = 0;
+        noteClickedBoolVec[9][2] = 0;
+        noteClickedBoolVec[11][4] = 0;
+    }
     if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "G") != sharedNotesVec.end()) {
         // Change the color of all C's
         noteColorVec[3][1] = clickColor;
@@ -474,6 +556,38 @@ void Guitar::notesActivate() {
         noteClickedBoolVec[10][2] = 0;
         noteClickedBoolVec[12][4] = 0;
 
+    }
+    if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "Ab") != sharedNotesVec.end()) {
+        // Change the color of all C's
+        noteColorVec[1][4] = clickColor;
+        noteColorVec[4][6] = clickColor;
+        noteColorVec[4][1] = clickColor;
+        noteColorVec[6][3] = clickColor;
+        noteColorVec[9][5] = clickColor;
+        noteColorVec[11][2] = clickColor;
+
+        noteClickedBoolVec[1][4] = 1;
+        noteClickedBoolVec[4][6] = 1;
+        noteClickedBoolVec[4][1] = 1;
+        noteClickedBoolVec[6][3] = 1;
+        noteClickedBoolVec[9][5] = 1;
+        noteClickedBoolVec[11][2] = 1;
+
+    }
+    else {
+        noteColorVec[1][4] = rootColor;
+        noteColorVec[4][6] = rootColor;
+        noteColorVec[4][1] = rootColor;
+        noteColorVec[6][3] = rootColor;
+        noteColorVec[9][5] = rootColor;
+        noteColorVec[11][2] = rootColor;
+
+        noteClickedBoolVec[1][4] = 0;
+        noteClickedBoolVec[4][6] = 0;
+        noteClickedBoolVec[4][1] = 0;
+        noteClickedBoolVec[6][3] = 0;
+        noteClickedBoolVec[9][5] = 0;
+        noteClickedBoolVec[11][2] = 0;
     }
     if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "A") != sharedNotesVec.end()) {
         // Change the color of all C's
@@ -536,7 +650,38 @@ void Guitar::notesActivate() {
         noteClickedBoolVec[7][6] = 0;
         noteClickedBoolVec[9][3] = 0;
         noteClickedBoolVec[12][5] = 0;
+    }
+    if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "Bb") != sharedNotesVec.end()) {
+        // Change the color of all C's
+        noteColorVec[1][2] = clickColor;
+        noteColorVec[3][4] = clickColor;
+        noteColorVec[6][6] = clickColor;
+        noteColorVec[6][1] = clickColor;
+        noteColorVec[8][3] = clickColor;
+        noteColorVec[11][5] = clickColor;
 
+        noteClickedBoolVec[1][2] = 1;
+        noteClickedBoolVec[3][4] = 1;
+        noteClickedBoolVec[6][6] = 1;
+        noteClickedBoolVec[6][1] = 1;
+        noteClickedBoolVec[8][3] = 1;
+        noteClickedBoolVec[11][5] = 1;
+
+    }
+    else {
+        noteColorVec[1][2] = rootColor;
+        noteColorVec[3][4] = rootColor;
+        noteColorVec[6][6] = rootColor;
+        noteColorVec[6][1] = rootColor;
+        noteColorVec[8][3] = rootColor;
+        noteColorVec[11][5] = rootColor;
+
+        noteClickedBoolVec[1][2] = 0;
+        noteClickedBoolVec[3][4] = 0;
+        noteClickedBoolVec[6][6] = 0;
+        noteClickedBoolVec[6][1] = 0;
+        noteClickedBoolVec[8][3] = 0;
+        noteClickedBoolVec[11][5] = 0;
     }
 }
 

@@ -51,7 +51,8 @@ private:
     std::vector<Sound> notesVec;
 
     std::vector<std::vector<Color>> noteColorVec;
-    std::vector<int> noteClickedBoolVec;
+    std::vector<int> noteClickedBoolVecWhite;
+    std::vector<int> noteClickedBoolVecBlack;
     std::vector<std::string> activeNotesVec;
 
     // White keys

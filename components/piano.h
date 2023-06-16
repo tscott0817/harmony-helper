@@ -83,6 +83,7 @@ public:
     bool getStateActive() override;
     std::vector<std::string> getSelectedNotes() override;
     std::vector<std::string> getActiveNotes() override;
+    void appendActiveNotes(std::string appendedNote) override;
 //    std::vector<std::vector<int>> getNoteClickedBoolVec() override;
 
 

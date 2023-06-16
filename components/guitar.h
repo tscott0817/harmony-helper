@@ -104,6 +104,7 @@ public:
     //void setConnectionRec(Rectangle pos) override;
 //    void addSelectNote(const std::string &notes) override;
     void setActiveNotes(std::vector<std::string> newVec) override;
+    void appendActiveNotes(std::string newNote) override;
 
 
     void destroy();

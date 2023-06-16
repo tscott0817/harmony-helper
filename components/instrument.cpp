@@ -1,6 +1,6 @@
 #include "instrument.h"
-
 #include <utility>
+#include <algorithm>
 
 // Make constructor
 Instrument::Instrument() {
@@ -67,6 +67,40 @@ bool Instrument::isHovering(Vector2 mousePos) {
 std::vector<std::string> Instrument::getActiveNotes() {
     return {};
 }
+
+void Instrument::appendActiveNotes(std::string appendedNote) {
+    int x = 2;  // Placeholder
+}
+
+
+// TODO: This seems weird
+std::vector<std::string> Instrument::sharedNotesVec;
+void Instrument::addNoteShared(const std::string& note) {
+    // Only add if not currently in sharedNotesVec
+    if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), note) == sharedNotesVec.end()) {
+        sharedNotesVec.emplace_back(note);
+        std::cout << "Note added to Share Notes Vec: " << note << std::endl;
+    }
+}
+
+void Instrument::printNotesShared() {
+    for (const auto& item : sharedNotesVec) {
+        std::cout << item << " ";
+    }
+    std::cout << std::endl;
+}
+
+void Instrument::removeNoteShared(const std::string& note) {
+    auto it = std::find(sharedNotesVec.begin(), sharedNotesVec.end(), note);
+    if (it != sharedNotesVec.end()) {
+        sharedNotesVec.erase(it);
+        std::cout << "Note removed from Share Notes Vec: " << note << std::endl;
+    } else {
+        std::cout << "Note not found in Share Notes Vec: " << note << std::endl;
+    }
+}
+
+std::vector<std::string> Instrument::getNotesShared() {return sharedNotesVec;}
 
 //std::vector<std::vector<int>> Instrument::getNoteClickedBoolVec() {
 //    return {};

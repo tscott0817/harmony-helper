@@ -85,9 +85,9 @@ int main()
 
     std::vector<std::string> currNotesVec;
     // Fill current notes with empty strings
-    for (int i = 0; i < 50; i++) {
-        currNotesVec.emplace_back("X");
-    }
+//    for (int i = 0; i < 50; i++) {
+//        currNotesVec.emplace_back("X");
+//    }
     // print current notes
     for (int i = 0; i < currNotesVec.size(); i++) {
         std::cout << currNotesVec[i] << std::endl;
@@ -106,21 +106,22 @@ int main()
         // For mouse interactions
         Vector2 mousePos = GetMousePosition();
         bool leftMouseClicked = IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
-        
+
+        // Print shareNotesVec from Instrument base class
+        // std::cout << "Shared Notes: " << std::endl;
+        // for (int i = 0; i < instrumentsVec[0]->getNotesShared().size(); i++) {
+        //     std::cout << instrumentsVec[0]->getNotesShared()[i] << std::endl;
+        // }
+
         for (int i = 0; i < instrumentsVec.size(); i++) {
-            // Only assign if not at index i
-            for (int j = 0; j < instrumentsVec.size(); j++) {
-                if (j != i) {
-                    currNotesVec = instrumentsVec[j]->getActiveNotes();
-                }
-            }
 
-            std::cout << "\nNotes Currently Selected From Index: " << i << std::endl;
-            for (const auto& note : instrumentsVec[i]->getSelectedNotes()) {
-                std::cout << note << std::endl;
-            }
+//            std::cout << "Instrument " << i << " notes: " << std::endl;
+//            for (int j = 0; j < instrumentsVec[i]->getNotesShared().size(); j++) {
+//                std::cout << instrumentsVec[i]->getNotesShared()[j] << std::endl;
+//            }
+            // currNotesVec = instrumentsVec[i]->getNotesShared();
 
-            instrumentsVec[i]->setActiveNotes(currNotesVec);
+            // instrumentsVec[i]->setActiveNotes(currNotesVec);
             instrumentsVec[i]->notesActivate();
 
             if (instrumentsVec[i]->getStateActive()) {

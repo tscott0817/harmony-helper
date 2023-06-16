@@ -48,6 +48,9 @@ protected:
     // TODO: Maybe just hold string that can be used to search. Like 'if the current note is selected'
     std::vector<std::string> selectedNotesVec;  // Hold index of each note that is selected,
 
+    /** Track All Shared Notes **/
+    static std::vector<std::string> sharedNotesVec;
+
 
 public:
 
@@ -76,10 +79,16 @@ public:
     virtual void setCanDraw(bool state);
     virtual void setCanDrawConnection(bool state);
     virtual void setActiveNotes(std::vector<std::string> newVec);
+    virtual void appendActiveNotes(std::string appendedNote);
     virtual void notesActivate();
 //    virtual void setNoteClickBoolVec(std::vector<std::vector<int>> newVec);
 //    virtual void setConnectionRec(Rectangle pos);
 //    virtual void addSelectNote(const std::string &notes);
+
+    void addNoteShared(const std::string& item);
+    void printNotesShared();
+    void removeNoteShared(const std::string& note);
+    static std::vector<std::string> getNotesShared();
 
     virtual void destroy();
 

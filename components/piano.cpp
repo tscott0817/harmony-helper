@@ -255,7 +255,9 @@ void Piano::clickColorHold(Vector2 mousePos) {
                 noteClickedBoolVec[i] = 1;
                 keyWhiteColorVec[i] = clickColor;
                 // selectedNotesVec.emplace_back(noteTextVec[0][i]);
-                activeNotesVec.emplace_back(noteTextVec[0][i]);
+                // activeNotesVec.emplace_back(noteTextVec[0][i]);
+                // sharedNotesVec.emplace_back(noteTextVec[0][i]);
+                addNoteShared(noteTextVec[0][i]);
 
 
             } else if (mousePos.x > keyWhiteLocations[i].x &&
@@ -277,13 +279,24 @@ void Piano::clickColorHold(Vector2 mousePos) {
 //                selectedNotesVec.erase(selectedNotesVec.begin() + index);
 
                 // DO the same but with activeNotesVec
-                int index = 0;
-                for (int k = 0; k < activeNotesVec.size(); k++) {
-                    if (activeNotesVec[k] == noteTextVec[0][i]) {
-                        index = k;
-                    }
-                }
-                activeNotesVec.erase(activeNotesVec.begin() + index);
+//                int index = 0;
+//                for (int k = 0; k < activeNotesVec.size(); k++) {
+//                    if (activeNotesVec[k] == noteTextVec[0][i]) {
+//                        index = k;
+//                    }
+//                }
+//                activeNotesVec.erase(activeNotesVec.begin() + index);
+
+                // Do the same but with sharedNotesVec
+//                int index = 0;
+//                for (int k = 0; k < sharedNotesVec.size(); k++) {
+//                    if (sharedNotesVec[k] == noteTextVec[0][i]) {
+//                        index = k;
+//                    }
+//                }
+//                sharedNotesVec.erase(sharedNotesVec.begin() + index);
+                removeNoteShared(noteTextVec[0][i]);
+
             }
         }
     }
@@ -316,78 +329,152 @@ void Piano::clickAndDrag(Vector2 mousePos) {
 }
 
 void Piano::notesActivate() {
-    if (std::find(activeNotesVec.begin(), activeNotesVec.end(), "C") != activeNotesVec.end()) {
+    if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "C") != sharedNotesVec.end()) {
         keyWhiteColorVec[0] = clickColor;
     }
     else {
         keyWhiteColorVec[0] = whiteKeyColor;
     }
-    if (std::find(activeNotesVec.begin(), activeNotesVec.end(), "Db") != activeNotesVec.end()) {
+    if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "Db") != sharedNotesVec.end()) {
         keyBlackColorVec[0] = blackKeyClickColor;
     }
     else {
         keyBlackColorVec[0] = blackKeyColor;
     }
-    if (std::find(activeNotesVec.begin(), activeNotesVec.end(), "D") != activeNotesVec.end()) {
+    if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "D") != sharedNotesVec.end()) {
         keyWhiteColorVec[1] = clickColor;
     }
     else {
         keyWhiteColorVec[1] = whiteKeyColor;
     }
-    if (std::find(activeNotesVec.begin(), activeNotesVec.end(), "Eb") != activeNotesVec.end()) {
+    if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "Eb") != sharedNotesVec.end()) {
         keyBlackColorVec[1] = blackKeyClickColor;
     }
     else {
         keyBlackColorVec[1] = blackKeyColor;
     }
-    if (std::find(activeNotesVec.begin(), activeNotesVec.end(), "E") != activeNotesVec.end()) {
+    if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "E") != sharedNotesVec.end()) {
         keyWhiteColorVec[2] = clickColor;
     }
     else {
         keyWhiteColorVec[2] = whiteKeyColor;
     }
-    if (std::find(activeNotesVec.begin(), activeNotesVec.end(), "F") != activeNotesVec.end()) {
+    if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "F") != sharedNotesVec.end()) {
         keyWhiteColorVec[3] = clickColor;
     }
     else {
         keyWhiteColorVec[3] = whiteKeyColor;
     }
-    if (std::find(activeNotesVec.begin(), activeNotesVec.end(), "Gb") != activeNotesVec.end()) {
+    if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "Gb") != sharedNotesVec.end()) {
         keyBlackColorVec[2] = blackKeyClickColor;
     }
     else {
         keyBlackColorVec[2] = blackKeyColor;
     }
-    if (std::find(activeNotesVec.begin(), activeNotesVec.end(), "G") != activeNotesVec.end()) {
+    if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "G") != sharedNotesVec.end()) {
         keyWhiteColorVec[4] = clickColor;
     }
     else {
         keyWhiteColorVec[4] = whiteKeyColor;
     }
-    if (std::find(activeNotesVec.begin(), activeNotesVec.end(), "Ab") != activeNotesVec.end()) {
+    if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "Ab") != sharedNotesVec.end()) {
         keyBlackColorVec[3] = blackKeyClickColor;
     }
     else {
         keyBlackColorVec[3] = blackKeyColor;
     }
-    if (std::find(activeNotesVec.begin(), activeNotesVec.end(), "A") != activeNotesVec.end()) {
+    if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "A") != sharedNotesVec.end()) {
         keyWhiteColorVec[5] = clickColor;
     }
     else {
         keyWhiteColorVec[5] = whiteKeyColor;
     }
-    if (std::find(activeNotesVec.begin(), activeNotesVec.end(), "Bb") != activeNotesVec.end()) {
+    if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "Bb") != sharedNotesVec.end()) {
         keyBlackColorVec[4] = blackKeyClickColor;
     }
     else {
         keyBlackColorVec[4] = blackKeyColor;
     }
-    if (std::find(activeNotesVec.begin(), activeNotesVec.end(), "B") != activeNotesVec.end()) {
+    if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "B") != sharedNotesVec.end()) {
         keyWhiteColorVec[6] = clickColor;
     }
     else {
         keyWhiteColorVec[6] = whiteKeyColor;
     }
+
+
+//    if (std::find(activeNotesVec.begin(), activeNotesVec.end(), "C") != activeNotesVec.end()) {
+//        keyWhiteColorVec[0] = clickColor;
+//    }
+//    else {
+//        keyWhiteColorVec[0] = whiteKeyColor;
+//    }
+//    if (std::find(activeNotesVec.begin(), activeNotesVec.end(), "Db") != activeNotesVec.end()) {
+//        keyBlackColorVec[0] = blackKeyClickColor;
+//    }
+//    else {
+//        keyBlackColorVec[0] = blackKeyColor;
+//    }
+//    if (std::find(activeNotesVec.begin(), activeNotesVec.end(), "D") != activeNotesVec.end()) {
+//        keyWhiteColorVec[1] = clickColor;
+//    }
+//    else {
+//        keyWhiteColorVec[1] = whiteKeyColor;
+//    }
+//    if (std::find(activeNotesVec.begin(), activeNotesVec.end(), "Eb") != activeNotesVec.end()) {
+//        keyBlackColorVec[1] = blackKeyClickColor;
+//    }
+//    else {
+//        keyBlackColorVec[1] = blackKeyColor;
+//    }
+//    if (std::find(activeNotesVec.begin(), activeNotesVec.end(), "E") != activeNotesVec.end()) {
+//        keyWhiteColorVec[2] = clickColor;
+//    }
+//    else {
+//        keyWhiteColorVec[2] = whiteKeyColor;
+//    }
+//    if (std::find(activeNotesVec.begin(), activeNotesVec.end(), "F") != activeNotesVec.end()) {
+//        keyWhiteColorVec[3] = clickColor;
+//    }
+//    else {
+//        keyWhiteColorVec[3] = whiteKeyColor;
+//    }
+//    if (std::find(activeNotesVec.begin(), activeNotesVec.end(), "Gb") != activeNotesVec.end()) {
+//        keyBlackColorVec[2] = blackKeyClickColor;
+//    }
+//    else {
+//        keyBlackColorVec[2] = blackKeyColor;
+//    }
+//    if (std::find(activeNotesVec.begin(), activeNotesVec.end(), "G") != activeNotesVec.end()) {
+//        keyWhiteColorVec[4] = clickColor;
+//    }
+//    else {
+//        keyWhiteColorVec[4] = whiteKeyColor;
+//    }
+//    if (std::find(activeNotesVec.begin(), activeNotesVec.end(), "Ab") != activeNotesVec.end()) {
+//        keyBlackColorVec[3] = blackKeyClickColor;
+//    }
+//    else {
+//        keyBlackColorVec[3] = blackKeyColor;
+//    }
+//    if (std::find(activeNotesVec.begin(), activeNotesVec.end(), "A") != activeNotesVec.end()) {
+//        keyWhiteColorVec[5] = clickColor;
+//    }
+//    else {
+//        keyWhiteColorVec[5] = whiteKeyColor;
+//    }
+//    if (std::find(activeNotesVec.begin(), activeNotesVec.end(), "Bb") != activeNotesVec.end()) {
+//        keyBlackColorVec[4] = blackKeyClickColor;
+//    }
+//    else {
+//        keyBlackColorVec[4] = blackKeyColor;
+//    }
+//    if (std::find(activeNotesVec.begin(), activeNotesVec.end(), "B") != activeNotesVec.end()) {
+//        keyWhiteColorVec[6] = clickColor;
+//    }
+//    else {
+//        keyWhiteColorVec[6] = whiteKeyColor;
+//    }
 }
 
 /** Getters **/
@@ -406,6 +493,13 @@ void Piano::setCanDraw(bool canDraw) {this->canDraw = canDraw;}
 void Piano::setCanDrawConnection(bool state) {this->canDrawConnection = state;}
 void Piano::setStateActive(bool state) {this->active = state;}
 void Piano::setActiveNotes(std::vector<std::string> newVec) {activeNotesVec = std::move(newVec);}
+void Piano::appendActiveNotes(std::string appendedNote) {
+    // Add appendedNote to activeNotesVec
+    if (std::find(activeNotesVec.begin(), activeNotesVec.end(), appendedNote) == activeNotesVec.end()) {
+        activeNotesVec.emplace_back(appendedNote);
+    }
+//    activeNotesVec.emplace_back(appendedNote);
+}
 //void Piano::setNoteClickBoolVec(std::vector<std::vector<int>> newVec) { noteClickedBoolVec = newVec; }
 //void Piano::addSelectNote(const std::string &notes) {selectedNotesVec.push_back(notes);}
 //void Piano::addSelectNote(const std::string &notes) {selectedNotesVec.push_back(notes);}

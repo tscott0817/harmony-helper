@@ -42,17 +42,15 @@ constexpr int MAX(int a, int b) {
     return (a > b) ? a : b;
 }
 
-
 int main()
 {
-
     /** Window Setup **/
-//    const int screenWidth =  1920;  // Only for when using 2k settings
-//    const int screenHeight = 1080;
     // TODO: Check user's computer for their screen size and set window size accordingly
-
     const int screenWidth =  1280;
     const int screenHeight = 720;
+//    const int screenWidth =  1920;  // Only for when using 2k settings
+//    const int screenHeight = 1080;
+
     Color backgroundColor = RAYWHITE;
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(screenWidth, screenHeight, "Guitar App");
@@ -75,13 +73,11 @@ int main()
     std::unique_ptr<Piano> piano = std::make_unique<Piano>(screenWidth, screenHeight, pianoPosX, pianoPosY, pianoWidth, pianoHeight);
     instrumentsVec.push_back(std::move(piano));
 
-
     Menu menu(screenWidth, screenHeight, 0, screenHeight * .0001f, 1, .05f);
 
     InitAudioDevice();  // TODO: Not sure if best here in main, or if each class should have one
     // Sound fxWav = LoadSound("resources/sound.wav");         // Load WAV audio file
     Sound noteOgg = LoadSound("../resources/audio/key13.ogg");  // TODO: Not sure why I have to go up a folder
-
 
     /** Main Loop **/
     SetTargetFPS(60);
@@ -90,11 +86,7 @@ int main()
     {
 
         // TODO: Sound tests
-        // if (IsKeyPressed(KEY_SPACE)) PlaySound(fxWav);      // Play WAV sound
-//        if (IsKeyPressed(KEY_SPACE)) PlaySound(noteOgg);      // Play OGG sound
-        if (IsKeyPressed(KEY_SPACE)) PlaySound(noteOgg);      // Play OGG sound
-
-
+        if (IsKeyPressed(KEY_SPACE)) PlaySound(noteOgg);
 
         // TODO: This can be used to resize objects dynamically with the window size,
         // TODO: Needs to be called each frame, so I think it should be param for object methods
@@ -106,10 +98,8 @@ int main()
 
         /** Handles appropriate instrument functions to call **/
         for (int i = 0; i < instrumentsVec.size(); i++) {
-
             instrumentsVec[i]->selectNote(mousePos);  // Highlights chosen not on selected instrument
             instrumentsVec[i]->notesActivate();  // Activates notes on the other non-selected instruments
-            // instrumentsVec[i]->soundTests();
             instrumentsVec[i]->clickAndDrag(mousePos);  // Hold L-CTRL to click and drag instrument
         }
 
@@ -152,7 +142,6 @@ int main()
     for (const auto & inst : instrumentsVec) {
         inst->destroy();
     }
-    // UnloadSound(fxWav);     // Unload sound data
     UnloadSound(noteOgg);     // Unload sound data
     CloseAudioDevice();
     CloseWindow();        // Close window and OpenGL context

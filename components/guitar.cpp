@@ -11,9 +11,7 @@ Guitar::Guitar(int screenWidth, int screenHeight, float posX, float posY, float 
     this->screenHeight = screenHeight;
 
     /** State Managing **/
-    active = false;  // TODO: May use to 'pause'
     canDraw = false;
-    canDrawConnection = false;
 
     /** Parent Container **/
     containerImage = LoadImage("../images/blue_background.png");     // Loaded in CPU memory (RAM)
@@ -106,13 +104,6 @@ void Guitar::draw(float windowScale) {
                    (Rectangle) {container.x, container.y, container.width, container.height},  /** Params = (x-pos, y-pos, height, width) **/
                    containerCenter, 0, WHITE);
     containerLoc = {container.x, container.y};  // TODO: Want to update location only when container is moved, not every frame
-
-    // TODO: Not currently implementing connection points
-//    /** Connection Point **/
-//    DrawTexturePro(connectTexture,
-//                   connectRectangle,
-//                   (Rectangle) {connectRectangle.x, connectRectangle.y, connectRectangle.width, connectRectangle.height},
-//                   connectCenter, 0, WHITE);
 
     /** Neck **/
     DrawTexturePro(neckTexture,
@@ -229,7 +220,6 @@ void Guitar::draw(float windowScale) {
 
             float noteTextSize = (noteRectangle.width > noteRectangle.height) ? static_cast<float>(noteRectangle.height) : static_cast<float>(noteRectangle.width);
             Vector2 noteNewLoc = {static_cast<float>(neckRectangle.x - (neckRectangle.width * .53f) + ((neckRectangle.width * .08) * i) - (noteRectangle.width / 3)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .56f) - (noteRectangle.height / 2))};
-//            DrawTextEx(testFont, lowE[i - 1], noteNewLoc, noteTextSize, 0, WHITE);
 
             // Draw text using the stringVec, each const char *[] is a string
             DrawTextEx(testFont, noteTextVec[j-1][i-1], noteNewLoc, noteTextSize, 0, WHITE);
@@ -254,7 +244,6 @@ void Guitar::hover(Vector2 mousePos) {
 }
 
 bool Guitar::isHovering(Vector2 mousePos) {
-    // return true if hovering over piano container
     if (mousePos.x > containerLoc.x - (container.width * .5f) && mousePos.x < containerLoc.x + (container.width * .5f) &&
         mousePos.y > containerLoc.y - (container.height * .5f) && mousePos.y < containerLoc.y + (container.height * .5f)) {
         std::cout << "Hovering Guitar" << std::endl;
@@ -265,8 +254,7 @@ bool Guitar::isHovering(Vector2 mousePos) {
     }
 }
 
-void Guitar::clickColorHold(Vector2 mousePos) {
-
+void Guitar::selectNote(Vector2 mousePos) {
     for (int i = 0; i < noteLocations.size(); i++) {
         for (int j = 0; j < noteLocations[i].size(); j++) {
             if (mousePos.x > noteLocations[i][j].x &&
@@ -274,8 +262,6 @@ void Guitar::clickColorHold(Vector2 mousePos) {
                 mousePos.y > noteLocations[i][j].y &&
                 mousePos.y < noteLocations[i][j].y + (noteRectangle.height) &&
                 IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && noteClickedBoolVec[i][j] == 0) {
-
-                //PlaySound(testSound);
                 noteClickedBoolVec[i][j] = 1;
                 noteColorVec[i][j] = clickColor;
                 addNoteShared(noteTextVec[j-1][i-1]);
@@ -297,7 +283,6 @@ void Guitar::clickColorHold(Vector2 mousePos) {
 
 void Guitar::notesActivate() {
     if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "C") != sharedNotesVec.end()) {
-        // Change the color of all C's
         noteColorVec[1][5] = clickColor;
         noteColorVec[3][2] = clickColor;
         noteColorVec[5][4] = clickColor;
@@ -331,16 +316,15 @@ void Guitar::notesActivate() {
     }
 
     if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "Db") != sharedNotesVec.end()) {
-        // Change the color of all C's
         noteColorVec[2][5] = clickColor;
-        noteColorVec[4][3] = clickColor;
+        noteColorVec[4][2] = clickColor;
         noteColorVec[6][4] = clickColor;
         noteColorVec[9][1] = clickColor;
         noteColorVec[9][6] = clickColor;
         noteColorVec[11][3] = clickColor;
 
         noteClickedBoolVec[2][5] = 1;
-        noteClickedBoolVec[4][3] = 1;
+        noteClickedBoolVec[4][2] = 1;
         noteClickedBoolVec[6][4] = 1;
         noteClickedBoolVec[9][1] = 1;
         noteClickedBoolVec[9][6] = 1;
@@ -349,14 +333,14 @@ void Guitar::notesActivate() {
     }
     else {
         noteColorVec[2][5] = rootColor;
-        noteColorVec[4][3] = rootColor;
+        noteColorVec[4][2] = rootColor;
         noteColorVec[6][4] = rootColor;
         noteColorVec[9][1] = rootColor;
         noteColorVec[9][6] = rootColor;
         noteColorVec[11][3] = rootColor;
 
         noteClickedBoolVec[2][5] = 0;
-        noteClickedBoolVec[4][3] = 0;
+        noteClickedBoolVec[4][2] = 0;
         noteClickedBoolVec[6][4] = 0;
         noteClickedBoolVec[9][1] = 0;
         noteClickedBoolVec[9][6] = 0;
@@ -364,7 +348,6 @@ void Guitar::notesActivate() {
     }
 
     if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "D") != sharedNotesVec.end()) {
-        // Change the color of all C's
         noteColorVec[3][5] = clickColor;
         noteColorVec[5][2] = clickColor;
         noteColorVec[7][4] = clickColor;
@@ -398,7 +381,6 @@ void Guitar::notesActivate() {
     }
 
     if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "Eb") != sharedNotesVec.end()) {
-        // Change the color of all C's
         noteColorVec[1][3] = clickColor;
         noteColorVec[4][5] = clickColor;
         noteColorVec[6][2] = clickColor;
@@ -431,7 +413,6 @@ void Guitar::notesActivate() {
     }
 
     if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "E") != sharedNotesVec.end()) {
-        // Change the color of all C's
         noteColorVec[2][3] = clickColor;
         noteColorVec[5][5] = clickColor;
         noteColorVec[7][2] = clickColor;
@@ -463,7 +444,6 @@ void Guitar::notesActivate() {
         noteClickedBoolVec[12][1] = 0;
     }
     if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "F") != sharedNotesVec.end()) {
-        // Change the color of all C's
         noteColorVec[1][1] = clickColor;
         noteColorVec[1][6] = clickColor;
         noteColorVec[3][3] = clickColor;
@@ -494,7 +474,6 @@ void Guitar::notesActivate() {
         noteClickedBoolVec[10][4] = 0;
     }
     if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "Gb") != sharedNotesVec.end()) {
-        // Change the color of all C's
         noteColorVec[2][1] = clickColor;
         noteColorVec[2][6] = clickColor;
         noteColorVec[4][3] = clickColor;
@@ -526,7 +505,6 @@ void Guitar::notesActivate() {
         noteClickedBoolVec[11][4] = 0;
     }
     if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "G") != sharedNotesVec.end()) {
-        // Change the color of all C's
         noteColorVec[3][1] = clickColor;
         noteColorVec[3][6] = clickColor;
         noteColorVec[5][3] = clickColor;
@@ -558,7 +536,6 @@ void Guitar::notesActivate() {
 
     }
     if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "Ab") != sharedNotesVec.end()) {
-        // Change the color of all C's
         noteColorVec[1][4] = clickColor;
         noteColorVec[4][6] = clickColor;
         noteColorVec[4][1] = clickColor;
@@ -590,7 +567,6 @@ void Guitar::notesActivate() {
         noteClickedBoolVec[11][2] = 0;
     }
     if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "A") != sharedNotesVec.end()) {
-        // Change the color of all C's
         noteColorVec[2][4] = clickColor;
         noteColorVec[5][6] = clickColor;
         noteColorVec[5][1] = clickColor;
@@ -621,7 +597,6 @@ void Guitar::notesActivate() {
         noteClickedBoolVec[12][2] = 0;
     }
     if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "B") != sharedNotesVec.end()) {
-        // Change the color of all C's
         noteColorVec[2][2] = clickColor;
         noteColorVec[4][4] = clickColor;
         noteColorVec[7][1] = clickColor;
@@ -652,7 +627,6 @@ void Guitar::notesActivate() {
         noteClickedBoolVec[12][5] = 0;
     }
     if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "Bb") != sharedNotesVec.end()) {
-        // Change the color of all C's
         noteColorVec[1][2] = clickColor;
         noteColorVec[3][4] = clickColor;
         noteColorVec[6][6] = clickColor;
@@ -685,28 +659,9 @@ void Guitar::notesActivate() {
     }
 }
 
-void Guitar::soundTests() {
-    // TODO: Just test, remove
-//    testSound = LoadSound("C:/Users/tyler/Dev/guitar-app/resources/audio/key13.ogg");
-    if (IsKeyPressed(KEY_SPACE)){
-        PlaySound(testSound);
-        std::cout << "Playing Sound From Guitar Class" << std::endl;
-    }
-}
-
-bool Guitar::connectionHover(Vector2 mousePos) {
-    if (mousePos.x > connectRectangle.x && mousePos.x < connectRectangle.x + (connectRectangle.width) &&
-        mousePos.y > connectRectangle.y && mousePos.y < connectRectangle.y + (connectRectangle.height)) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
 void Guitar::clickAndDrag(Vector2 mousePos) {
     if (mousePos.x > containerLoc.x - (container.width * .5f) && mousePos.x < containerLoc.x + (container.width * .5f) &&
         mousePos.y > containerLoc.y - (container.height * .5f) && mousePos.y < containerLoc.y + (container.height * .5f)) {
-
         if (IsKeyDown(KEY_LEFT_CONTROL) && IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
             // TODO: Should only have to change the container?? Maybe since initial build is in constructor.
             // TODO: Probably reset them all to their constructor values, think mousePos works only because relative to container
@@ -715,8 +670,6 @@ void Guitar::clickAndDrag(Vector2 mousePos) {
             // TODO: Not sure why these have to be different?
             connectRectangle.x = container.x;
             connectRectangle.y = container.y - (container.height * .55f);
-            bezierStart.x = container.x;
-            bezierStart.y = container.y - (container.height * .55f);
             neckRectangle.x = mousePos.x;
             neckRectangle.y = mousePos.y;
             fretRectangle.x = mousePos.x;
@@ -732,24 +685,10 @@ void Guitar::clickAndDrag(Vector2 mousePos) {
 }
 
 /** Getter **/
-bool Guitar::getStateActive() { return active; }
 bool Guitar::getCanDraw() { return canDraw; }
-bool Guitar::getCanDrawConnection() { return canDrawConnection;}
-Rectangle Guitar::getContainer() { return container; }
-Rectangle Guitar::getConnectionRec() { return connectRectangle;}
-std::vector<std::string> Guitar::getSelectedNotes() { return selectedNotesVec; }
-std::vector<std::string> Guitar::getActiveNotes() { return activeNotesVec; }
-//std::vector<std::vector<int>> Guitar::getNoteClickedBoolVec() { return noteClickedBoolVec; }
 
 /** Setters **/
-void Guitar::setStateActive(bool state) { active = state; }
 void Guitar::setCanDraw(bool state) { canDraw = state; }
-void Guitar::setCanDrawConnection(bool state) { canDrawConnection = state; }
-void Guitar::setActiveNotes(std::vector<std::string> newVec) {activeNotesVec = std::move(newVec);}
-void Guitar::appendActiveNotes(std::string appendedNote) {
-    // Add appendedNote to activeNotesVec
-    activeNotesVec.emplace_back(appendedNote);
-}
 
 // To remove textures from memory after program closes, must be after main loop ends
 void Guitar::destroy() {

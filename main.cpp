@@ -31,7 +31,6 @@
 //#endif
 
 
-
 /**
  * For window resizing
  */
@@ -79,16 +78,24 @@ int main()
 
     Menu menu(screenWidth, screenHeight, 0, screenHeight * .0001f, 1, .05f);
 
-
-    // Used to stop hovering at same time as over objects
-    bool menuActive = false;
-
     InitAudioDevice();  // TODO: Not sure if best here in main, or if each class should have one
+    // Sound fxWav = LoadSound("resources/sound.wav");         // Load WAV audio file
+    Sound noteOgg = LoadSound("../resources/audio/key13.ogg");  // TODO: Not sure why I have to go up a folder
+
+
     /** Main Loop **/
     SetTargetFPS(60);
     std::vector<std::string> newNotesVec;  // TODO: Don't like this here
     while (!WindowShouldClose())
     {
+
+        // TODO: Sound tests
+        // if (IsKeyPressed(KEY_SPACE)) PlaySound(fxWav);      // Play WAV sound
+//        if (IsKeyPressed(KEY_SPACE)) PlaySound(noteOgg);      // Play OGG sound
+        if (IsKeyPressed(KEY_SPACE)) PlaySound(noteOgg);      // Play OGG sound
+
+
+
         // TODO: This can be used to resize objects dynamically with the window size,
         // TODO: Needs to be called each frame, so I think it should be param for object methods
         float scale = MIN((float)GetScreenWidth()/screenWidth, (float)GetScreenHeight()/screenHeight);
@@ -100,13 +107,10 @@ int main()
         /** Handles appropriate instrument functions to call **/
         for (int i = 0; i < instrumentsVec.size(); i++) {
 
-            instrumentsVec[i]->notesActivate();
-
-            if (instrumentsVec[i]->getStateActive()) {
-                instrumentsVec[i]->soundTests();
-                instrumentsVec[i]->clickColorHold(mousePos);
-                instrumentsVec[i]->clickAndDrag(mousePos);
-            }
+            instrumentsVec[i]->selectNote(mousePos);  // Highlights chosen not on selected instrument
+            instrumentsVec[i]->notesActivate();  // Activates notes on the other non-selected instruments
+            // instrumentsVec[i]->soundTests();
+            instrumentsVec[i]->clickAndDrag(mousePos);  // Hold L-CTRL to click and drag instrument
         }
 
         // Check keyboard for escape key press
@@ -133,23 +137,14 @@ int main()
         menu.setBackground(screenWidth, screenHeight);  // TODO: Probably don't want this in menu class
 
         // Draw Objects
-        for (int i = 0; i < instrumentsVec.size(); i++) {
-            if (instrumentsVec[i]->getCanDraw()) {
-                instrumentsVec[i]->draw(scale);
+        for (const auto & instrument : instrumentsVec) {
+            if (instrument->getCanDraw()) {
+                instrument->draw(scale);  // Scale is not being used currently
             }
         }
         // Want Menu to be drawn last so it's on top
         menu.drawTopMenu(screenWidth, screenHeight);
 
-        // TODO: Do the same for every object, stop hover interactions if using RayGUI
-        if (menu.isHovering){  // Takes care of hovering issue between menu and guitars
-            instrumentsVec[0]->setStateActive(false);
-            instrumentsVec[1]->setStateActive(false);
-        }
-        else {
-            instrumentsVec[0]->setStateActive(true);
-            instrumentsVec[1]->setStateActive(true);
-        }
         EndDrawing();
     }
 
@@ -157,7 +152,8 @@ int main()
     for (const auto & inst : instrumentsVec) {
         inst->destroy();
     }
-    //UnloadSound(soundTest);
+    // UnloadSound(fxWav);     // Unload sound data
+    UnloadSound(noteOgg);     // Unload sound data
     CloseAudioDevice();
     CloseWindow();        // Close window and OpenGL context
 

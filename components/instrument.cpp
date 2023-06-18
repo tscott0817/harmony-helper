@@ -3,27 +3,14 @@
 #include <algorithm>
 
 // Make constructor
-Instrument::Instrument() {
-    std::cout << "Creating Instrument" << std::endl;
-}
+Instrument::Instrument() = default;
+Instrument::~Instrument() = default;
 
-void Instrument::hover(Vector2 mousePos) {
-    if (CheckCollisionPointRec(mousePos, container)) {
-        std::cout << "Hovering over Instrument" << std::endl;
-    }
-}
-
-/** Getters **/
-bool Instrument::getCanDraw() {return false;}
-
-/** Setters **/
-void Instrument::setCanDraw(bool state) {this->canDraw = state;}
-void Instrument::notesActivate() {;}
-
-void Instrument::destroy() {
-    std::cout << "Destroying Instrument" << std::endl;
-}
-
+/**
+ *  The base class shares a vector of data (notes) between the inherited classes (instruments).
+ *  The vector is used to set appropriate notes for every instrument as they are selected.
+ *  These methods allow interactions with that shared vector of notes.
+ */
 // TODO: This seems weird, but get undefined reference otherwise
 std::vector<std::string> Instrument::sharedNotesVec;
 void Instrument::addNoteShared(const std::string& note) {

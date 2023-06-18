@@ -59,7 +59,6 @@ Piano::Piano(int screenWidth, int screenHeight, float posX, float posY, float wi
     }
     notesLocAdded = false;
 
-    F = LoadSound("../resources/audio/CantinaBand3.wav");
 //    soundNoteTest = LoadSound("../../resources/audio/key13.ogg");
     soundNoteTest = LoadSound("key13.ogg");
     notesVec.push_back(F);
@@ -105,17 +104,6 @@ void Piano::draw(float windowScale) {
     keyBlackLocations[3] = {keyBlackRectangle.x + (container.width * .1575f), keyBlackRectangle.y - (keyBlackRectangle.height * .85f)};
     keyBlackLocations[4] = {keyBlackRectangle.x + (container.width * .2875f), keyBlackRectangle.y - (keyBlackRectangle.height * .85f)};
 
-}
-
-bool Piano::isHovering(Vector2 mousePos) {
-    if (mousePos.x > containerLoc.x - (container.width * .5f) && mousePos.x < containerLoc.x + (container.width * .5f) &&
-        mousePos.y > containerLoc.y - (container.height * .5f) && mousePos.y < containerLoc.y + (container.height * .5f)) {
-        std::cout << "Hovering Piano" << std::endl;
-        return true;
-    }
-    else {
-        return false;
-    }
 }
 
 void Piano::selectNote(Vector2 mousePos) {

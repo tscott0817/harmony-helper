@@ -48,28 +48,26 @@ protected:
 
 
 public:
-
     Instrument();
+    ~Instrument();
 
-    // Functionality
-    virtual void hover(Vector2 mousePos);
-    virtual bool isHovering(Vector2 mousePos) = 0;
+    /** Base Class Specific Methods **/
+    static void addNoteShared(const std::string& item);
+    static void printNotesShared();
+    static void removeNoteShared(const std::string& note);
+
+    /** Methods to be Overridden **/
     virtual void selectNote(Vector2 mousePos) = 0;
     virtual void draw(float windowScale) = 0;
     virtual void clickAndDrag(Vector2 mousePos) = 0;
-
-    // Getters
-    virtual bool getCanDraw();
+    virtual void notesActivate() = 0;
+    virtual void destroy() = 0;
 
     // Setters
-    virtual void setCanDraw(bool state);
-    virtual void notesActivate();
+    virtual void setCanDraw(bool state) = 0;
 
-    void addNoteShared(const std::string& item);
-    void printNotesShared();
-    void removeNoteShared(const std::string& note);
-
-    virtual void destroy();
+    // Getters
+    virtual bool getCanDraw() = 0;
 
 };
 

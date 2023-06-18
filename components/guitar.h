@@ -36,14 +36,11 @@ private:
     std::vector<std::vector<int>> noteClickedBoolVec;  // TODO: Read more about why vector<bool> is bad practice.
 
     // Text and Font
-    const char *testText;
-    const char *noteName;
     Font testFont;
     float fontSize;
     Vector2 fontPosition;
     Vector2 textSize;
     int currentFontFilter;
-    Vector2 tempNoteLoc;
 
     const char *lowE[12] = {"F", "Gb", "G", "Ab", "A", "Bb", "B", "C", "Db", "D", "Eb", "E"};
     const char *a[12] = {"Bb", "B", "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A"};
@@ -53,30 +50,41 @@ private:
     const char *highE[12] = {"F", "Gb", "G", "Ab", "A", "Bb", "B", "C", "Db", "D", "Eb", "E"};
     std::vector<const char **> noteTextVec;
 
+    /** Colors **/
+    Color cNoteColor;
+    Color dbNoteColor;
+    Color dNoteColor;
+    Color ebNoteColor;
+    Color eNoteColor;
+    Color fNoteColor;
+    Color gbNoteColor;
+    Color gNoteColor;
+    Color abNoteColor;
+    Color aNoteColor;
+    Color bbNoteColor;
+    Color bNoteColor;
+
+
     // Audio
     Sound testSound;
 
 public:
-
-    // Constructors
     Guitar(int screenWidth, int screenHeight, float posX, float posY, float width, float height);
-    virtual ~Guitar() = default;
+    ~Guitar() = default;
 
-    // Guitar Methods
+    /** Inherited Methods **/
     void draw(float windowScale) override;
-    void hover(Vector2 mousePos) override;
     void selectNote(Vector2 mousePos) override;
     void clickAndDrag(Vector2 mousePos) override;
     void notesActivate() override;
-    bool isHovering(Vector2 mousePos) override;
-
-    // Getters
-    bool getCanDraw() override;
+    void destroy() override;
 
     // Setters
     void setCanDraw(bool state) override;
 
-    void destroy() override;
+    // Getters
+    bool getCanDraw() override;
+
 };
 
 

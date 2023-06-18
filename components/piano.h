@@ -65,20 +65,21 @@ public:
     Piano(int screenWidth, int screenHeight, float posX, float posY, float width, float height);
     ~Piano() = default;
 
+    /** Inherited Methods **/
     void draw(float windowScale) override;
     void selectNote(Vector2 mousePos) override;
     void clickAndDrag(Vector2 mousePos) override;
     void notesActivate() override;
-    bool isHovering(Vector2 mousePos) override;
-    bool hoverBlackNotes(Vector2 mousePos);
-
-    // Getters
-    bool getCanDraw() override;
+    void destroy() override;
 
     // Setters
     void setCanDraw(bool canDraw) override;
 
-    void destroy() override;
+    // Getters
+    bool getCanDraw() override;
+
+    /** Derived Class Specific Methods **/
+    bool hoverBlackNotes(Vector2 mousePos);  // If mouse hovers over black notes, don't allow white note interactions
 
 };
 

@@ -51,8 +51,9 @@ int main()
 //    const int screenWidth =  1920;  // Only for when using 2k settings
 //    const int screenHeight = 1080;
 
-    Color backgroundColor = RAYWHITE;
-    SetConfigFlags(FLAG_WINDOW_RESIZABLE);
+    Color backgroundColor = RAYWHITE;  // Ignore error; I prefer knowing the type instead of 'auto'
+    SetConfigFlags(FLAG_WINDOW_RESIZABLE);  // Allows window to be resized
+    SetConfigFlags(FLAG_MSAA_4X_HINT);  // Anti-aliasing for shape edges
     InitWindow(screenWidth, screenHeight, "Guitar App");
     SetExitKey(KEY_ZERO);  // Frees up escape key for menu, makes '0' exit program
 

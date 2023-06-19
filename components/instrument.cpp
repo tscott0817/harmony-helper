@@ -33,6 +33,15 @@ void Instrument::removeNoteShared(const std::string& note) {
     printNotesShared();
 }
 
+void Instrument::clearNotesShared() {
+    sharedNotesVec.clear();
+    std::cout << "Shared Notes Vec cleared" << std::endl;
+    printNotesShared();
+}
+
+// Return the shard notesVec
+std::vector<std::string> Instrument::getNotesShared() {return sharedNotesVec;}
+
 
 void Instrument::printNotesShared() {
     std::cout << "Full sharedNotesVec: ";

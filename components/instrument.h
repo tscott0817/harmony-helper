@@ -60,8 +60,10 @@ public:
 
     /** Base Class Specific Methods **/
     static void addNoteShared(const std::string& item);
-    static void printNotesShared();
     static void removeNoteShared(const std::string& note);
+    static void clearNotesShared();
+    static std::vector<std::string> getNotesShared();
+    static void printNotesShared();
 
     /** Methods to be Overridden **/
     virtual void selectNote(Vector2 mousePos) = 0;

@@ -78,7 +78,32 @@ int main()
 
     InitAudioDevice();  // TODO: Not sure if best here in main, or if each class should have one
     // Sound fxWav = LoadSound("resources/sound.wav");         // Load WAV audio file
-    Sound noteOgg = LoadSound("../resources/audio/key13.ogg");  // TODO: Not sure why I have to go up a folder
+    Sound noteC = LoadSound("../resources/audio/key08.ogg");  // TODO: Not sure why I have to go up a folder
+    Sound noteDb = LoadSound("../resources/audio/key09.ogg");  // TODO: Not sure why I have to go up a folder
+    Sound noteD = LoadSound("../resources/audio/key10.ogg");  // TODO: Not sure why I have to go up a folder
+    Sound noteEb = LoadSound("../resources/audio/key11.ogg");
+    Sound noteE = LoadSound("../resources/audio/key12.ogg");
+    Sound noteF = LoadSound("../resources/audio/key13.ogg");
+    Sound noteGb = LoadSound("../resources/audio/key14.ogg");
+    Sound noteG = LoadSound("../resources/audio/key15.ogg");
+    Sound noteAb = LoadSound("../resources/audio/key16.ogg");
+    Sound noteA = LoadSound("../resources/audio/key17.ogg");
+    Sound noteBb = LoadSound("../resources/audio/key18.ogg");
+    Sound noteB = LoadSound("../resources/audio/key19.ogg");
+
+    std::vector<Sound> notesSoundVec;
+    notesSoundVec.emplace_back(noteC);
+    notesSoundVec.emplace_back(noteDb);
+    notesSoundVec.emplace_back(noteD);
+    notesSoundVec.emplace_back(noteEb);
+    notesSoundVec.emplace_back(noteE);
+    notesSoundVec.emplace_back(noteF);
+    notesSoundVec.emplace_back(noteGb);
+    notesSoundVec.emplace_back(noteG);
+    notesSoundVec.emplace_back(noteAb);
+    notesSoundVec.emplace_back(noteA);
+    notesSoundVec.emplace_back(noteBb);
+    notesSoundVec.emplace_back(noteB);
 
     /** Main Loop **/
     SetTargetFPS(60);
@@ -87,7 +112,7 @@ int main()
     {
 
         // TODO: Sound tests
-        if (IsKeyPressed(KEY_SPACE)) PlaySound(noteOgg);
+        // if (IsKeyPressed(KEY_SPACE)) PlaySound(noteOgg);
 
         // TODO: This can be used to resize objects dynamically with the window size,
         // TODO: Needs to be called each frame, so I think it should be param for object methods
@@ -98,10 +123,12 @@ int main()
         bool leftMouseClicked = IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
 
         /** Handles appropriate instrument functions to call **/
-        for (int i = 0; i < instrumentsVec.size(); i++) {
-            instrumentsVec[i]->selectNote(mousePos);  // Highlights chosen not on selected instrument
-            instrumentsVec[i]->notesActivate();  // Activates notes on the other non-selected instruments
-            instrumentsVec[i]->clickAndDrag(mousePos);  // Hold L-CTRL to click and drag instrument
+        for (const auto & instrument : instrumentsVec) {
+            if (instrument->getCanDraw()) {  // Only allow interactions if menu has activated object
+                instrument->selectNote(mousePos);  // Highlights chosen not on selected instrument
+                instrument->notesActivate();  // Activates notes on the other non-selected instruments
+                instrument->clickAndDrag(mousePos);
+            }
         }
 
         // Check keyboard for escape key press
@@ -135,6 +162,56 @@ int main()
                 instrument->draw(scale);  // Scale is not being used currently
             }
         }
+        /** This will be a separate object, just for testing now **/
+        if (GuiButton((Rectangle){screenWidth * .9f, screenHeight * .9f, screenWidth * .1f, screenHeight * .1f}, "Clear")) {
+            for (const auto & instrument : instrumentsVec) {
+                instrument->clearNotesShared();
+            }
+        }
+        /** Create a second button that will read the sharedNotesVec and use PlaySound to play appropriate notes **/
+        if (GuiButton((Rectangle){screenWidth * .9f, screenHeight * .8f, screenWidth * .1f, screenHeight * .1f}, "Play")) {
+            for (const auto & instrument : instrumentsVec) {
+                for (const auto &note: instrument->getNotesShared()) {
+                    if (note == "C") {
+                        PlaySound(notesSoundVec[0]);
+                    }
+                    if (note == "Db") {
+                        PlaySound(notesSoundVec[1]);
+                    }
+                    if (note == "D") {
+                        PlaySound(notesSoundVec[2]);
+                    }
+                    if (note == "Eb") {
+                        PlaySound(notesSoundVec[3]);
+                    }
+                    if (note == "E") {
+                        PlaySound(notesSoundVec[4]);
+                    }
+                    if (note == "F") {
+                        PlaySound(notesSoundVec[5]);
+                    }
+                    if (note == "Gb") {
+                        PlaySound(notesSoundVec[6]);
+                    }
+                    if (note == "G") {
+                        PlaySound(notesSoundVec[7]);
+                    }
+                    if (note == "Ab") {
+                        PlaySound(notesSoundVec[8]);
+                    }
+                    if (note == "A") {
+                        PlaySound(notesSoundVec[9]);
+                    }
+                    if (note == "Bb") {
+                        PlaySound(notesSoundVec[10]);
+                    }
+                    if (note == "B") {
+                        PlaySound(notesSoundVec[11]);
+                    }
+                }
+            }
+
+        }
         // Want Menu to be drawn last so it's on top
         menu.drawTopMenu(screenWidth, screenHeight);
 
@@ -145,7 +222,18 @@ int main()
     for (const auto & inst : instrumentsVec) {
         inst->destroy();
     }
-    UnloadSound(noteOgg);     // Unload sound data
+    UnloadSound(noteC);     // Unload sound data
+    UnloadSound(noteDb);     // Unload sound data
+    UnloadSound(noteD);     // Unload sound data
+    UnloadSound(noteEb);     // Unload sound data
+    UnloadSound(noteE);     // Unload sound data
+    UnloadSound(noteF);     // Unload sound data
+    UnloadSound(noteGb);     // Unload sound data
+    UnloadSound(noteG);     // Unload sound data
+    UnloadSound(noteAb);     // Unload sound data
+    UnloadSound(noteA);     // Unload sound data
+    UnloadSound(noteBb);     // Unload sound data
+    UnloadSound(noteB);     // Unload sound data
     CloseAudioDevice();
     CloseWindow();        // Close window and OpenGL context
 

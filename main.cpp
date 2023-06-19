@@ -58,8 +58,9 @@ int main()
     SetExitKey(KEY_ZERO);  // Frees up escape key for menu, makes '0' exit program
 
     /** Object Inits **/
-    std::vector<std::unique_ptr<Instrument>> instrumentsVec;  // Holds all instruments
+    Menu menu(screenWidth, screenHeight, 0, screenHeight * .0001f, 1, .05f);
 
+    std::vector<std::unique_ptr<Instrument>> instrumentsVec;  // Holds all instruments
     float guitarWidth = .7f;
     float guitarHeight = .35f;
     float guitarPosX = .5f;  // The ( * 0.5f) are basically scalars for the guitar's position
@@ -74,13 +75,10 @@ int main()
     std::unique_ptr<Piano> piano = std::make_unique<Piano>(screenWidth, screenHeight, pianoPosX, pianoPosY, pianoWidth, pianoHeight);
     instrumentsVec.push_back(std::move(piano));
 
-    Menu menu(screenWidth, screenHeight, 0, screenHeight * .0001f, 1, .05f);
-
     InitAudioDevice();  // TODO: Not sure if best here in main, or if each class should have one
-    // Sound fxWav = LoadSound("resources/sound.wav");         // Load WAV audio file
     Sound noteC = LoadSound("../resources/audio/key08.ogg");  // TODO: Not sure why I have to go up a folder
-    Sound noteDb = LoadSound("../resources/audio/key09.ogg");  // TODO: Not sure why I have to go up a folder
-    Sound noteD = LoadSound("../resources/audio/key10.ogg");  // TODO: Not sure why I have to go up a folder
+    Sound noteDb = LoadSound("../resources/audio/key09.ogg");
+    Sound noteD = LoadSound("../resources/audio/key10.ogg");
     Sound noteEb = LoadSound("../resources/audio/key11.ogg");
     Sound noteE = LoadSound("../resources/audio/key12.ogg");
     Sound noteF = LoadSound("../resources/audio/key13.ogg");
@@ -110,10 +108,6 @@ int main()
     std::vector<std::string> newNotesVec;  // TODO: Don't like this here
     while (!WindowShouldClose())
     {
-
-        // TODO: Sound tests
-        // if (IsKeyPressed(KEY_SPACE)) PlaySound(noteOgg);
-
         // TODO: This can be used to resize objects dynamically with the window size,
         // TODO: Needs to be called each frame, so I think it should be param for object methods
         float scale = MIN((float)GetScreenWidth()/screenWidth, (float)GetScreenHeight()/screenHeight);
@@ -210,8 +204,22 @@ int main()
                     }
                 }
             }
-
         }
+        // TODO: Make this logic its own separate drop down menu for all scales
+        // TODO: Do the same thing again for chords
+        if (GuiButton((Rectangle){screenWidth * .9f, screenHeight * .7f, screenWidth * .1f, screenHeight * .1f}, "C Major")) {
+            newNotesVec.emplace_back("C");
+            newNotesVec.emplace_back("D");
+            newNotesVec.emplace_back("E");
+            newNotesVec.emplace_back("F");
+            newNotesVec.emplace_back("G");
+            newNotesVec.emplace_back("A");
+            newNotesVec.emplace_back("B");
+            for (const auto & instrument : instrumentsVec) {
+                instrument->setNotesShared(newNotesVec);
+            }
+        }
+
         // Want Menu to be drawn last so it's on top
         menu.drawTopMenu(screenWidth, screenHeight);
 

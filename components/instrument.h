@@ -62,6 +62,7 @@ public:
     static void addNoteShared(const std::string& item);
     static void removeNoteShared(const std::string& note);
     static void clearNotesShared();
+    static void setNotesShared(std::vector<std::string> notesVec);
     static std::vector<std::string> getNotesShared();
     static void printNotesShared();
 

@@ -39,6 +39,12 @@ void Instrument::clearNotesShared() {
     printNotesShared();
 }
 
+void Instrument::setNotesShared(std::vector<std::string> notesVec) {
+    sharedNotesVec = std::move(notesVec);
+    std::cout << "Shared Notes Vec Replaced With: " << std::endl;
+    printNotesShared();
+}
+
 // Return the shard notesVec
 std::vector<std::string> Instrument::getNotesShared() {return sharedNotesVec;}
 

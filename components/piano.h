@@ -11,6 +11,7 @@ class Piano : public Instrument {
 private:
 
     Rectangle containerLoc;
+    Rectangle bgLoc;
     Image keyWhiteImage;
     Texture2D keyWhiteTexture;
     Rectangle keyWhiteRectangle;
@@ -32,9 +33,9 @@ private:
     std::vector<Color> keyBlackColorVec;
     bool whiteKeyHover;
     bool blackKeyHover;
+
     Color whiteKeyColor;
     Color blackKeyColor;
-    Color blackKeyClickColor;
 
     Sound F;
     Sound Fs;
@@ -60,6 +61,8 @@ private:
     const char *keysWhite[7] = {"C",  "D", "E", "F", "G", "A", "B"};
     const char *keysBlack[5] = {"Db",  "Eb", "Gb", "Ab", "Bb"};
     std::vector<const char **> noteTextVec;
+
+    Color containerColor;
 
 public:
     Piano(int screenWidth, int screenHeight, float posX, float posY, float width, float height);

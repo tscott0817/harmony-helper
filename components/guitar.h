@@ -42,6 +42,12 @@ private:
     Vector2 textSize;
     int currentFontFilter;
 
+//    const char *lowE[13] = {"E", "F", "Gb", "G", "Ab", "A", "Bb", "B", "C", "Db", "D", "Eb", "E"};
+//    const char *a[13] = {"A", "Bb", "B", "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A"};
+//    const char *d[13] = {"D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B", "C", "Db", "D"};
+//    const char *g[13] = {"G", "Ab", "A", "Bb", "B", "C", "Db", "D", "Eb", "E", "F", "Gb", "G"};
+//    const char *b[13] = {"B","C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"};
+//    const char *highE[13] = {"E", "F", "Gb", "G", "Ab", "A", "Bb", "B", "C", "Db", "D", "Eb", "E"};
     const char *lowE[12] = {"F", "Gb", "G", "Ab", "A", "Bb", "B", "C", "Db", "D", "Eb", "E"};
     const char *a[12] = {"Bb", "B", "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A"};
     const char *d[12] = {"Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B", "C", "Db", "D"};
@@ -51,18 +57,7 @@ private:
     std::vector<const char **> noteTextVec;
 
     /** Colors **/
-    Color cNoteColor;
-    Color dbNoteColor;
-    Color dNoteColor;
-    Color ebNoteColor;
-    Color eNoteColor;
-    Color fNoteColor;
-    Color gbNoteColor;
-    Color gNoteColor;
-    Color abNoteColor;
-    Color aNoteColor;
-    Color bbNoteColor;
-    Color bNoteColor;
+    Color containerColor;
 
 
     // Audio

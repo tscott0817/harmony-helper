@@ -64,20 +64,20 @@ Guitar::Guitar(int screenWidth, int screenHeight, float posX, float posY, float 
     SetTextureFilter(testFont.texture, TEXTURE_FILTER_TRILINEAR);
 
     /** Colors **/
-    // Colors for individual notes
-    rootColor = Color{238, 238, 238, 200};
-    cNoteColor = Color{168, 50, 50, 255};
-    dbNoteColor = Color{184, 171, 61, 255};
-    dNoteColor = Color{38, 128, 80, 255};
-    ebNoteColor = Color{168, 111, 50, 255};
-    eNoteColor = Color{168, 50, 152, 255};
-    fNoteColor = Color{48, 102, 150, 255};
-    gbNoteColor = Color{60, 194, 183, 255};
-    gNoteColor = Color{126, 74, 247, 255};
-    abNoteColor = Color{49, 62, 158, 255};
-    aNoteColor = Color{130, 176, 49, 255};
-    bbNoteColor = Color{127, 50, 168, 255};
-    bNoteColor = Color{179, 64, 117, 255};
+//    // Colors for individual notes
+//    rootColor = Color{238, 238, 238, 200};
+//    cNoteColor = Color{168, 50, 50, 255};
+//    dbNoteColor = Color{184, 171, 61, 255};
+//    dNoteColor = Color{38, 128, 80, 255};
+//    ebNoteColor = Color{168, 111, 50, 255};
+//    eNoteColor = Color{168, 50, 152, 255};
+//    fNoteColor = Color{48, 102, 150, 255};
+//    gbNoteColor = Color{60, 194, 183, 255};
+//    gNoteColor = Color{126, 74, 247, 255};
+//    abNoteColor = Color{49, 62, 158, 255};
+//    aNoteColor = Color{130, 176, 49, 255};
+//    bbNoteColor = Color{127, 50, 168, 255};
+//    bNoteColor = Color{179, 64, 117, 255};
 
     /** Vector Inits **/
     for (int i = 0; i < 100; i++) {      // TODO: Just filling to 100 for space right now
@@ -100,116 +100,152 @@ Guitar::Guitar(int screenWidth, int screenHeight, float posX, float posY, float 
 //    testSound = LoadSound("C:/Users/tyler/Dev/guitar-app/resources/audio/key13.ogg");
     testSound = LoadSound("C:/Users/tyler/Dev/guitar-app/resources/audio/key13.ogg");
 
+    containerColor = Color{51, 51, 51, 255};
 }
 
 void Guitar::draw(float windowScale) {
 
     /** Container **/
-    DrawTexturePro(containerTexture,
-                   container,
-                   (Rectangle) {container.x, container.y, container.width, container.height},  /** Params = (x-pos, y-pos, height, width) **/
-                   containerCenter, 0, WHITE);
-    containerLoc = {container.x, container.y};  // TODO: Want to update location only when container is moved, not every frame
+//    DrawTexturePro(containerTexture,
+//                   container,
+//                   (Rectangle) {container.x, container.y, container.width, container.height},  /** Params = (x-pos, y-pos, height, width) **/
+//                   containerCenter, 0, WHITE);
+
+    // Draw Rectangle that has its center at the center of the container, it defaults to the bottom right at the center of the container
+    // DrawRectangle(static_cast<int>(container.x), static_cast<int>(container.y), static_cast<int>(container.width), static_cast<int>(container.height), WHITE);
+    // Make sure the top left of the rectangle is also the top left of the container, not the center
+    DrawRectangle(static_cast<int>(container.x - (container.width * .5f)), static_cast<int>(container.y - (container.height * .5f)), static_cast<int>(container.width), static_cast<int>(container.height), containerColor);
+    containerLoc = {container.x, container.y};  // TODO: Not sure if needed; Maybe want to update location only when container is moved, not every frame
 
     /** Neck **/
-    DrawTexturePro(neckTexture,
-                   neckRectangle,
-                   (Rectangle) {neckRectangle.x, neckRectangle.y, neckRectangle.width, neckRectangle.height},
-                   neckCenter, 0, WHITE);
+//    DrawTexturePro(neckTexture,
+//                   neckRectangle,
+//                   (Rectangle) {neckRectangle.x, neckRectangle.y, neckRectangle.width, neckRectangle.height},
+//                   neckCenter, 0, WHITE);
+
+    // Draw Rectangle instead of most recent texture
+    //DrawRectangle(static_cast<int>(neckRectangle.x), static_cast<int>(neckRectangle.y), static_cast<int>(neckRectangle.width), static_cast<int>(neckRectangle.height), WHITE);
+    // Make sure the top left of the rectangle is also the top left of the container, not the center
+    DrawRectangle(static_cast<int>(neckRectangle.x - (neckRectangle.width * .5f)), static_cast<int>(neckRectangle.y - (neckRectangle.height * .5f)), static_cast<int>(neckRectangle.width), static_cast<int>(neckRectangle.height), BROWN);
 
     /** Frets **/
     // Frets separated by 1/8 width of neck
-    DrawTexturePro(stringTexture,
-                   fretRectangle,
-                   (Rectangle) {static_cast<float>(fretRectangle.x - (neckRectangle.width * .49)), fretRectangle.y, fretRectangle.width, fretRectangle.height},
-                   fretCenter, 0, WHITE);
+//    DrawTexturePro(stringTexture,
+//                   fretRectangle,
+//                   (Rectangle) {static_cast<float>(fretRectangle.x - (neckRectangle.width * .49)), fretRectangle.y, fretRectangle.width, fretRectangle.height},
+//                   fretCenter, 0, WHITE);
+//
+//    DrawTexturePro(fretTexture,
+//                   fretRectangle,
+//                   (Rectangle) {static_cast<float>(fretRectangle.x - (neckRectangle.width * .41)), fretRectangle.y, fretRectangle.width, fretRectangle.height},
+//                   fretCenter, 0, WHITE);
+//
+//    DrawTexturePro(fretTexture,
+//                   fretRectangle,
+//                   (Rectangle) {static_cast<float>(fretRectangle.x - (neckRectangle.width * .33)), fretRectangle.y, fretRectangle.width, fretRectangle.height},
+//                   fretCenter, 0, WHITE);
+//
+//    DrawTexturePro(fretTexture,
+//                   fretRectangle,
+//                   (Rectangle) {static_cast<float>(fretRectangle.x - (neckRectangle.width * .25)), fretRectangle.y, fretRectangle.width, fretRectangle.height},
+//                   fretCenter, 0, WHITE);
+//
+//    DrawTexturePro(fretTexture,
+//                   fretRectangle,
+//                   (Rectangle) {static_cast<float>(fretRectangle.x - (neckRectangle.width * .17)), fretRectangle.y, fretRectangle.width, fretRectangle.height},
+//                   fretCenter, 0, WHITE);
+//
+//    DrawTexturePro(fretTexture,
+//                   fretRectangle,
+//                   (Rectangle) {static_cast<float>(fretRectangle.x - (neckRectangle.width * .09)), fretRectangle.y, fretRectangle.width, fretRectangle.height},
+//                   fretCenter, 0, WHITE);
+//
+//    DrawTexturePro(fretTexture,
+//                   fretRectangle,
+//                   (Rectangle) {static_cast<float>(fretRectangle.x - (neckRectangle.width * .01)), fretRectangle.y, fretRectangle.width, fretRectangle.height},
+//                   fretCenter, 0, WHITE);
+//
+//    DrawTexturePro(fretTexture,
+//                   fretRectangle,
+//                   (Rectangle) {static_cast<float>(fretRectangle.x + (neckRectangle.width * .07)), fretRectangle.y, fretRectangle.width, fretRectangle.height},
+//                   fretCenter, 0, WHITE);
+//
+//    DrawTexturePro(fretTexture,
+//                   fretRectangle,
+//                   (Rectangle) {static_cast<float>(fretRectangle.x + (neckRectangle.width * .15)), fretRectangle.y, fretRectangle.width, fretRectangle.height},
+//                   fretCenter, 0, WHITE);
+//
+//    DrawTexturePro(fretTexture,
+//                   fretRectangle,
+//                   (Rectangle) {static_cast<float>(fretRectangle.x + (neckRectangle.width * .23)), fretRectangle.y, fretRectangle.width, fretRectangle.height},
+//                   fretCenter, 0, WHITE);
+//
+//    DrawTexturePro(fretTexture,
+//                   fretRectangle,
+//                   (Rectangle) {static_cast<float>(fretRectangle.x + (neckRectangle.width * .31)), fretRectangle.y, fretRectangle.width, fretRectangle.height},
+//                   fretCenter, 0, WHITE);
+//
+//    DrawTexturePro(fretTexture,
+//                   fretRectangle,
+//                   (Rectangle) {static_cast<float>(fretRectangle.x + (neckRectangle.width * .39)), fretRectangle.y, fretRectangle.width, fretRectangle.height},
+//                   fretCenter, 0, WHITE);
+//
+//    DrawTexturePro(fretTexture,
+//                   fretRectangle,
+//                   (Rectangle) {static_cast<float>(fretRectangle.x + (neckRectangle.width * .47)), fretRectangle.y, fretRectangle.width, fretRectangle.height},
+//                   fretCenter, 0, WHITE);
 
-    DrawTexturePro(fretTexture,
-                   fretRectangle,
-                   (Rectangle) {static_cast<float>(fretRectangle.x - (neckRectangle.width * .41)), fretRectangle.y, fretRectangle.width, fretRectangle.height},
-                   fretCenter, 0, WHITE);
+    // Redo all of the frets but with Rectangles instead, but keep all else the same
+    DrawRectangle(static_cast<int>(fretRectangle.x - (neckRectangle.width * .49)), static_cast<int>(fretRectangle.y - (neckRectangle.height * .5f)), static_cast<int>(fretRectangle.width), static_cast<int>(fretRectangle.height), GRAY);
+    DrawRectangle(static_cast<int>(fretRectangle.x - (neckRectangle.width * .41)), static_cast<int>(fretRectangle.y - (neckRectangle.height * .5f)), static_cast<int>(fretRectangle.width), static_cast<int>(fretRectangle.height), GRAY);
+    DrawRectangle(static_cast<int>(fretRectangle.x - (neckRectangle.width * .33)), static_cast<int>(fretRectangle.y - (neckRectangle.height * .5f)), static_cast<int>(fretRectangle.width), static_cast<int>(fretRectangle.height), GRAY);
+    DrawRectangle(static_cast<int>(fretRectangle.x - (neckRectangle.width * .25)), static_cast<int>(fretRectangle.y - (neckRectangle.height * .5f)), static_cast<int>(fretRectangle.width), static_cast<int>(fretRectangle.height), GRAY);
+    DrawRectangle(static_cast<int>(fretRectangle.x - (neckRectangle.width * .17)), static_cast<int>(fretRectangle.y - (neckRectangle.height * .5f)), static_cast<int>(fretRectangle.width), static_cast<int>(fretRectangle.height), GRAY);
+    DrawRectangle(static_cast<int>(fretRectangle.x - (neckRectangle.width * .09)), static_cast<int>(fretRectangle.y - (neckRectangle.height * .5f)), static_cast<int>(fretRectangle.width), static_cast<int>(fretRectangle.height), GRAY);
+    DrawRectangle(static_cast<int>(fretRectangle.x - (neckRectangle.width * .01)), static_cast<int>(fretRectangle.y - (neckRectangle.height * .5f)), static_cast<int>(fretRectangle.width), static_cast<int>(fretRectangle.height), GRAY);
+    DrawRectangle(static_cast<int>(fretRectangle.x + (neckRectangle.width * .07)), static_cast<int>(fretRectangle.y - (neckRectangle.height * .5f)), static_cast<int>(fretRectangle.width), static_cast<int>(fretRectangle.height), GRAY);
+    DrawRectangle(static_cast<int>(fretRectangle.x + (neckRectangle.width * .15)), static_cast<int>(fretRectangle.y - (neckRectangle.height * .5f)), static_cast<int>(fretRectangle.width), static_cast<int>(fretRectangle.height), GRAY);
+    DrawRectangle(static_cast<int>(fretRectangle.x + (neckRectangle.width * .23)), static_cast<int>(fretRectangle.y - (neckRectangle.height * .5f)), static_cast<int>(fretRectangle.width), static_cast<int>(fretRectangle.height), GRAY);
+    DrawRectangle(static_cast<int>(fretRectangle.x + (neckRectangle.width * .31)), static_cast<int>(fretRectangle.y - (neckRectangle.height * .5f)), static_cast<int>(fretRectangle.width), static_cast<int>(fretRectangle.height), GRAY);
+    DrawRectangle(static_cast<int>(fretRectangle.x + (neckRectangle.width * .39)), static_cast<int>(fretRectangle.y - (neckRectangle.height * .5f)), static_cast<int>(fretRectangle.width), static_cast<int>(fretRectangle.height), GRAY);
+    DrawRectangle(static_cast<int>(fretRectangle.x + (neckRectangle.width * .47)), static_cast<int>(fretRectangle.y - (neckRectangle.height * .5f)), static_cast<int>(fretRectangle.width), static_cast<int>(fretRectangle.height), GRAY);
 
-    DrawTexturePro(fretTexture,
-                   fretRectangle,
-                   (Rectangle) {static_cast<float>(fretRectangle.x - (neckRectangle.width * .33)), fretRectangle.y, fretRectangle.width, fretRectangle.height},
-                   fretCenter, 0, WHITE);
-
-    DrawTexturePro(fretTexture,
-                   fretRectangle,
-                   (Rectangle) {static_cast<float>(fretRectangle.x - (neckRectangle.width * .25)), fretRectangle.y, fretRectangle.width, fretRectangle.height},
-                   fretCenter, 0, WHITE);
-
-    DrawTexturePro(fretTexture,
-                   fretRectangle,
-                   (Rectangle) {static_cast<float>(fretRectangle.x - (neckRectangle.width * .17)), fretRectangle.y, fretRectangle.width, fretRectangle.height},
-                   fretCenter, 0, WHITE);
-
-    DrawTexturePro(fretTexture,
-                   fretRectangle,
-                   (Rectangle) {static_cast<float>(fretRectangle.x - (neckRectangle.width * .09)), fretRectangle.y, fretRectangle.width, fretRectangle.height},
-                   fretCenter, 0, WHITE);
-
-    DrawTexturePro(fretTexture,
-                   fretRectangle,
-                   (Rectangle) {static_cast<float>(fretRectangle.x - (neckRectangle.width * .01)), fretRectangle.y, fretRectangle.width, fretRectangle.height},
-                   fretCenter, 0, WHITE);
-
-    DrawTexturePro(fretTexture,
-                   fretRectangle,
-                   (Rectangle) {static_cast<float>(fretRectangle.x + (neckRectangle.width * .07)), fretRectangle.y, fretRectangle.width, fretRectangle.height},
-                   fretCenter, 0, WHITE);
-
-    DrawTexturePro(fretTexture,
-                   fretRectangle,
-                   (Rectangle) {static_cast<float>(fretRectangle.x + (neckRectangle.width * .15)), fretRectangle.y, fretRectangle.width, fretRectangle.height},
-                   fretCenter, 0, WHITE);
-
-    DrawTexturePro(fretTexture,
-                   fretRectangle,
-                   (Rectangle) {static_cast<float>(fretRectangle.x + (neckRectangle.width * .23)), fretRectangle.y, fretRectangle.width, fretRectangle.height},
-                   fretCenter, 0, WHITE);
-
-    DrawTexturePro(fretTexture,
-                   fretRectangle,
-                   (Rectangle) {static_cast<float>(fretRectangle.x + (neckRectangle.width * .31)), fretRectangle.y, fretRectangle.width, fretRectangle.height},
-                   fretCenter, 0, WHITE);
-
-    DrawTexturePro(fretTexture,
-                   fretRectangle,
-                   (Rectangle) {static_cast<float>(fretRectangle.x + (neckRectangle.width * .39)), fretRectangle.y, fretRectangle.width, fretRectangle.height},
-                   fretCenter, 0, WHITE);
-
-    DrawTexturePro(fretTexture,
-                   fretRectangle,
-                   (Rectangle) {static_cast<float>(fretRectangle.x + (neckRectangle.width * .47)), fretRectangle.y, fretRectangle.width, fretRectangle.height},
-                   fretCenter, 0, WHITE);
 
     /** Strings **/
     // Strings separated 1/6 height of neck
-    DrawTexturePro(stringTexture,
-                   stringRectangle,
-                   (Rectangle) {stringRectangle.x, static_cast<float>(stringRectangle.y - (neckRectangle.height * .40)), stringRectangle.width, stringRectangle.height},
-                   stringCenter, 0, WHITE);
-    DrawTexturePro(stringTexture,
-                   stringRectangle,
-                   (Rectangle) {stringRectangle.x, static_cast<float>(stringRectangle.y - (neckRectangle.height * .24)), stringRectangle.width, stringRectangle.height},
-                   stringCenter, 0, WHITE);
-    DrawTexturePro(stringTexture,
-                   stringRectangle,
-                   (Rectangle) {stringRectangle.x, static_cast<float>(stringRectangle.y - (neckRectangle.height * .08)), stringRectangle.width, stringRectangle.height},
-                   stringCenter, 0, WHITE);
-    DrawTexturePro(stringTexture,
-                   stringRectangle,
-                   (Rectangle) {stringRectangle.x, static_cast<float>(stringRectangle.y + (neckRectangle.height * .08)), stringRectangle.width, stringRectangle.height},
-                   stringCenter, 0, WHITE);
-    DrawTexturePro(stringTexture,
-                   stringRectangle,
-                   (Rectangle) {stringRectangle.x, static_cast<float>(stringRectangle.y + (neckRectangle.height * .24)), stringRectangle.width, stringRectangle.height},
-                   stringCenter, 0, WHITE);
-    DrawTexturePro(stringTexture,
-                   stringRectangle,
-                   (Rectangle) {stringRectangle.x, static_cast<float>(stringRectangle.y + (neckRectangle.height * .40)), stringRectangle.width, stringRectangle.height},
-                   stringCenter, 0, WHITE);
+//    DrawTexturePro(stringTexture,
+//                   stringRectangle,
+//                   (Rectangle) {stringRectangle.x, static_cast<float>(stringRectangle.y - (neckRectangle.height * .40)), stringRectangle.width, stringRectangle.height},
+//                   stringCenter, 0, WHITE);
+//    DrawTexturePro(stringTexture,
+//                   stringRectangle,
+//                   (Rectangle) {stringRectangle.x, static_cast<float>(stringRectangle.y - (neckRectangle.height * .24)), stringRectangle.width, stringRectangle.height},
+//                   stringCenter, 0, WHITE);
+//    DrawTexturePro(stringTexture,
+//                   stringRectangle,
+//                   (Rectangle) {stringRectangle.x, static_cast<float>(stringRectangle.y - (neckRectangle.height * .08)), stringRectangle.width, stringRectangle.height},
+//                   stringCenter, 0, WHITE);
+//    DrawTexturePro(stringTexture,
+//                   stringRectangle,
+//                   (Rectangle) {stringRectangle.x, static_cast<float>(stringRectangle.y + (neckRectangle.height * .08)), stringRectangle.width, stringRectangle.height},
+//                   stringCenter, 0, WHITE);
+//    DrawTexturePro(stringTexture,
+//                   stringRectangle,
+//                   (Rectangle) {stringRectangle.x, static_cast<float>(stringRectangle.y + (neckRectangle.height * .24)), stringRectangle.width, stringRectangle.height},
+//                   stringCenter, 0, WHITE);
+//    DrawTexturePro(stringTexture,
+//                   stringRectangle,
+//                   (Rectangle) {stringRectangle.x, static_cast<float>(stringRectangle.y + (neckRectangle.height * .40)), stringRectangle.width, stringRectangle.height},
+//                   stringCenter, 0, WHITE);
+
+    // Redo all of the strings but with Rectangles instead, but keep all else the same
+    DrawRectangle(static_cast<int>(stringRectangle.x - (stringRectangle.width * .5f)), static_cast<int>(stringRectangle.y - (neckRectangle.height * .40)), static_cast<int>(stringRectangle.width), static_cast<int>(stringRectangle.height), RED);
+    DrawRectangle(static_cast<int>(stringRectangle.x - (stringRectangle.width * .5f)), static_cast<int>(stringRectangle.y - (neckRectangle.height * .24)), static_cast<int>(stringRectangle.width), static_cast<int>(stringRectangle.height), RED);
+    DrawRectangle(static_cast<int>(stringRectangle.x - (stringRectangle.width * .5f)), static_cast<int>(stringRectangle.y - (neckRectangle.height * .08)), static_cast<int>(stringRectangle.width), static_cast<int>(stringRectangle.height), RED);
+    DrawRectangle(static_cast<int>(stringRectangle.x - (stringRectangle.width * .5f)), static_cast<int>(stringRectangle.y + (neckRectangle.height * .08)), static_cast<int>(stringRectangle.width), static_cast<int>(stringRectangle.height), RED);
+    DrawRectangle(static_cast<int>(stringRectangle.x - (stringRectangle.width * .5f)), static_cast<int>(stringRectangle.y + (neckRectangle.height * .24)), static_cast<int>(stringRectangle.width), static_cast<int>(stringRectangle.height), RED);
+    DrawRectangle(static_cast<int>(stringRectangle.x - (stringRectangle.width * .5f)), static_cast<int>(stringRectangle.y + (neckRectangle.height * .40)), static_cast<int>(stringRectangle.width), static_cast<int>(stringRectangle.height), RED);
+
 
 
     /** Note Containers **/
@@ -228,7 +264,7 @@ void Guitar::draw(float windowScale) {
             }
             else {
 //                DrawEllipse(static_cast<float>(neckRectangle.x - (neckRectangle.width * .53f) + ((neckRectangle.width * .08) * i)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .56f)), static_cast<float>(noteRectangle.width / 2), static_cast<float>(noteRectangle.height / 2), noteColorVec[i][j]);
-                DrawEllipseLines(static_cast<float>(neckRectangle.x - (neckRectangle.width * .53f) + ((neckRectangle.width * .08) * i)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .56f)), static_cast<float>(noteRectangle.width / 2), static_cast<float>(noteRectangle.height / 2), noteColorVec[i][j]);
+                DrawEllipseLines(static_cast<float>(neckRectangle.x - (neckRectangle.width * .53f) + ((neckRectangle.width * .08) * i)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .56f)), static_cast<float>(noteRectangle.width / 2), static_cast<float>(noteRectangle.height / 2), GREEN);
             }
 
             noteLocations[i][j] = {static_cast<float>(neckRectangle.x - (neckRectangle.width * .53f) + ((neckRectangle.width * .08) * i) - (noteRectangle.width / 2)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .56f) - (noteRectangle.height / 2))};

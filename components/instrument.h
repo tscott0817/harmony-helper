@@ -31,13 +31,20 @@ protected:
     bool connectLocAdded{};
 
     /** Colors **/
-    Color rootColor{};
-    Color hoverColor{};
-    Color clickColor{};
-    Color secondColor{};
-    Color thirdColor{};
-    Color fourthColor{};
-    Color fifthColor{};
+    // Colors for individual notes
+    Color rootColor = Color{238, 238, 238, 200};
+    Color cNoteColor = Color{168, 50, 50, 255};
+    Color dbNoteColor = Color{184, 171, 61, 255};
+    Color dNoteColor = Color{38, 128, 80, 255};
+    Color ebNoteColor = Color{168, 111, 50, 255};
+    Color eNoteColor = Color{168, 50, 152, 255};
+    Color fNoteColor = Color{48, 102, 150, 255};
+    Color gbNoteColor = Color{60, 194, 183, 255};
+    Color gNoteColor = Color{126, 74, 247, 255};
+    Color abNoteColor = Color{49, 62, 158, 255};
+    Color aNoteColor = Color{130, 176, 49, 255};
+    Color bbNoteColor = Color{127, 50, 168, 255};
+    Color bNoteColor = Color{179, 64, 117, 255};
 
     /** States Each Object Has **/
     bool active{};  // TODO: Make this private with a getter/setter;

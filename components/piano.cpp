@@ -66,14 +66,8 @@ Piano::Piano(int screenWidth, int screenHeight, float posX, float posY, float wi
 void Piano::draw(float windowScale) {
 
     /** Parent Container **/
-//    DrawTexturePro(containerTexture,
-//                   container,
-//                   (Rectangle) {container.x, container.y, container.width, container.height},  /** Params = (x-pos, y-pos, height, width) **/
-//                   containerCenter, 0, WHITE);
-
     DrawRectangle(container.x - (container.width * .5f), container.y - (container.height * .5f), container.width, container.height, containerColor);
     containerLoc = {container.x, container.y};  // TODO: Not sure if needed; Maybe want to update location only when container is moved, not every frame
-
 
     /** White Keys **/
     DrawRectangle(keyWhiteRectangle.x - (keyWhiteRectangle.width * .5f) - (container.width * .39f), keyWhiteRectangle.y - (keyWhiteRectangle.height * .5f), keyWhiteRectangle.width, keyWhiteRectangle.height, keyWhiteColorVec[0]);
@@ -108,50 +102,48 @@ void Piano::draw(float windowScale) {
 }
 
 void Piano::selectNote(Vector2 mousePos) {
-    for (int i = 0; i < keyBlackLocations.size(); i++) {
-        if (mousePos.x > keyBlackLocations[i].x &&
-            mousePos.x < keyBlackLocations[i].x + (keyBlackRectangle.width) &&
-            mousePos.y > keyBlackLocations[i].y &&
-            mousePos.y < keyBlackLocations[i].y + (keyBlackRectangle.height) &&
-            IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && noteClickedBoolVecBlack[i] == 0) {
-            std::cout << "Hovering Black" << std::endl;
-            noteClickedBoolVecBlack[i] = 1;
-            // keyBlackColorVec[i] = blackKeyClickColor;
-            addNoteShared(noteTextVec[1][i]); // TODO: [1][x] is for black keys, [0][x] is for white keys
-            PlaySound(soundNoteTest);
-        }
-        else if (mousePos.x > keyBlackLocations[i].x &&
-                 mousePos.x < keyBlackLocations[i].x + (keyBlackRectangle.width) &&
-                 mousePos.y > keyBlackLocations[i].y &&
-                 mousePos.y < keyBlackLocations[i].y + (keyBlackRectangle.height) &&
-                 IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && noteClickedBoolVecBlack[i] == 1) {
+    if (!IsKeyDown(KEY_LEFT_CONTROL)) {  // TODO: Make this into field of base class
+        for (int i = 0; i < keyBlackLocations.size(); i++) {
+            if (mousePos.x > keyBlackLocations[i].x &&
+                mousePos.x < keyBlackLocations[i].x + (keyBlackRectangle.width) &&
+                mousePos.y > keyBlackLocations[i].y &&
+                mousePos.y < keyBlackLocations[i].y + (keyBlackRectangle.height) &&
+                IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && noteClickedBoolVecBlack[i] == 0) {
 
-            noteClickedBoolVecBlack[i] = 0;
-            // keyBlackColorVec[i] = blackKeyColor;
-            removeNoteShared(noteTextVec[1][i]);
-        }
-    }
-    if (!hoverBlackNotes(mousePos)) {
-        for (int i = 0; i < keyWhiteLocations.size(); i++) {
-            if (mousePos.x > keyWhiteLocations[i].x &&
-                mousePos.x < keyWhiteLocations[i].x + (keyWhiteRectangle.width) &&
-                mousePos.y > keyWhiteLocations[i].y &&
-                mousePos.y < keyWhiteLocations[i].y + (keyWhiteRectangle.height) &&
-                IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && noteClickedBoolVecWhite[i] == 0) {
+                noteClickedBoolVecBlack[i] = 1;
+                addNoteShared(noteTextVec[1][i]); // TODO: [1][x] is for black keys, [0][x] is for white keys
                 PlaySound(soundNoteTest);
-                noteClickedBoolVecWhite[i] = 1;
-                // keyWhiteColorVec[i] = clickColor;
-                addNoteShared(noteTextVec[0][i]);  // TODO: [1][x] is for black keys, [0][x] is for white keys
+            } else if (mousePos.x > keyBlackLocations[i].x &&
+                       mousePos.x < keyBlackLocations[i].x + (keyBlackRectangle.width) &&
+                       mousePos.y > keyBlackLocations[i].y &&
+                       mousePos.y < keyBlackLocations[i].y + (keyBlackRectangle.height) &&
+                       IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && noteClickedBoolVecBlack[i] == 1) {
 
-            } else if (mousePos.x > keyWhiteLocations[i].x &&
-                       mousePos.x < keyWhiteLocations[i].x + (keyWhiteRectangle.width) &&
-                       mousePos.y > keyWhiteLocations[i].y &&
-                       mousePos.y < keyWhiteLocations[i].y + (keyWhiteRectangle.height) &&
-                       IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && noteClickedBoolVecWhite[i] == 1) {
+                noteClickedBoolVecBlack[i] = 0;
+                removeNoteShared(noteTextVec[1][i]);
+            }
+        }
+        if (!hoverBlackNotes(mousePos)) {
+            for (int i = 0; i < keyWhiteLocations.size(); i++) {
+                if (mousePos.x > keyWhiteLocations[i].x &&
+                    mousePos.x < keyWhiteLocations[i].x + (keyWhiteRectangle.width) &&
+                    mousePos.y > keyWhiteLocations[i].y &&
+                    mousePos.y < keyWhiteLocations[i].y + (keyWhiteRectangle.height) &&
+                    IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && noteClickedBoolVecWhite[i] == 0) {
 
-                noteClickedBoolVecWhite[i] = 0;
-                // keyWhiteColorVec[i] = whiteKeyColor;
-                removeNoteShared(noteTextVec[0][i]);
+                    PlaySound(soundNoteTest);
+                    noteClickedBoolVecWhite[i] = 1;
+                    addNoteShared(noteTextVec[0][i]);  // TODO: [1][x] is for black keys, [0][x] is for white keys
+
+                } else if (mousePos.x > keyWhiteLocations[i].x &&
+                           mousePos.x < keyWhiteLocations[i].x + (keyWhiteRectangle.width) &&
+                           mousePos.y > keyWhiteLocations[i].y &&
+                           mousePos.y < keyWhiteLocations[i].y + (keyWhiteRectangle.height) &&
+                           IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && noteClickedBoolVecWhite[i] == 1) {
+
+                    noteClickedBoolVecWhite[i] = 0;
+                    removeNoteShared(noteTextVec[0][i]);
+                }
             }
         }
     }

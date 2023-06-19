@@ -112,6 +112,8 @@ int main()
 
         /** Determines Which Objects Are Shown **/
         // Menu stuff
+        // TODO: Need to make some boolean check in instruments to add locations or
+        //  mouse interactions still work even if instruments is not visible
         for (int i = 0; i < instrumentsVec.size(); i++) {
             if (menu.getActiveButtons()[i] == 0) {
                 instrumentsVec[i]->setCanDraw(false);

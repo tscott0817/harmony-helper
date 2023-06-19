@@ -143,25 +143,26 @@ void Guitar::draw(float windowScale) {
 }
 
 void Guitar::selectNote(Vector2 mousePos) {
-    for (int i = 0; i < noteLocations.size(); i++) {
-        for (int j = 0; j < noteLocations[i].size(); j++) {
-            if (mousePos.x > noteLocations[i][j].x &&
-                mousePos.x < noteLocations[i][j].x + (noteRectangle.width) &&
-                mousePos.y > noteLocations[i][j].y &&
-                mousePos.y < noteLocations[i][j].y + (noteRectangle.height) &&
-                IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && noteClickedBoolVec[i][j] == 0) {
+    if (!IsKeyDown(KEY_LEFT_CONTROL)) {  // TODO: Make this into field of base class
+        for (int i = 0; i < noteLocations.size(); i++) {
+            for (int j = 0; j < noteLocations[i].size(); j++) {
+                if (mousePos.x > noteLocations[i][j].x &&
+                    mousePos.x < noteLocations[i][j].x + (noteRectangle.width) &&
+                    mousePos.y > noteLocations[i][j].y &&
+                    mousePos.y < noteLocations[i][j].y + (noteRectangle.height) &&
+                    IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && noteClickedBoolVec[i][j] == 0) {
 
-                noteClickedBoolVec[i][j] = 1;
-                addNoteShared(noteTextVec[j][i]);
-            }
-            else if (mousePos.x > noteLocations[i][j].x &&
-                     mousePos.x < noteLocations[i][j].x + (noteRectangle.width) &&
-                     mousePos.y > noteLocations[i][j].y &&
-                     mousePos.y < noteLocations[i][j].y + (noteRectangle.height) &&
-                     IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && noteClickedBoolVec[i][j] == 1) {
+                    noteClickedBoolVec[i][j] = 1;
+                    addNoteShared(noteTextVec[j][i]);
+                } else if (mousePos.x > noteLocations[i][j].x &&
+                           mousePos.x < noteLocations[i][j].x + (noteRectangle.width) &&
+                           mousePos.y > noteLocations[i][j].y &&
+                           mousePos.y < noteLocations[i][j].y + (noteRectangle.height) &&
+                           IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && noteClickedBoolVec[i][j] == 1) {
 
-                noteClickedBoolVec[i][j] = 0;
-                removeNoteShared(noteTextVec[j][i]);
+                    noteClickedBoolVec[i][j] = 0;
+                    removeNoteShared(noteTextVec[j][i]);
+                }
             }
         }
     }

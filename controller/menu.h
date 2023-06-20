@@ -17,9 +17,6 @@
 class Menu {
 private:
     int tempVal;
-    // GUI init
-    //----------------------------------------------------------------------------------
-    // bool active; // TODO: Will need one of these for each button
     int active;
     bool editMode;
     std::vector<int> activeVec;
@@ -33,6 +30,9 @@ private:
 
     Rectangle buttonTwoRec;
     Vector2 buttonTwoCenter;
+
+    Rectangle buttonThreeRec;
+    Vector2 buttonThreeCenter;
 
     Color blackBackground;
     int listViewExScrollIndex = 0;

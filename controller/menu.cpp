@@ -23,6 +23,9 @@ Menu::Menu(int screenWidth, int screenHeight, float posX, float posY, float widt
     buttonTwoRec = {container.x + (container.width * .1025f), container.y + (container.height * .06f), container.width * .1f, container.height * .9f}; // TODO: Fill container with neck (Currently have padding for testing)
     buttonTwoCenter = {static_cast<float>(buttonTwoRec.width / 2), static_cast<float>(buttonTwoRec.height / 2)};
 
+    buttonThreeRec = {container.x + (container.width * .2050f), container.y + (container.height * .06f), container.width * .1f, container.height * .9f}; // TODO: Fill container with neck (Currently have padding for testing)
+    buttonThreeCenter = {static_cast<float>(buttonThreeRec.width / 2), static_cast<float>(buttonThreeRec.height / 2)};
+
     buttonLocAdded = false;
 
     /** Colors **/
@@ -34,9 +37,9 @@ Menu::Menu(int screenWidth, int screenHeight, float posX, float posY, float widt
     /** Vector Inits **/
     // TODO: Just filling to 100 for room, but don't want to hardcode this 100
     for (int i = 0; i < 100; i++) {
-        buttonLocations.push_back({0, 0});
-        buttonColorVec.push_back(baseColor);
-        activeVec.push_back(0);
+        buttonLocations.emplace_back(Vector2 {0, 0});
+        buttonColorVec.emplace_back(baseColor);
+        activeVec.emplace_back(0);
     }
     isHovering = false;
     currentButton = 0;
@@ -69,9 +72,12 @@ void Menu::drawTopMenu(int width, int height) {
     DrawRectangle(container.x, container.y, container.width, container.height, blackBackground);
     DrawRectangle(buttonOneRec.x, buttonOneRec.y, buttonOneRec.width, buttonOneRec.height, buttonColorVec[0]);
     DrawRectangle(buttonTwoRec.x, buttonTwoRec.y, buttonTwoRec.width, buttonTwoRec.height, buttonColorVec[1]);
+    DrawRectangle(buttonThreeRec.x, buttonThreeRec.y, buttonThreeRec.width, buttonThreeRec.height, buttonColorVec[2]);
+
     if (!buttonLocAdded) {
         buttonLocations[0] = {buttonOneRec.x, buttonOneRec.y + (container.height * .06f)};
         buttonLocations[1] = {buttonTwoRec.x, buttonTwoRec.y + (container.height * .06f)};
+        buttonLocations[2] = {buttonThreeRec.x, buttonThreeRec.y + (container.height * .06f)};
         buttonLocAdded = true;
     }
     float buttonTextSize = (buttonOneRec.width > buttonOneRec.height) ? static_cast<float>(buttonOneRec.height) : static_cast<float>(buttonOneRec.width);
@@ -81,6 +87,10 @@ void Menu::drawTopMenu(int width, int height) {
     float buttonTwoTextSize = (buttonTwoRec.width > buttonTwoRec.height) ? static_cast<float>(buttonTwoRec.height) : static_cast<float>(buttonTwoRec.width);
     Vector2 buttonTwoNewLoc = {buttonTwoRec.x + (buttonTwoRec.width * .25f), buttonTwoRec.y};
     DrawTextEx(testFont, "Piano", buttonTwoNewLoc, buttonTwoTextSize, 0, WHITE);
+
+    float buttonThreeTextSize = (buttonThreeRec.width > buttonThreeRec.height) ? static_cast<float>(buttonThreeRec.height) : static_cast<float>(buttonThreeRec.width);
+    Vector2 buttonThreeNewLoc = {buttonThreeRec.x + (buttonThreeRec.width * .25f), buttonThreeRec.y};
+    DrawTextEx(testFont, "Scale Menu", buttonThreeNewLoc, buttonThreeTextSize, 0, WHITE);
 }
 
 // TODO: Implement hovering color change
@@ -90,7 +100,6 @@ void Menu::hover(Vector2 mousePos) {
         if (mousePos.x > buttonLocations[i].x && mousePos.x < buttonLocations[i].x + (buttonOneRec.width) &&
             mousePos.y > buttonLocations[i].y && mousePos.y < buttonLocations[i].y + (buttonOneRec.height)) {
             currentButton = i;
-            //buttonColorVec[currentButton] = hoverColor;
             click(currentButton);
             isHovering = true;
         }
@@ -110,18 +119,16 @@ void Menu::hover(Vector2 mousePos) {
     }
 }
 
-void Menu::click(int currentButton) {
+void Menu::click(int currButton) {  // Don't need param, could use currentButton, but feel this shows intent better
     // Check if left mouse clicked
     if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-        if (activeVec[currentButton] == 0) {
-            activeVec[currentButton] = 1;
-            // currentColor = activeColor;
-            buttonColorVec[currentButton] = activeColor;
+        if (activeVec[currButton] == 0) {
+            activeVec[currButton] = 1;
+            buttonColorVec[currButton] = activeColor;
         }
         else {
-            activeVec[currentButton] = 0;
-            // currentColor = baseColor;
-            buttonColorVec[currentButton] = baseColor;
+            activeVec[currButton] = 0;
+            buttonColorVec[currButton] = baseColor;
         }
     }
 }

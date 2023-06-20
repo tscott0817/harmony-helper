@@ -53,8 +53,7 @@ private:
     /** Colors **/
     Color containerColor;
 
-
-    // Audio
+    /** Audio **/
     Sound testSound;
 
 public:

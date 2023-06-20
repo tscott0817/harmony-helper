@@ -10,6 +10,7 @@
 #include "components/piano.h"
 #include "components/modal_chart.h"
 #include "controller/menu.h"
+#include "controller/scalesMenu.h"
 
 
 // TODO: If using webassembly, probably don't need to check OS
@@ -64,6 +65,7 @@ int main()
 
     /** Object Inits **/
     Menu menu(screenWidth, screenHeight, 0, screenHeight * .0001f, 1, .05f);
+    ScalesMenu scalesMenu(screenWidth, screenHeight, screenWidth * .01f, screenHeight * .06, .4f, .8f);
 
     std::vector<std::unique_ptr<Instrument>> instrumentsVec;  // Holds all instruments
     float guitarWidth = .7f;
@@ -118,12 +120,23 @@ int main()
         // Menu stuff
         // TODO: Need to make some boolean check in instruments to add locations or
         //  mouse interactions still work even if instruments is not visible
-        for (int i = 0; i < instrumentsVec.size(); i++) {
-            if (menu.getActiveButtons()[i] == 0) {
-                instrumentsVec[i]->setCanDraw(false);
+        bool canDrawScaleMenu = false;  // TODO: Preer to not have this here
+        for (int i = 0; i < 3; i++) {
+            if (menu.getActiveButtons()[i] == 0) {  // This checks if the current button is active or not
+                if (i == 2) {  // TODO: 2 is the scale chart, need to take different approach
+                    canDrawScaleMenu = false;
+                }
+                else {
+                    instrumentsVec[i]->setCanDraw(false);
+                }
             }
             if (menu.getActiveButtons()[i] == 1) {
-                instrumentsVec[i]->setCanDraw(true);
+                if (i == 2) {
+                    canDrawScaleMenu = true;
+                }
+                else {
+                    instrumentsVec[i]->setCanDraw(true);
+                }
             }
         }
 
@@ -154,36 +167,9 @@ int main()
                 instrumentsVec[1]->playSound();
             }
         }
-
-        // TODO: Make this logic its own separate drop down menu for all scales
-        // TODO: Do the same thing again for chords
-        if (GuiButton((Rectangle){screenWidth * .9f, screenHeight * .7f, screenWidth * .1f, screenHeight * .1f}, "C Major")) {
-            //newNotesVec.clear();  // TODO: Would prefer this as part of instrument class, but struggling to implement
-            std::vector<std::string> newNotesVec;
-            newNotesVec.emplace_back("C");
-            newNotesVec.emplace_back("D");
-            newNotesVec.emplace_back("E");
-            newNotesVec.emplace_back("F");
-            newNotesVec.emplace_back("G");
-            newNotesVec.emplace_back("A");
-            newNotesVec.emplace_back("B");
-            for (const auto & instrument : instrumentsVec) {
-                instrument->setNotesShared(newNotesVec);
-            }
-        }
-        // Add another button for C Minor
-        else if (GuiButton((Rectangle){screenWidth * .9f, screenHeight * .6f, screenWidth * .1f, screenHeight * .1f}, "C Minor")) {
-            std::vector<std::string> newNotesVec;
-            newNotesVec.emplace_back("C");
-            newNotesVec.emplace_back("D");
-            newNotesVec.emplace_back("Eb");
-            newNotesVec.emplace_back("F");
-            newNotesVec.emplace_back("G");
-            newNotesVec.emplace_back("Ab");
-            newNotesVec.emplace_back("Bb");
-            for (const auto & instrument : instrumentsVec) {
-                instrument->setNotesShared(newNotesVec);
-            }
+        if (canDrawScaleMenu) {
+            scalesMenu.draw();
+            scalesMenu.setScale(screenWidth, screenHeight, instrumentsVec);  // TODO: Maybe separate this into two functions
         }
 
         // Want Menu to be drawn last so it's on top

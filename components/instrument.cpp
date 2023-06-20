@@ -35,19 +35,18 @@ void Instrument::removeNoteShared(const std::string& note) {
 
 void Instrument::clearNotesShared() {
     sharedNotesVec.clear();
-    std::cout << "Shared Notes Vec cleared" << std::endl;
+    std::cout << "Shared Notes Vec cleared: " << std::endl;
     printNotesShared();
 }
 
+// TODO: This needs to replace the entire sharedNotesVec, right now it just adds to the end of it?
 void Instrument::setNotesShared(std::vector<std::string> notesVec) {
-    sharedNotesVec = std::move(notesVec);
-    std::cout << "Shared Notes Vec Replaced With: " << std::endl;
-    printNotesShared();
+        sharedNotesVec = std::move(notesVec);
+        std::cout << "Shared Notes Vec Replaced With: " << std::endl;
+        printNotesShared();
 }
 
-// Return the shard notesVec
 std::vector<std::string> Instrument::getNotesShared() {return sharedNotesVec;}
-
 
 void Instrument::printNotesShared() {
     std::cout << "Full sharedNotesVec: ";

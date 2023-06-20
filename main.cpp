@@ -42,6 +42,11 @@ constexpr int MAX(int a, int b) {
     return (a > b) ? a : b;
 }
 
+// TODO: These won't work if in separate class?
+// void playSound(const std::vector<std::unique_ptr<Instrument>>& instrumentsVec, const std::vector<Sound>& notesSoundVec);
+std::vector<Sound> initPianoAudio();
+void unloadPianoAudio(std::vector<Sound> notesSoundVec);
+
 int main()
 {
     /** Window Setup **/
@@ -66,46 +71,24 @@ int main()
     float guitarPosX = .5f;  // The ( * 0.5f) are basically scalars for the guitar's position
     float guitarPosY = .8f;
     std::unique_ptr<Guitar> guitar = std::make_unique<Guitar>(screenWidth, screenHeight, guitarPosX, guitarPosY, guitarWidth, guitarHeight);
-    instrumentsVec.push_back(std::move(guitar));
+    instrumentsVec.emplace_back(std::move(guitar));
 
     float pianoWidth = .4f;
     float pianoHeight = .3f;
     float pianoPosX = .5f;
     float pianoPosY = .3f;
     std::unique_ptr<Piano> piano = std::make_unique<Piano>(screenWidth, screenHeight, pianoPosX, pianoPosY, pianoWidth, pianoHeight);
-    instrumentsVec.push_back(std::move(piano));
+    instrumentsVec.emplace_back(std::move(piano));
 
-    InitAudioDevice();  // TODO: Not sure if best here in main, or if each class should have one
-    Sound noteC = LoadSound("../resources/audio/key08.ogg");  // TODO: Not sure why I have to go up a folder
-    Sound noteDb = LoadSound("../resources/audio/key09.ogg");
-    Sound noteD = LoadSound("../resources/audio/key10.ogg");
-    Sound noteEb = LoadSound("../resources/audio/key11.ogg");
-    Sound noteE = LoadSound("../resources/audio/key12.ogg");
-    Sound noteF = LoadSound("../resources/audio/key13.ogg");
-    Sound noteGb = LoadSound("../resources/audio/key14.ogg");
-    Sound noteG = LoadSound("../resources/audio/key15.ogg");
-    Sound noteAb = LoadSound("../resources/audio/key16.ogg");
-    Sound noteA = LoadSound("../resources/audio/key17.ogg");
-    Sound noteBb = LoadSound("../resources/audio/key18.ogg");
-    Sound noteB = LoadSound("../resources/audio/key19.ogg");
+    // InitAudioDevice();  // TODO: Not sure if best here in main, or if each class should have one
 
-    std::vector<Sound> notesSoundVec;
-    notesSoundVec.emplace_back(noteC);
-    notesSoundVec.emplace_back(noteDb);
-    notesSoundVec.emplace_back(noteD);
-    notesSoundVec.emplace_back(noteEb);
-    notesSoundVec.emplace_back(noteE);
-    notesSoundVec.emplace_back(noteF);
-    notesSoundVec.emplace_back(noteGb);
-    notesSoundVec.emplace_back(noteG);
-    notesSoundVec.emplace_back(noteAb);
-    notesSoundVec.emplace_back(noteA);
-    notesSoundVec.emplace_back(noteBb);
-    notesSoundVec.emplace_back(noteB);
+    /** Audio **/
+    instrumentsVec[1]->initAudio();  // TODO: Just Piano has audio currently
+
+    std::string instrSoundChoice = "Piano";  // TODO: Make this user assignable to choose sound
 
     /** Main Loop **/
     SetTargetFPS(60);
-    std::vector<std::string> newNotesVec;  // TODO: Don't like this here
     while (!WindowShouldClose())
     {
         // TODO: This can be used to resize objects dynamically with the window size,
@@ -164,50 +147,19 @@ int main()
         }
         /** Create a second button that will read the sharedNotesVec and use PlaySound to play appropriate notes **/
         if (GuiButton((Rectangle){screenWidth * .9f, screenHeight * .8f, screenWidth * .1f, screenHeight * .1f}, "Play")) {
-            for (const auto & instrument : instrumentsVec) {
-                for (const auto &note: instrument->getNotesShared()) {
-                    if (note == "C") {
-                        PlaySound(notesSoundVec[0]);
-                    }
-                    if (note == "Db") {
-                        PlaySound(notesSoundVec[1]);
-                    }
-                    if (note == "D") {
-                        PlaySound(notesSoundVec[2]);
-                    }
-                    if (note == "Eb") {
-                        PlaySound(notesSoundVec[3]);
-                    }
-                    if (note == "E") {
-                        PlaySound(notesSoundVec[4]);
-                    }
-                    if (note == "F") {
-                        PlaySound(notesSoundVec[5]);
-                    }
-                    if (note == "Gb") {
-                        PlaySound(notesSoundVec[6]);
-                    }
-                    if (note == "G") {
-                        PlaySound(notesSoundVec[7]);
-                    }
-                    if (note == "Ab") {
-                        PlaySound(notesSoundVec[8]);
-                    }
-                    if (note == "A") {
-                        PlaySound(notesSoundVec[9]);
-                    }
-                    if (note == "Bb") {
-                        PlaySound(notesSoundVec[10]);
-                    }
-                    if (note == "B") {
-                        PlaySound(notesSoundVec[11]);
-                    }
-                }
+            if (instrSoundChoice == "Guitar") {
+                instrumentsVec[0]->playSound();
+            }
+            else if (instrSoundChoice == "Piano") {
+                instrumentsVec[1]->playSound();
             }
         }
+
         // TODO: Make this logic its own separate drop down menu for all scales
         // TODO: Do the same thing again for chords
         if (GuiButton((Rectangle){screenWidth * .9f, screenHeight * .7f, screenWidth * .1f, screenHeight * .1f}, "C Major")) {
+            //newNotesVec.clear();  // TODO: Would prefer this as part of instrument class, but struggling to implement
+            std::vector<std::string> newNotesVec;
             newNotesVec.emplace_back("C");
             newNotesVec.emplace_back("D");
             newNotesVec.emplace_back("E");
@@ -215,6 +167,20 @@ int main()
             newNotesVec.emplace_back("G");
             newNotesVec.emplace_back("A");
             newNotesVec.emplace_back("B");
+            for (const auto & instrument : instrumentsVec) {
+                instrument->setNotesShared(newNotesVec);
+            }
+        }
+        // Add another button for C Minor
+        else if (GuiButton((Rectangle){screenWidth * .9f, screenHeight * .6f, screenWidth * .1f, screenHeight * .1f}, "C Minor")) {
+            std::vector<std::string> newNotesVec;
+            newNotesVec.emplace_back("C");
+            newNotesVec.emplace_back("D");
+            newNotesVec.emplace_back("Eb");
+            newNotesVec.emplace_back("F");
+            newNotesVec.emplace_back("G");
+            newNotesVec.emplace_back("Ab");
+            newNotesVec.emplace_back("Bb");
             for (const auto & instrument : instrumentsVec) {
                 instrument->setNotesShared(newNotesVec);
             }
@@ -230,19 +196,9 @@ int main()
     for (const auto & inst : instrumentsVec) {
         inst->destroy();
     }
-    UnloadSound(noteC);     // Unload sound data
-    UnloadSound(noteDb);     // Unload sound data
-    UnloadSound(noteD);     // Unload sound data
-    UnloadSound(noteEb);     // Unload sound data
-    UnloadSound(noteE);     // Unload sound data
-    UnloadSound(noteF);     // Unload sound data
-    UnloadSound(noteGb);     // Unload sound data
-    UnloadSound(noteG);     // Unload sound data
-    UnloadSound(noteAb);     // Unload sound data
-    UnloadSound(noteA);     // Unload sound data
-    UnloadSound(noteBb);     // Unload sound data
-    UnloadSound(noteB);     // Unload sound data
-    CloseAudioDevice();
+    // unloadPianoAudio(notesSoundVec);
+    // CloseAudioDevice();
+    instrumentsVec[1]->unloadAudio();
     CloseWindow();        // Close window and OpenGL context
 
     return 0;

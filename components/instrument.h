@@ -21,15 +21,6 @@ protected:
     Vector2 containerLoc{};
     bool containerLocAdded{};
 
-    // TODO: Not sure if i will end up doing the bezier, might just stack instr in rows
-    /** Connection Point **/
-    Image connectImage{};
-    Texture2D connectTexture{};
-    Rectangle connectRectangle{};
-    Vector2 connectCenter{};
-    Vector2 connectLoc{};
-    bool connectLocAdded{};
-
     /** Colors **/
     // Colors for individual notes
     Color rootColor = Color{238, 238, 238, 200};
@@ -52,6 +43,7 @@ protected:
 
     /** Track All Shared Notes **/
     static std::vector<std::string> sharedNotesVec;
+    // std::vector<Sound> notesSoundVec;
 
 
 public:
@@ -72,6 +64,9 @@ public:
     virtual void clickAndDrag(Vector2 mousePos) = 0;
     virtual void notesActivate() = 0;
     virtual void destroy() = 0;
+    virtual void playSound() = 0;
+    virtual void initAudio() = 0;
+    virtual void unloadAudio() = 0;
 
     // Setters
     virtual void setCanDraw(bool state) = 0;

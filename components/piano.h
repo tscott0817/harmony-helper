@@ -64,6 +64,9 @@ private:
 
     Color containerColor;
 
+    std::vector<Sound> notesSoundVecWhite;
+    std::vector<Sound> notesSoundVecBlack;
+
 public:
     Piano(int screenWidth, int screenHeight, float posX, float posY, float width, float height);
     ~Piano() = default;
@@ -74,6 +77,9 @@ public:
     void clickAndDrag(Vector2 mousePos) override;
     void notesActivate() override;
     void destroy() override;
+    void playSound() override;
+    void initAudio() override;
+    void unloadAudio() override;
 
     // Setters
     void setCanDraw(bool canDraw) override;

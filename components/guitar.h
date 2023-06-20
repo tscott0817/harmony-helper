@@ -67,6 +67,9 @@ public:
     void clickAndDrag(Vector2 mousePos) override;
     void notesActivate() override;
     void destroy() override;
+    void playSound() override;
+    void initAudio() override;
+    void unloadAudio() override;
 
     // Setters
     void setCanDraw(bool state) override;

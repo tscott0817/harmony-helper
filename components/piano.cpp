@@ -29,13 +29,6 @@ Piano::Piano(int screenWidth, int screenHeight, float posX, float posY, float wi
     keyBlackRectangle = {container.x, container.y + (container.height * .125f), static_cast<float>(keyWhiteRectangle.width * .6), static_cast<float>(keyWhiteRectangle.height * .6)};
     keyBlackCenter = {static_cast<float>(keyBlackRectangle.width * .5f), static_cast<float>(keyBlackRectangle.height * .5f)};
 
-    /** Connection Point **/
-    connectImage = LoadImage("../images/fret.png");
-    connectTexture = LoadTextureFromImage(connectImage);
-    UnloadImage(connectImage);
-    connectRectangle = {container.x  - (container.width * .55f), container.y, static_cast<float>(container.width * .02f), static_cast<float>(container.width * .02f)};
-    connectCenter = {static_cast<float>(connectRectangle.width * .5f), static_cast<float>(connectRectangle.height )};
-
     /** Colors **/
     whiteKeyColor = WHITE;
     blackKeyColor = BLACK;
@@ -45,22 +38,25 @@ Piano::Piano(int screenWidth, int screenHeight, float posX, float posY, float wi
 
     /** Vector Inits **/
     for (int i = 0; i < 100; i++) {      // TODO: Just filling to 100 for space right now
-        keyWhiteColorVec.push_back(WHITE);
-        keyBlackColorVec.push_back(BLACK);
-        keyWhiteLocations.push_back({0, 0});
-        keyBlackLocations.push_back({0, 0});
-        noteClickedBoolVecWhite.push_back(0);
-        noteClickedBoolVecBlack.push_back(0);
+        keyWhiteColorVec.emplace_back(WHITE);
+        keyBlackColorVec.emplace_back(BLACK);
+        keyWhiteLocations.emplace_back(Vector2{0, 0});
+        keyBlackLocations.emplace_back(Vector2{0, 0});
+        noteClickedBoolVecWhite.emplace_back(0);
+        noteClickedBoolVecBlack.emplace_back(0);
     }
     notesLocAdded = false;
 
-//    soundNoteTest = LoadSound("../../resources/audio/key13.ogg");
-    soundNoteTest = LoadSound("key13.ogg");
-    notesVec.push_back(F);
+    InitAudioDevice();  // TODO: Not sure if best here in main, or if each class should have one
+    std::cout << "Audio From Piano Constructor" << std::endl;
+    soundNoteTest = LoadSound("../resources/audio/key13.ogg");
+    // soundNoteTest = LoadSound("../key13.ogg");
+    notesVec.emplace_back(F);
     noteTextVec.emplace_back(keysWhite);
     noteTextVec.emplace_back(keysBlack);
 
     containerColor = Color{51, 51, 51, 255};
+
 }
 
 void Piano::draw(float windowScale) {
@@ -112,7 +108,8 @@ void Piano::selectNote(Vector2 mousePos) {
 
                 noteClickedBoolVecBlack[i] = 1;
                 addNoteShared(noteTextVec[1][i]); // TODO: [1][x] is for black keys, [0][x] is for white keys
-                PlaySound(soundNoteTest);
+                PlaySound(notesSoundVecBlack[i]);
+
             } else if (mousePos.x > keyBlackLocations[i].x &&
                        mousePos.x < keyBlackLocations[i].x + (keyBlackRectangle.width) &&
                        mousePos.y > keyBlackLocations[i].y &&
@@ -121,6 +118,7 @@ void Piano::selectNote(Vector2 mousePos) {
 
                 noteClickedBoolVecBlack[i] = 0;
                 removeNoteShared(noteTextVec[1][i]);
+                PlaySound(notesSoundVecBlack[i]);
             }
         }
         if (!hoverBlackNotes(mousePos)) {
@@ -131,9 +129,9 @@ void Piano::selectNote(Vector2 mousePos) {
                     mousePos.y < keyWhiteLocations[i].y + (keyWhiteRectangle.height) &&
                     IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && noteClickedBoolVecWhite[i] == 0) {
 
-                    PlaySound(soundNoteTest);
                     noteClickedBoolVecWhite[i] = 1;
                     addNoteShared(noteTextVec[0][i]);  // TODO: [1][x] is for black keys, [0][x] is for white keys
+                    PlaySound(notesSoundVecWhite[i]);
 
                 } else if (mousePos.x > keyWhiteLocations[i].x &&
                            mousePos.x < keyWhiteLocations[i].x + (keyWhiteRectangle.width) &&
@@ -143,6 +141,7 @@ void Piano::selectNote(Vector2 mousePos) {
 
                     noteClickedBoolVecWhite[i] = 0;
                     removeNoteShared(noteTextVec[0][i]);
+                    PlaySound(notesSoundVecWhite[i]);
                 }
             }
         }
@@ -207,8 +206,6 @@ void Piano::clickAndDrag(Vector2 mousePos) {
             // TODO: Should only have to change the container?? Maybe since initial build is in constructor.
             container.x = mousePos.x;
             container.y = mousePos.y;
-            connectRectangle.x = container.x - (container.width * .55f);
-            connectRectangle.y = container.y;
             keyWhiteRectangle.x = container.x;
             keyWhiteRectangle.y = container.y + (container.height * .125f);
             keyBlackRectangle.x = container.x;
@@ -332,7 +329,87 @@ void Piano::setCanDraw(bool canDraw) {this->canDraw = canDraw;}
 
 /** Destruct **/
 // TODO: Not sure if this is best approach
-void Piano::destroy() {UnloadTexture(containerTexture); UnloadSound(F);}
+void Piano::destroy() {UnloadTexture(containerTexture); UnloadSound(F); UnloadSound(soundNoteTest); CloseAudioDevice();}
+
+// TODO: Would prefer to have in separate class, but can't get sound to work outside of main.cpp
+void Piano::initAudio() {
+    Sound noteC = LoadSound("../resources/audio/key08.ogg");  // TODO: Not sure why I have to go up a folder
+    Sound noteDb = LoadSound("../resources/audio/key09.ogg");
+    Sound noteD = LoadSound("../resources/audio/key10.ogg");
+    Sound noteEb = LoadSound("../resources/audio/key11.ogg");
+    Sound noteE = LoadSound("../resources/audio/key12.ogg");
+    Sound noteF = LoadSound("../resources/audio/key13.ogg");
+    Sound noteGb = LoadSound("../resources/audio/key14.ogg");
+    Sound noteG = LoadSound("../resources/audio/key15.ogg");
+    Sound noteAb = LoadSound("../resources/audio/key16.ogg");
+    Sound noteA = LoadSound("../resources/audio/key17.ogg");
+    Sound noteBb = LoadSound("../resources/audio/key18.ogg");
+    Sound noteB = LoadSound("../resources/audio/key19.ogg");
+
+    notesSoundVecWhite.emplace_back(noteC);
+    notesSoundVecBlack.emplace_back(noteDb);
+    notesSoundVecWhite.emplace_back(noteD);
+    notesSoundVecBlack.emplace_back(noteEb);
+    notesSoundVecWhite.emplace_back(noteE);
+    notesSoundVecWhite.emplace_back(noteF);
+    notesSoundVecBlack.emplace_back(noteGb);
+    notesSoundVecWhite.emplace_back(noteG);
+    notesSoundVecBlack.emplace_back(noteAb);
+    notesSoundVecWhite.emplace_back(noteA);
+    notesSoundVecBlack.emplace_back(noteBb);
+    notesSoundVecWhite.emplace_back(noteB);
+}
+
+void Piano::playSound() {
+    std::cout << "Playing Sound" << std::endl;
+    for (const auto &note: getNotesShared()) {
+        if (note == "C") {
+            PlaySound(notesSoundVecWhite[0]);
+        }
+        if (note == "Db") {
+            PlaySound(notesSoundVecBlack[0]);
+        }
+        if (note == "D") {
+            PlaySound(notesSoundVecWhite[1]);
+        }
+        if (note == "Eb") {
+            PlaySound(notesSoundVecBlack[1]);
+        }
+        if (note == "E") {
+            PlaySound(notesSoundVecWhite[2]);
+        }
+        if (note == "F") {
+            PlaySound(notesSoundVecWhite[3]);
+        }
+        if (note == "Gb") {
+            PlaySound(notesSoundVecBlack[2]);
+        }
+        if (note == "G") {
+            PlaySound(notesSoundVecWhite[4]);
+        }
+        if (note == "Ab") {
+            PlaySound(notesSoundVecBlack[3]);
+        }
+        if (note == "A") {
+            PlaySound(notesSoundVecWhite[5]);
+        }
+        if (note == "Bb") {
+            PlaySound(notesSoundVecBlack[4]);
+        }
+        if (note == "B") {
+            PlaySound(notesSoundVecWhite[6]);
+        }
+    }
+}
+
+void Piano::unloadAudio() {
+    for (const auto & note : notesSoundVecWhite) {
+        UnloadSound(note);
+    }
+    for (const auto & note : notesSoundVecBlack) {
+        UnloadSound(note);
+    }
+}
 
 
 

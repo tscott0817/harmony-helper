@@ -72,12 +72,12 @@ Guitar::Guitar(int screenWidth, int screenHeight, float posX, float posY, float 
         for (int j = 0; j < 100; j++) {
             // TODO: Replace all with emplace_back
             tempLoc.emplace_back(Vector2{0, 0});  // With emplace_back, need to specify type
-            tempColor.push_back(rootColor);
-            tempClicked.push_back(0);
+            tempColor.emplace_back(rootColor);
+            tempClicked.emplace_back(0);
         }
-        noteLocations.push_back(tempLoc);
-        noteColorVec.push_back(tempColor);
-        noteClickedBoolVec.push_back(tempClicked);
+        noteLocations.emplace_back(tempLoc);
+        noteColorVec.emplace_back(tempColor);
+        noteClickedBoolVec.emplace_back(tempClicked);
     }
 
     // TODO: The filepath will not play sound, but is same the above font filepath, so it should?
@@ -589,9 +589,6 @@ void Guitar::clickAndDrag(Vector2 mousePos) {
         if (IsKeyDown(KEY_LEFT_CONTROL) && IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
             container.x = mousePos.x;
             container.y = mousePos.y;
-            // TODO: Not sure why these have to be different?
-            connectRectangle.x = container.x;
-            connectRectangle.y = container.y - (container.height * .55f);
             neckRectangle.x = mousePos.x;
             neckRectangle.y = mousePos.y;
             fretRectangle.x = mousePos.x;
@@ -618,4 +615,16 @@ void Guitar::destroy() {
     UnloadTexture(fretTexture);
     UnloadTexture(stringTexture);
     UnloadSound(testSound);
+}
+
+void Guitar::playSound() {
+    int x = 5;  // TODO: Placeholder
+}
+
+void Guitar::initAudio() {
+    int x = 5;  // TODO: Placeholder
+}
+
+void Guitar::unloadAudio() {
+    int x = 5;  // TODO: Placeholder
 }

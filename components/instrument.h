@@ -36,6 +36,12 @@ protected:
     Color aNoteColor = Color{130, 176, 49, 255};
     Color bbNoteColor = Color{127, 50, 168, 255};
     Color bNoteColor = Color{179, 64, 117, 255};
+    std::vector<Color> noteColorVecBase = {cNoteColor, dbNoteColor, dNoteColor, ebNoteColor, eNoteColor, fNoteColor, gbNoteColor, gNoteColor, abNoteColor, aNoteColor, bbNoteColor, bNoteColor};
+
+    // TODO: Do not want these in the base class
+    std::vector<Color> whiteKeyColorVec = {cNoteColor, dNoteColor, eNoteColor, fNoteColor, gNoteColor, aNoteColor, bNoteColor};
+    std::vector<Color> blackKeyColorVec = {dbNoteColor, ebNoteColor, gbNoteColor, abNoteColor, bbNoteColor};
+
 
     /** States Each Object Has **/
     bool active{};  // TODO: Make this private with a getter/setter;
@@ -46,6 +52,7 @@ protected:
     // std::vector<Sound> notesSoundVec;
 
 
+public:
 public:
     Instrument();
     ~Instrument();

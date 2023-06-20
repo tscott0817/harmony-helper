@@ -79,12 +79,6 @@ Guitar::Guitar(int screenWidth, int screenHeight, float posX, float posY, float 
         noteColorVec.emplace_back(tempColor);
         noteClickedBoolVec.emplace_back(tempClicked);
     }
-
-    // TODO: The filepath will not play sound, but is same the above font filepath, so it should?
-//    testSound = LoadSound("C:/Users/tyler/Dev/guitar-app/resources/audio/key13.ogg");
-    testSound = LoadSound("../resources/audio/key13.ogg");
-
-
     containerColor = Color{51, 51, 51, 255};
 }
 
@@ -617,11 +611,11 @@ void Guitar::destroy() {
     UnloadSound(testSound);
 }
 
-void Guitar::playSound() {
+void Guitar::initAudio() {
     int x = 5;  // TODO: Placeholder
 }
 
-void Guitar::initAudio() {
+void Guitar::playSound() {
     int x = 5;  // TODO: Placeholder
 }
 

@@ -47,10 +47,7 @@ Piano::Piano(int screenWidth, int screenHeight, float posX, float posY, float wi
     }
     notesLocAdded = false;
 
-    InitAudioDevice();  // TODO: Not sure if best here in main, or if each class should have one
-    std::cout << "Audio From Piano Constructor" << std::endl;
-    soundNoteTest = LoadSound("../resources/audio/key13.ogg");
-    // soundNoteTest = LoadSound("../key13.ogg");
+    InitAudioDevice();
     notesVec.emplace_back(F);
     noteTextVec.emplace_back(keysWhite);
     noteTextVec.emplace_back(keysBlack);
@@ -149,54 +146,15 @@ void Piano::selectNote(Vector2 mousePos) {
 }
 
 bool Piano::hoverBlackNotes(Vector2 mousePos) {
-
-    // TODO: Loop doesn't work?
-//    for (auto & keyBlackLocation : keyBlackLocations) {
-//        if (mousePos.x > keyBlackLocation.x &&
-//            mousePos.x < keyBlackLocation.x + (keyBlackRectangle.width) &&
-//            mousePos.y > keyBlackLocation.y &&
-//            mousePos.y < keyBlackLocation.y + (keyBlackRectangle.height)) {
-//            return true;
-//        }
-//        else {
-//            return false;
-//        }
-//    }
-
-    // Hardcode instead works well
-    if (mousePos.x > keyBlackLocations[0].x &&
-        mousePos.x < keyBlackLocations[0].x + (keyBlackRectangle.width) &&
-        mousePos.y > keyBlackLocations[0].y &&
-        mousePos.y < keyBlackLocations[0].y + (keyBlackRectangle.height)) {  // TODO: This error is probably caused not using loop, but loop doesn't work?
-        return true;
+    for (auto& keyBlackLocation : keyBlackLocations) {
+        if (mousePos.x > keyBlackLocation.x &&
+            mousePos.x < keyBlackLocation.x + keyBlackRectangle.width &&
+            mousePos.y > keyBlackLocation.y &&
+            mousePos.y < keyBlackLocation.y + keyBlackRectangle.height) {
+            return true;
+        }
     }
-    else if (mousePos.x > keyBlackLocations[1].x &&
-             mousePos.x < keyBlackLocations[1].x + (keyBlackRectangle.width) &&
-             mousePos.y > keyBlackLocations[1].y &&
-             mousePos.y < keyBlackLocations[1].y + (keyBlackRectangle.height)) {
-        return true;
-    }
-    else if (mousePos.x > keyBlackLocations[2].x &&
-             mousePos.x < keyBlackLocations[2].x + (keyBlackRectangle.width) &&
-             mousePos.y > keyBlackLocations[2].y &&
-             mousePos.y < keyBlackLocations[2].y + (keyBlackRectangle.height)) {
-        return true;
-    }
-    else if (mousePos.x > keyBlackLocations[3].x &&
-             mousePos.x < keyBlackLocations[3].x + (keyBlackRectangle.width) &&
-             mousePos.y > keyBlackLocations[3].y &&
-             mousePos.y < keyBlackLocations[3].y + (keyBlackRectangle.height)) {
-        return true;
-    }
-    else if (mousePos.x > keyBlackLocations[4].x &&
-             mousePos.x < keyBlackLocations[4].x + (keyBlackRectangle.width) &&
-             mousePos.y > keyBlackLocations[4].y &&
-             mousePos.y < keyBlackLocations[4].y + (keyBlackRectangle.height)) {
-        return true;
-    }
-    else {
-        return false;
-    }
+    return false;  // Return false if no black key matches
 }
 
 void Piano::clickAndDrag(Vector2 mousePos) {
@@ -223,101 +181,27 @@ void Piano::clickAndDrag(Vector2 mousePos) {
 }
 
 void Piano::notesActivate() {
-    if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "C") != sharedNotesVec.end()) {
-        keyWhiteColorVec[0] = cNoteColor;
-        noteClickedBoolVecWhite[0] = 1;
+    std::vector<std::string> whiteKeysTemp = {"C", "D", "E", "F", "G", "A", "B"};
+    std::vector<std::string> blackKeysTemp = {"Db", "Eb", "Gb", "Ab", "Bb"};
+
+    for (int i = 0; i < whiteKeysTemp.size(); i++) {
+        if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), whiteKeysTemp[i]) != sharedNotesVec.end()) {
+            keyWhiteColorVec[i] = whiteKeyColorVec[i];
+            noteClickedBoolVecWhite[i] = 1;
+        } else {
+            keyWhiteColorVec[i] = whiteKeyColor;
+            noteClickedBoolVecWhite[i] = 0;
+        }
     }
-    else {
-        keyWhiteColorVec[0] = whiteKeyColor;
-        noteClickedBoolVecWhite[0] = 0;
-    }
-    if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "Db") != sharedNotesVec.end()) {
-        keyBlackColorVec[0] = dbNoteColor;
-        noteClickedBoolVecBlack[0] = 1;
-    }
-    else {
-        keyBlackColorVec[0] = blackKeyColor;
-        noteClickedBoolVecBlack[0] = 0;
-    }
-    if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "D") != sharedNotesVec.end()) {
-        keyWhiteColorVec[1] = dNoteColor;
-        noteClickedBoolVecWhite[1] = 1;
-    }
-    else {
-        keyWhiteColorVec[1] = whiteKeyColor;
-        noteClickedBoolVecWhite[1] = 0;
-    }
-    if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "Eb") != sharedNotesVec.end()) {
-        keyBlackColorVec[1] = ebNoteColor;
-        noteClickedBoolVecBlack[1] = 1;
-    }
-    else {
-        keyBlackColorVec[1] = blackKeyColor;
-        noteClickedBoolVecBlack[1] = 0;
-    }
-    if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "E") != sharedNotesVec.end()) {
-        keyWhiteColorVec[2] = eNoteColor;
-        noteClickedBoolVecWhite[2] = 1;
-    }
-    else {
-        keyWhiteColorVec[2] = whiteKeyColor;
-        noteClickedBoolVecWhite[2] = 0;
-    }
-    if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "F") != sharedNotesVec.end()) {
-        keyWhiteColorVec[3] = fNoteColor;
-        noteClickedBoolVecWhite[3] = 1;
-    }
-    else {
-        keyWhiteColorVec[3] = whiteKeyColor;
-        noteClickedBoolVecWhite[3] = 0;
-    }
-    if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "Gb") != sharedNotesVec.end()) {
-        keyBlackColorVec[2] = gbNoteColor;
-        noteClickedBoolVecBlack[2] = 1;
-    }
-    else {
-        keyBlackColorVec[2] = blackKeyColor;
-        noteClickedBoolVecBlack[2] = 0;
-    }
-    if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "G") != sharedNotesVec.end()) {
-        keyWhiteColorVec[4] = gNoteColor;
-        noteClickedBoolVecWhite[4] = 1;
-    }
-    else {
-        keyWhiteColorVec[4] = whiteKeyColor;
-        noteClickedBoolVecWhite[4] = 0;
-    }
-    if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "Ab") != sharedNotesVec.end()) {
-        keyBlackColorVec[3] = abNoteColor;
-        noteClickedBoolVecBlack[3] = 1;
-    }
-    else {
-        keyBlackColorVec[3] = blackKeyColor;
-        noteClickedBoolVecBlack[3] = 0;
-    }
-    if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "A") != sharedNotesVec.end()) {
-        keyWhiteColorVec[5] = aNoteColor;
-        noteClickedBoolVecWhite[5] = 1;
-    }
-    else {
-        keyWhiteColorVec[5] = whiteKeyColor;
-        noteClickedBoolVecWhite[5] = 0;
-    }
-    if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "Bb") != sharedNotesVec.end()) {
-        keyBlackColorVec[4] = bbNoteColor;
-        noteClickedBoolVecBlack[4] = 1;
-    }
-    else {
-        keyBlackColorVec[4] = blackKeyColor;
-        noteClickedBoolVecBlack[4] = 0;
-    }
-    if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "B") != sharedNotesVec.end()) {
-        keyWhiteColorVec[6] = bNoteColor;
-        noteClickedBoolVecWhite[6] = 1;
-    }
-    else {
-        keyWhiteColorVec[6] = whiteKeyColor;
-        noteClickedBoolVecWhite[6] = 0;
+
+    for (int i = 0; i < blackKeysTemp.size(); i++) {
+        if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), blackKeysTemp[i]) != sharedNotesVec.end()) {
+            keyBlackColorVec[i] = blackKeyColorVec[i];
+            noteClickedBoolVecBlack[i] = 1;
+        } else {
+            keyBlackColorVec[i] = blackKeyColor;
+            noteClickedBoolVecBlack[i] = 0;
+        }
     }
 }
 
@@ -331,9 +215,8 @@ void Piano::setCanDraw(bool canDraw) {this->canDraw = canDraw;}
 // TODO: Not sure if this is best approach
 void Piano::destroy() {UnloadTexture(containerTexture); UnloadSound(F); UnloadSound(soundNoteTest); CloseAudioDevice();}
 
-// TODO: Would prefer to have in separate class, but can't get sound to work outside of main.cpp
 void Piano::initAudio() {
-    Sound noteC = LoadSound("../resources/audio/key08.ogg");  // TODO: Not sure why I have to go up a folder
+    Sound noteC = LoadSound("../resources/audio/key08.ogg");  // TODO: Need to fix filepath
     Sound noteDb = LoadSound("../resources/audio/key09.ogg");
     Sound noteD = LoadSound("../resources/audio/key10.ogg");
     Sound noteEb = LoadSound("../resources/audio/key11.ogg");
@@ -358,46 +241,26 @@ void Piano::initAudio() {
     notesSoundVecWhite.emplace_back(noteA);
     notesSoundVecBlack.emplace_back(noteBb);
     notesSoundVecWhite.emplace_back(noteB);
+
+    // TODO: Think I can just keep adding note as octaves go up, indices should stay the same I think
 }
 
 void Piano::playSound() {
+    // TODO: I don't like this here, move it to .h file maybe
+    std::vector<std::string> whiteKeysTemp = {"C", "D", "E", "F", "G", "A", "B"};  // TODO: Just keep adding as octaves go up, indices should stay the same I think
+    std::vector<std::string> blackKeysTemp = {"Db", "Eb", "Gb", "Ab", "Bb"};
+
     std::cout << "Playing Sound" << std::endl;
     for (const auto &note: getNotesShared()) {
-        if (note == "C") {
-            PlaySound(notesSoundVecWhite[0]);
+        for (int i = 0; i < notesSoundVecWhite.size(); i++) {
+            if (note == whiteKeysTemp[i]) {
+                PlaySound(notesSoundVecWhite[i]);
+            }
         }
-        if (note == "Db") {
-            PlaySound(notesSoundVecBlack[0]);
-        }
-        if (note == "D") {
-            PlaySound(notesSoundVecWhite[1]);
-        }
-        if (note == "Eb") {
-            PlaySound(notesSoundVecBlack[1]);
-        }
-        if (note == "E") {
-            PlaySound(notesSoundVecWhite[2]);
-        }
-        if (note == "F") {
-            PlaySound(notesSoundVecWhite[3]);
-        }
-        if (note == "Gb") {
-            PlaySound(notesSoundVecBlack[2]);
-        }
-        if (note == "G") {
-            PlaySound(notesSoundVecWhite[4]);
-        }
-        if (note == "Ab") {
-            PlaySound(notesSoundVecBlack[3]);
-        }
-        if (note == "A") {
-            PlaySound(notesSoundVecWhite[5]);
-        }
-        if (note == "Bb") {
-            PlaySound(notesSoundVecBlack[4]);
-        }
-        if (note == "B") {
-            PlaySound(notesSoundVecWhite[6]);
+        for (int i = 0; i < notesSoundVecBlack.size(); i++) {
+            if (note == blackKeysTemp[i]) {
+                PlaySound(notesSoundVecBlack[i]);
+            }
         }
     }
 }

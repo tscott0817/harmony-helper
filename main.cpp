@@ -196,7 +196,6 @@ int main()
     for (const auto & inst : instrumentsVec) {
         inst->destroy();
     }
-    // unloadPianoAudio(notesSoundVec);
     // CloseAudioDevice();
     instrumentsVec[1]->unloadAudio();
     CloseWindow();        // Close window and OpenGL context

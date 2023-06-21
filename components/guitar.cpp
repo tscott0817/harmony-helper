@@ -58,7 +58,7 @@ Guitar::Guitar(int screenWidth, int screenHeight, float posX, float posY, float 
         std::vector<int> tempClicked;
         for (int j = 0; j < 100; j++) {
             // TODO: Replace all with emplace_back
-            tempLoc.emplace_back(Vector2{0, 0});  // With emplace_back, need to specify type
+            tempLoc.emplace_back(Vector2{0, 0});
             tempColor.emplace_back(rootColor);
             tempClicked.emplace_back(0);
         }
@@ -108,7 +108,6 @@ void Guitar::draw(float windowScale) {
     for (int i = 0; i < 13; i++) {  // Rows
         for (int j = 0; j < 6; j++) {  // Columns
             if (noteClickedBoolVec[i][j] == 1) {
-                PlaySound(testSound);
                 DrawEllipse(static_cast<float>(neckRectangle.x - (neckRectangle.width * .53f) + ((neckRectangle.width * .08) * i)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .4f)), static_cast<float>(noteRectangle.width / 2), static_cast<float>(noteRectangle.height / 2), noteColorVec[i][j]);
 
                 float noteTextSize = (noteRectangle.width > noteRectangle.height) ? static_cast<float>(noteRectangle.height) : static_cast<float>(noteRectangle.width);
@@ -135,6 +134,7 @@ void Guitar::selectNote(Vector2 mousePos) {
 
                     noteClickedBoolVec[i][j] = 1;
                     addNoteShared(noteTextVec[j][i]);
+
                 } else if (mousePos.x > noteLocations[i][j].x &&
                            mousePos.x < noteLocations[i][j].x + (noteRectangle.width) &&
                            mousePos.y > noteLocations[i][j].y &&
@@ -598,14 +598,15 @@ void Guitar::destroy() {
     UnloadSound(testSound);
 }
 
-void Guitar::initAudio() {
-    int x = 5;  // TODO: Placeholder
-}
-
-void Guitar::playSound() {
-    int x = 5;  // TODO: Placeholder
-}
-
-void Guitar::unloadAudio() {
-    int x = 5;  // TODO: Placeholder
-}
+// TODO: Implement audio
+//void Guitar::initAudio() {
+//    int x = 5;  // TODO: Placeholder
+//}
+//
+//void Guitar::playSound() {
+//    int x = 5;  // TODO: Placeholder
+//}
+//
+//void Guitar::unloadAudio() {
+//    int x = 5;  // TODO: Placeholder
+//}

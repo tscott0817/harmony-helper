@@ -73,19 +73,18 @@ void Menu::drawTopMenu(int width, int height) {
 //                   containerCenter, 0, WHITE);
 
     // Draw a rectangle that is the size of the container
-    DrawRectangle(container.x, container.y, container.width, container.height, blackBackground);
-    DrawRectangle(buttonOneRec.x, buttonOneRec.y, buttonOneRec.width, buttonOneRec.height, buttonColorVec[0]);
-    DrawRectangle(buttonTwoRec.x, buttonTwoRec.y, buttonTwoRec.width, buttonTwoRec.height, buttonColorVec[1]);
-    DrawRectangle(buttonThreeRec.x, buttonThreeRec.y, buttonThreeRec.width, buttonThreeRec.height, buttonColorVec[2]);
-    DrawRectangle(buttonFourRec.x, buttonFourRec.y, buttonFourRec.width, buttonFourRec.height, buttonColorVec[3]);
+//    DrawRectangle(container.x, container.y, container.width, container.height, blackBackground);
+//    DrawRectangle(buttonOneRec.x, buttonOneRec.y, buttonOneRec.width, buttonOneRec.height, buttonColorVec[0]);
+//    DrawRectangle(buttonTwoRec.x, buttonTwoRec.y, buttonTwoRec.width, buttonTwoRec.height, buttonColorVec[1]);
+//    DrawRectangle(buttonThreeRec.x, buttonThreeRec.y, buttonThreeRec.width, buttonThreeRec.height, buttonColorVec[2]);
+//    DrawRectangle(buttonFourRec.x, buttonFourRec.y, buttonFourRec.width, buttonFourRec.height, buttonColorVec[3]);
 
-//    if (!buttonLocAdded) {
-//        buttonLocations[0] = {buttonOneRec.x, buttonOneRec.y + (container.height * .06f)};
-//        buttonLocations[1] = {buttonTwoRec.x, buttonTwoRec.y + (container.height * .06f)};
-//        buttonLocations[2] = {buttonThreeRec.x, buttonThreeRec.y + (container.height * .06f)};
-//        buttonLocations[3] = {buttonFourRec.x, buttonFourRec.y + (container.height * .06f)};
-//        buttonLocAdded = true;
-//    }
+    DrawRectangleRounded(container, 0.05f, 0, blackBackground);
+    DrawRectangleRounded(buttonOneRec, 0.25f, 0, buttonColorVec[0]);
+    DrawRectangleRounded(buttonTwoRec, 0.25f, 0, buttonColorVec[1]);
+    DrawRectangleRounded(buttonThreeRec, 0.25f, 0, buttonColorVec[2]);
+    DrawRectangleRounded(buttonFourRec, 0.25f, 0, buttonColorVec[3]);
+
     if (!buttonLocAdded) {
         buttonLocations[0] = {buttonOneRec.x, buttonOneRec.y};
         buttonLocations[1] = {buttonTwoRec.x, buttonTwoRec.y};

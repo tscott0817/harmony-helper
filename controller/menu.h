@@ -34,6 +34,9 @@ private:
     Rectangle buttonThreeRec;
     Vector2 buttonThreeCenter;
 
+    Rectangle buttonFourRec;
+    Vector2 buttonFourCenter;
+
     Color blackBackground;
     int listViewExScrollIndex = 0;
     int listViewExActive = 2;

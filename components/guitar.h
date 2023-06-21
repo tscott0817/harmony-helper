@@ -1,6 +1,5 @@
 #ifndef GUITAR_APP_GUITAR_H
 #define GUITAR_APP_GUITAR_H
-
 #include "raylib.h"
 #include "instrument.h"
 #include <iostream>

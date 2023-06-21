@@ -11,6 +11,7 @@
 #include "components/modal_chart.h"
 #include "controller/menu.h"
 #include "controller/scalesMenu.h"
+#include "controller/chordMenu.h"
 
 
 // TODO: If using webassembly, probably don't need to check OS
@@ -52,10 +53,23 @@ int main()
 {
     /** Window Setup **/
     // TODO: Check user's computer for their screen size and set window size accordingly
+    // 16x9 Resolutions:
+    //    640x360
+    //    854x480
+    //    1024x576
+    //    1152x648
+    //    1280x720 (720p)
+    //    1366x768
+    //    1600x900
+    //    1920x1080 (1080p)
+    //    2048x1152
+    //    2304x1296
+    //    2560x1440 (1440p)
+    //    2880x1620
+    //    3200x1800
+    //    3840x2160 (4K UHD)
     const int screenWidth =  1280;
     const int screenHeight = 720;
-//    const int screenWidth =  1920;  // Only for when using 2k settings
-//    const int screenHeight = 1080;
 
     Color backgroundColor = RAYWHITE;  // Ignore error; I prefer knowing the type instead of 'auto'
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);  // Allows window to be resized
@@ -66,10 +80,11 @@ int main()
     /** Object Inits **/
     Menu menu(screenWidth, screenHeight, 0, screenHeight * .0001f, 1, .05f);
     ScalesMenu scalesMenu(screenWidth, screenHeight, screenWidth * .01f, screenHeight * .06, .4f, .8f);
+    ChordMenu chordMenu(screenWidth, screenHeight, screenWidth * .01f, screenHeight * .06, .4f, .8f);
 
     std::vector<std::unique_ptr<Instrument>> instrumentsVec;  // Holds all instruments
-    float guitarWidth = .7f;
-    float guitarHeight = .35f;
+    float guitarWidth = .5f;
+    float guitarHeight = .3f;
     float guitarPosX = .5f;  // The ( * 0.5f) are basically scalars for the guitar's position
     float guitarPosY = .8f;
     std::unique_ptr<Guitar> guitar = std::make_unique<Guitar>(screenWidth, screenHeight, guitarPosX, guitarPosY, guitarWidth, guitarHeight);
@@ -121,10 +136,14 @@ int main()
         // TODO: Need to make some boolean check in instruments to add locations or
         //  mouse interactions still work even if instruments is not visible
         bool canDrawScaleMenu = false;  // TODO: Preer to not have this here
-        for (int i = 0; i < 3; i++) {
+        bool canDrawChordMenu = false;
+        for (int i = 0; i < 4; i++) {
             if (menu.getActiveButtons()[i] == 0) {  // This checks if the current button is active or not
                 if (i == 2) {  // TODO: 2 is the scale chart, need to take different approach
                     canDrawScaleMenu = false;
+                }
+                else if (i == 3) {  // TODO: 3 is the chord chart, need to take different approach
+                    canDrawChordMenu = false;
                 }
                 else {
                     instrumentsVec[i]->setCanDraw(false);
@@ -133,6 +152,9 @@ int main()
             if (menu.getActiveButtons()[i] == 1) {
                 if (i == 2) {
                     canDrawScaleMenu = true;
+                }
+                else if (i == 3) {
+                    canDrawChordMenu = true;
                 }
                 else {
                     instrumentsVec[i]->setCanDraw(true);
@@ -167,9 +189,16 @@ int main()
                 instrumentsVec[1]->playSound();
             }
         }
+
+        // TODO: Refactor all of this into menu state machine
         if (canDrawScaleMenu) {
             scalesMenu.draw();
             scalesMenu.setScale(screenWidth, screenHeight, instrumentsVec);  // TODO: Maybe separate this into two functions
+        }
+        else if (canDrawChordMenu) {
+            chordMenu.draw();
+            chordMenu.chooseButton(mousePos);
+            chordMenu.setChord(instrumentsVec);  // TODO: Maybe separate this into two functions
         }
 
         // Want Menu to be drawn last so it's on top

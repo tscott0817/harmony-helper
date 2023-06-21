@@ -1,6 +1,5 @@
 #include "menu.h"
 
-
 // Create constructor for menu
 Menu::Menu(int screenWidth, int screenHeight, float posX, float posY, float width, float height) {
 
@@ -17,14 +16,19 @@ Menu::Menu(int screenWidth, int screenHeight, float posX, float posY, float widt
 
 
     /** Buttons **/
+    // TODO: Want the put all instruments into own menu
     buttonOneRec = {container.x + (container.width * .0005f), container.y + (container.height * .06f), container.width * .1f, container.height * .9f}; // TODO: Fill container with neck (Currently have padding for testing)
     buttonOneCenter = {static_cast<float>(buttonOneRec.width / 2), static_cast<float>(buttonOneRec.height / 2)};
 
     buttonTwoRec = {container.x + (container.width * .1025f), container.y + (container.height * .06f), container.width * .1f, container.height * .9f}; // TODO: Fill container with neck (Currently have padding for testing)
     buttonTwoCenter = {static_cast<float>(buttonTwoRec.width / 2), static_cast<float>(buttonTwoRec.height / 2)};
 
+    // TODO: The menu items
     buttonThreeRec = {container.x + (container.width * .2050f), container.y + (container.height * .06f), container.width * .1f, container.height * .9f}; // TODO: Fill container with neck (Currently have padding for testing)
     buttonThreeCenter = {static_cast<float>(buttonThreeRec.width / 2), static_cast<float>(buttonThreeRec.height / 2)};
+
+    buttonFourRec = {container.x + (container.width * .3075f), container.y + (container.height * .06f), container.width * .1f, container.height * .9f}; // TODO: Fill container with neck (Currently have padding for testing)
+    buttonFourCenter = {static_cast<float>(buttonThreeRec.width / 2), static_cast<float>(buttonThreeRec.height / 2)};
 
     buttonLocAdded = false;
 
@@ -41,11 +45,11 @@ Menu::Menu(int screenWidth, int screenHeight, float posX, float posY, float widt
         buttonColorVec.emplace_back(baseColor);
         activeVec.emplace_back(0);
     }
-    isHovering = false;
+    isHovering = false;  // TODO: This is never used
     currentButton = 0;
 
     /** GUI Stuff **/
-    GuiSetStyle(DEFAULT, TEXT_SIZE, 40);  // Default text size
+    GuiSetStyle(DEFAULT, TEXT_SIZE, 20);  // Default text size
 
     testFont = LoadFontEx("../resources/fonts/OpenSans-Light.ttf", 200, nullptr, 100);
     GenTextureMipmaps(&testFont.texture);
@@ -73,16 +77,26 @@ void Menu::drawTopMenu(int width, int height) {
     DrawRectangle(buttonOneRec.x, buttonOneRec.y, buttonOneRec.width, buttonOneRec.height, buttonColorVec[0]);
     DrawRectangle(buttonTwoRec.x, buttonTwoRec.y, buttonTwoRec.width, buttonTwoRec.height, buttonColorVec[1]);
     DrawRectangle(buttonThreeRec.x, buttonThreeRec.y, buttonThreeRec.width, buttonThreeRec.height, buttonColorVec[2]);
+    DrawRectangle(buttonFourRec.x, buttonFourRec.y, buttonFourRec.width, buttonFourRec.height, buttonColorVec[3]);
 
+//    if (!buttonLocAdded) {
+//        buttonLocations[0] = {buttonOneRec.x, buttonOneRec.y + (container.height * .06f)};
+//        buttonLocations[1] = {buttonTwoRec.x, buttonTwoRec.y + (container.height * .06f)};
+//        buttonLocations[2] = {buttonThreeRec.x, buttonThreeRec.y + (container.height * .06f)};
+//        buttonLocations[3] = {buttonFourRec.x, buttonFourRec.y + (container.height * .06f)};
+//        buttonLocAdded = true;
+//    }
     if (!buttonLocAdded) {
-        buttonLocations[0] = {buttonOneRec.x, buttonOneRec.y + (container.height * .06f)};
-        buttonLocations[1] = {buttonTwoRec.x, buttonTwoRec.y + (container.height * .06f)};
-        buttonLocations[2] = {buttonThreeRec.x, buttonThreeRec.y + (container.height * .06f)};
+        buttonLocations[0] = {buttonOneRec.x, buttonOneRec.y};
+        buttonLocations[1] = {buttonTwoRec.x, buttonTwoRec.y};
+        buttonLocations[2] = {buttonThreeRec.x, buttonThreeRec.y};
+        buttonLocations[3] = {buttonFourRec.x, buttonFourRec.y};
         buttonLocAdded = true;
     }
+
     float buttonTextSize = (buttonOneRec.width > buttonOneRec.height) ? static_cast<float>(buttonOneRec.height) : static_cast<float>(buttonOneRec.width);
-    Vector2 buttonNewLoc = {buttonOneRec.x + (buttonOneRec.width * .25f), buttonOneRec.y};
-    DrawTextEx(testFont, "Guitar", buttonNewLoc, buttonTextSize, 0, WHITE);
+    Vector2 buttonOneLoc = {buttonOneRec.x + (buttonOneRec.width * .25f), buttonOneRec.y};
+    DrawTextEx(testFont, "Guitar", buttonOneLoc, buttonTextSize, 0, WHITE);
 
     float buttonTwoTextSize = (buttonTwoRec.width > buttonTwoRec.height) ? static_cast<float>(buttonTwoRec.height) : static_cast<float>(buttonTwoRec.width);
     Vector2 buttonTwoNewLoc = {buttonTwoRec.x + (buttonTwoRec.width * .25f), buttonTwoRec.y};
@@ -90,10 +104,13 @@ void Menu::drawTopMenu(int width, int height) {
 
     float buttonThreeTextSize = (buttonThreeRec.width > buttonThreeRec.height) ? static_cast<float>(buttonThreeRec.height) : static_cast<float>(buttonThreeRec.width);
     Vector2 buttonThreeNewLoc = {buttonThreeRec.x + (buttonThreeRec.width * .25f), buttonThreeRec.y};
-    DrawTextEx(testFont, "Scale Menu", buttonThreeNewLoc, buttonThreeTextSize, 0, WHITE);
+    DrawTextEx(testFont, "Scales", buttonThreeNewLoc, buttonThreeTextSize, 0, WHITE);
+
+    float buttonFourTextSize = (buttonFourRec.width > buttonFourRec.height) ? static_cast<float>(buttonFourRec.height) : static_cast<float>(buttonFourRec.width);
+    Vector2 buttonFourNewLoc = {buttonFourRec.x + (buttonFourRec.width * .21f), buttonFourRec.y};
+    DrawTextEx(testFont, "Chords", buttonFourNewLoc, buttonFourTextSize, 0, WHITE);
 }
 
-// TODO: Implement hovering color change
 void Menu::hover(Vector2 mousePos) {
     for (int i = 0; i < buttonLocations.size(); i++) {
         // For individual buttons
@@ -121,6 +138,8 @@ void Menu::hover(Vector2 mousePos) {
 
 void Menu::click(int currButton) {  // Don't need param, could use currentButton, but feel this shows intent better
     // Check if left mouse clicked
+    // TODO: Need to add a check to not allow more than one menu item visible at a time.
+    // TODO: Need some separattion between menus and instrument selection, probably put instrument selection in its own menu
     if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
         if (activeVec[currButton] == 0) {
             activeVec[currButton] = 1;

@@ -14,35 +14,22 @@ Guitar::Guitar(int screenWidth, int screenHeight, float posX, float posY, float 
     canDraw = false;
 
     /** Parent Container **/
-    containerImage = LoadImage("../images/blue_background.png");     // Loaded in CPU memory (RAM)
-    containerTexture = LoadTextureFromImage(containerImage);  // Image converted to texture, GPU memory (VRAM)
-    UnloadImage(containerImage);   // Once image has been converted to texture and uploaded to VRAM, it can be unloaded from RAM
     container = {static_cast<float>(this->screenWidth * posX), static_cast<float>(this->screenHeight * posY), static_cast<float>(this->screenWidth * width), static_cast<float>(this->screenHeight * height)};
     containerCenter = {container.width * .5f, container.height * .5f};
     containerLocAdded = false;
 
     /** Neck **/
-    neckImage = LoadImage("../images/wood_dark.png");
-    neckTexture = LoadTextureFromImage(neckImage);
-    UnloadImage(neckImage);
-    // neckRectangle = {container.x + (container.width * .03f), container.y, container.width * .94f, container.height * .9f}; // TODO: Fill container with neck (Currently have padding for testing)
     neckRectangle = {container.x, container.y, container.width, container.height * .9f}; // TODO: Fill container with neck (Currently have padding for testing)
     neckCenter = {static_cast<float>(neckRectangle.width * .5f), static_cast<float>(neckRectangle.height * .5f)};
 
     /** Frets **/
-    fretImage = LoadImage("../images/fret.png");
-    fretTexture = LoadTextureFromImage(fretImage);
-    UnloadImage(fretImage);
     fretRectangle = {neckRectangle.x, neckRectangle.y, static_cast<float>(neckRectangle.width * .01), neckRectangle.height};
     fretCenter = {static_cast<float>(fretRectangle.width * .5f), static_cast<float>(fretRectangle.height * .5f)};
 
     /** Strings **/
-    stringImage = LoadImage("../images/silver.png");
-    stringTexture = LoadTextureFromImage(stringImage);
-    UnloadImage(stringImage);
     stringRectangle = {neckRectangle.x, neckRectangle.y, neckRectangle.width, neckRectangle.height * .02f};
     stringCenter = {static_cast<float>(stringRectangle.width * .5f), static_cast<float>(stringRectangle.height * .5f)};
-    // Fill stringVec with each const char
+
     noteTextVec.emplace_back(lowE);
     noteTextVec.emplace_back(a);
     noteTextVec.emplace_back(d);

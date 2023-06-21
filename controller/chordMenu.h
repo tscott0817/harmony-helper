@@ -21,10 +21,12 @@ private:
 
     Rectangle container;
     Vector2 containerCenter;
-    Texture2D containerTexture;
 
     Rectangle buttonOneRec;
     Vector2 buttonOneCenter;
+
+    Rectangle buttonTwoRec;
+    Vector2 buttonTwoCenter;
 
     int currentButton;
     std::vector<Vector2> buttonLocations;
@@ -43,6 +45,8 @@ private:
     Vector2 textSize;
     const char *buttonText[2] = {"Guitar", "Piano"};
 
+    bool scaleChanged;
+
 public:
 
     ChordMenu(int screenWidth, int screenHeight, float posX, float posY, float width, float height);
@@ -51,9 +55,10 @@ public:
     void draw();
     void click(int currButton);
     void chooseButton(Vector2 mousePos);
+    void resetMenu(const std::vector<std::unique_ptr<Instrument>>& instrumentsVec);
 
 //    std::vector<std::string> setScale(float screenWidth, float screenHeight, const std::vector<std::unique_ptr<Instrument>> &instrumentsVec);
-    void setChord(const std::vector<std::unique_ptr<Instrument>> &instrumentsVec) const;
+    void setChord(const std::vector<std::unique_ptr<Instrument>> &instrumentsVec);
 
 };
 

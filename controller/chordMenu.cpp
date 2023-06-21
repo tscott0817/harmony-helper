@@ -8,10 +8,12 @@ ChordMenu::ChordMenu(int screenWidth, int screenHeight, float posX, float posY, 
 
     container = {posX, posY, static_cast<float>(screenWidth * width), static_cast<float>(screenHeight * height)};  // @params: x-pos, y-pos, width, height
     containerCenter = {container.width / 2, container.height / 2};
-    containerTexture = LoadTexture("../images/plaid.png");
 
-    buttonOneRec = {container.x + (container.width * .01f), container.y + (container.height * .31f), container.width * .3f, container.height * .1f}; // TODO: Fill container with neck (Currently have padding for testing)
+    buttonOneRec = {container.x + (container.width * .01f), container.y + (container.height * .25f), container.width * .3f, container.height * .1f}; // TODO: Fill container with neck (Currently have padding for testing)
     buttonOneCenter = {static_cast<float>(buttonOneRec.width / 2), static_cast<float>(buttonOneRec.height / 2)};
+
+    buttonTwoRec = {container.x + (container.width * .01f), container.y + (container.height * .5f), container.width * .3f, container.height * .1f}; // TODO: Fill container with neck (Currently have padding for testing)
+    buttonTwoCenter = {static_cast<float>(buttonOneRec.width / 2), static_cast<float>(buttonOneRec.height / 2)};
 
     /** Vector Inits **/
     baseColor = BLUE;
@@ -43,31 +45,43 @@ void ChordMenu::draw() {
 
     /** Buttons **/
     DrawRectangle(buttonOneRec.x, buttonOneRec.y, buttonOneRec.width, buttonOneRec.height, buttonColorVec[0]);
+    DrawRectangle(buttonTwoRec.x, buttonTwoRec.y, buttonTwoRec.width, buttonTwoRec.height, buttonColorVec[1]);
 
     if (!buttonLocAdded) {  // Should never change relative to window size, so only need to do this once
         buttonLocations[0] = {buttonOneRec.x, buttonOneRec.y};
+        buttonLocations[1] = {buttonTwoRec.x, buttonTwoRec.y};
         buttonLocAdded = true;
     }
 
     float buttonTextSize = (buttonOneRec.width > buttonOneRec.height) ? static_cast<float>(buttonOneRec.height * .9f) : static_cast<float>(buttonOneRec.width * .9f);
     Vector2 buttonOneLoc = {buttonOneRec.x + (buttonOneRec.width * .05f), buttonOneRec.y};
     DrawTextEx(testFont, "Major 7", buttonOneLoc, buttonTextSize, 0, WHITE);
+
+    float buttonTwoTextSize = (buttonTwoRec.width > buttonTwoRec.height) ? static_cast<float>(buttonTwoRec.height * .9f) : static_cast<float>(buttonTwoRec.width * .9f);
+    Vector2 buttonTwoLoc = {buttonTwoRec.x + (buttonTwoRec.width * .05f), buttonTwoRec.y};
+    DrawTextEx(testFont, "Minor Triad", buttonTwoLoc, buttonTwoTextSize, 0, WHITE);
 }
 
 void ChordMenu::click(int currButton) {  // Don't need param, could use currentButton, but feel this shows intent better
-    // Check if left mouse clicked
-    // TODO: Need to add a check to not allow more than one menu item visible at a time.
-    // TODO: Need some separattion between menus and instrument selection, probably put instrument selection in its own menu
     if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
         std::cout << "Clicked Button" << std::endl;
         if (activeVec[currButton] == 0) {
             activeVec[currButton] = 1;
+            // Set all other activeVec[currButton] to 0
+            for (int i = 0; i < activeVec.size(); i++) {
+                if (i != currButton) {
+                    activeVec[i] = 0;
+                    buttonColorVec[i] = baseColor;
+                }
+            }
             buttonColorVec[currButton] = activeColor;
         }
         else {
             activeVec[currButton] = 0;
             buttonColorVec[currButton] = baseColor;
         }
+
+        // If any activeVec[currButton] == 1, then set all others to 0
     }
 }
 
@@ -79,37 +93,15 @@ void ChordMenu::chooseButton(Vector2 mousePos) {
             mousePos.y > buttonLocations[i].y && mousePos.y < buttonLocations[i].y + (buttonOneRec.height)) {
             currentButton = i;
             click(currentButton);
-            //isHovering = true;
         }
-        else {
-            buttonColorVec[currentButton] = buttonColorVec[currentButton];
-            //isHovering = false;
-        }
-
-//        // For entire menu bar
-//        if (mousePos.x > container.x && mousePos.x < container.x + (container.width) &&
-//            mousePos.y > container.y && mousePos.y < container.y + (container.height)) {
-//            isHovering = true;
-//        }
 //        else {
-//            isHovering = false;
+//            buttonColorVec[currentButton] = buttonColorVec[currentButton];
 //        }
     }
 }
 
-void ChordMenu::setChord(const std::vector<std::unique_ptr<Instrument>>& instrumentsVec) const {
-//    if (GuiButton((Rectangle){container.x + (container.width * .01f), container.y + (container.height * .1f), container.width * .3f, container.height * .1f}, "Major7 Chord")) {
-//        std::vector<std::string> newNotesVec;
-//        newNotesVec.emplace_back("C");
-//        newNotesVec.emplace_back("E");
-//        newNotesVec.emplace_back("G");
-//        newNotesVec.emplace_back("B");
-//        for (const auto & instrument : instrumentsVec) {
-//            instrument->setNotesShared(newNotesVec);
-//        }
-//    }
-    // if activeVec currButton == 1, set notes to major 7
-    if (activeVec[currentButton] == 1) {
+void ChordMenu::setChord(const std::vector<std::unique_ptr<Instrument>>& instrumentsVec) {
+    if (activeVec[0] == 1) {
         std::vector<std::string> newNotesVec;
         newNotesVec.emplace_back("C");
         newNotesVec.emplace_back("E");
@@ -118,22 +110,42 @@ void ChordMenu::setChord(const std::vector<std::unique_ptr<Instrument>>& instrum
         for (const auto & instrument : instrumentsVec) {
             instrument->setNotesShared(newNotesVec);
         }
+
+        // Make all other buttons inactive
+        activeVec[1] = 0;
     }
-//    std::vector<std::string> newNotesVec;
-//    newNotesVec.emplace_back("C");
-//    newNotesVec.emplace_back("E");
-//    newNotesVec.emplace_back("G");
-//    newNotesVec.emplace_back("B");
+    else if (activeVec[1] == 1) {
+        std::vector<std::string> newNotesVec;
+        newNotesVec.emplace_back("C");
+        newNotesVec.emplace_back("Eb");
+        newNotesVec.emplace_back("G");
+        for (const auto & instrument : instrumentsVec) {
+            instrument->setNotesShared(newNotesVec);
+        }
+
+        // Make all other buttons inactive
+        activeVec[0] = 0;
+    }
+    else {
+        for (const auto & instrument : instrumentsVec) {
+            instrument->clearNotesShared();
+        }
+    }
+}
+
+void ChordMenu::resetMenu(const std::vector<std::unique_ptr<Instrument>>& instrumentsVec) {
+
+    // Clear the instrument notes
 //    for (const auto & instrument : instrumentsVec) {
-//        instrument->setNotesShared(newNotesVec);
+//        // instrument->setNotesShared(newNotesVec);
+//        instrument->clearNotesShared();
 //    }
-//    else if (GuiButton((Rectangle){container.x + (container.width * .01f), container.y + (container.height * .31f), container.width * .3f, container.height * .1f}, "Minor Triad")) {
-//        std::vector<std::string> newNotesVec;
-//        newNotesVec.emplace_back("C");
-//        newNotesVec.emplace_back("Eb");
-//        newNotesVec.emplace_back("G");
-//        for (const auto & instrument : instrumentsVec) {
-//            instrument->setNotesShared(newNotesVec);
-//        }
-//    }
+
+    for (int & activeButton : activeVec) {
+        activeButton = 0;
+    }
+
+    for (auto & buttonColor : buttonColorVec) {
+        buttonColor = baseColor;
+    }
 }

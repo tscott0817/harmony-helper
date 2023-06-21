@@ -195,10 +195,13 @@ int main()
             scalesMenu.draw();
             scalesMenu.setScale(screenWidth, screenHeight, instrumentsVec);  // TODO: Maybe separate this into two functions
         }
-        else if (canDrawChordMenu) {
+        if (canDrawChordMenu) {
             chordMenu.draw();
             chordMenu.chooseButton(mousePos);
             chordMenu.setChord(instrumentsVec);  // TODO: Maybe separate this into two functions
+        }
+        else {
+            chordMenu.resetMenu(instrumentsVec);  // TODO: Not quite what I want
         }
 
         // Want Menu to be drawn last so it's on top

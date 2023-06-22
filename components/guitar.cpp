@@ -3,6 +3,7 @@
 #include <utility>
 #include <algorithm>
 #include <string>
+#include <cstring>
 
 Guitar::Guitar(int screenWidth, int screenHeight, float posX, float posY, float width, float height) {
 
@@ -38,7 +39,7 @@ Guitar::Guitar(int screenWidth, int screenHeight, float posX, float posY, float 
     noteTextVec.emplace_back(highE);
 
     /** Note Containers **/
-    noteRectangle = {neckRectangle.x, neckRectangle.y, neckRectangle.width * .05f, neckRectangle.height * .15f};
+    noteRectangle = {neckRectangle.x, neckRectangle.y, neckRectangle.width * .07f, neckRectangle.height * .15f};
     notesLocAdded = false;
 
     /** Text and Font **/
@@ -107,15 +108,47 @@ void Guitar::draw(float windowScale) {
     // TODO: The whole design of the notes
     for (int i = 0; i < 13; i++) {  // Rows
         for (int j = 0; j < 6; j++) {  // Columns
-            if (noteClickedBoolVec[i][j] == 1) {
-                DrawEllipse(static_cast<float>(neckRectangle.x - (neckRectangle.width * .53f) + ((neckRectangle.width * .08) * i)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .4f)), static_cast<float>(noteRectangle.width / 2), static_cast<float>(noteRectangle.height / 2), noteColorVec[i][j]);
-
-                float noteTextSize = (noteRectangle.width > noteRectangle.height) ? static_cast<float>(noteRectangle.height * .75f) : static_cast<float>(noteRectangle.width * .75f);
-                Vector2 noteTextLoc = {static_cast<float>(neckRectangle.x - (neckRectangle.width * .53f) + ((neckRectangle.width * .08) * i) - (noteRectangle.width / 3)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .4f) - (noteRectangle.height / 2))};
-                DrawTextEx(testFont, noteTextVec[j][i], noteTextLoc, noteTextSize, 0, WHITE);
+            if (noteClickedBoolVec[i][j] == 0 && i == 0) {
+                DrawEllipseLines(static_cast<float>(neckRectangle.x - (neckRectangle.width * .55f) + ((neckRectangle.width * .08) * i)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .4f)), static_cast<float>(noteRectangle.width / 2), static_cast<float>(noteRectangle.height / 2), GREEN);
             }
-            else {
-                DrawEllipseLines(static_cast<float>(neckRectangle.x - (neckRectangle.width * .53f) + ((neckRectangle.width * .08) * i)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .4f)), static_cast<float>(noteRectangle.width / 2), static_cast<float>(noteRectangle.height / 2), GREEN);
+            if (noteClickedBoolVec[i][j] == 1 && i != 0) {  // If not clicked and  not at the first column
+                // DrawRectangle(static_cast<int>(neckRectangle.x - (neckRectangle.width * .56f) + ((neckRectangle.width * .08) * i)), static_cast<int>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .325f)), static_cast<int>(noteRectangle.width), static_cast<int>(noteRectangle.height), BLACK);
+                DrawEllipse(static_cast<float>(neckRectangle.x - (neckRectangle.width * .525f) + ((neckRectangle.width * .08) * i)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .4f)), static_cast<float>(noteRectangle.width / 2), static_cast<float>(noteRectangle.height / 2), noteColorVec[i][j]);
+
+                Vector2 noteTextLoc;
+                float noteTextSize;
+                std::size_t noteSize = std::strlen(noteTextVec[j][i]);  // Gets length of cstring
+
+                if (noteSize == 1) {  // If natural note
+                    noteTextSize = (noteRectangle.width > noteRectangle.height) ? static_cast<float>(noteRectangle.height * .75f) : static_cast<float>(noteRectangle.width * .75f);
+                    noteTextLoc = {static_cast<float>(neckRectangle.x - (neckRectangle.width * .51f) + ((neckRectangle.width * .08) * i) - (noteRectangle.width / 3)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .415f) - (noteRectangle.height / 2))};
+                    DrawTextEx(testFont, noteTextVec[j][i], noteTextLoc, noteTextSize, 0, WHITE);
+                }
+                else {  // If accidental
+                    noteTextSize = (noteRectangle.width > noteRectangle.height) ? static_cast<float>(noteRectangle.height * .65f) : static_cast<float>(noteRectangle.width * .7f);
+                    noteTextLoc = {static_cast<float>(neckRectangle.x - (neckRectangle.width * .5325f) + ((neckRectangle.width * .08) * i) - (noteRectangle.width / 3)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .4225f) - (noteRectangle.height / 2))};
+                    DrawTextEx(testFont, noteTextVec[j][i], noteTextLoc, noteTextSize, 0, WHITE);
+                }
+            }
+            else if (noteClickedBoolVec[i][j] == 1 && i == 0) {  // If at the first column
+                // DrawRectangle(static_cast<int>(neckRectangle.x - (neckRectangle.width * .56f) + ((neckRectangle.width * .08) * i)), static_cast<int>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .325f)), static_cast<int>(noteRectangle.width), static_cast<int>(noteRectangle.height), BLACK);
+                DrawEllipse(static_cast<float>(neckRectangle.x - (neckRectangle.width * .55f) + ((neckRectangle.width * .08) * i)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .4f)), static_cast<float>(noteRectangle.width / 2), static_cast<float>(noteRectangle.height / 2), noteColorVec[i][j]);
+
+                Vector2 noteTextLoc;
+                float noteTextSize;
+                std::size_t noteSize = std::strlen(noteTextVec[j][i]);  // Gets length of cstring
+
+                if (noteSize == 1) {  // If natural note
+                    noteTextSize = (noteRectangle.width > noteRectangle.height) ? static_cast<float>(noteRectangle.height * .75f) : static_cast<float>(noteRectangle.width * .75f);
+                    noteTextLoc = {static_cast<float>(neckRectangle.x - (neckRectangle.width * .535f) + ((neckRectangle.width * .08) * i) - (noteRectangle.width / 3)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .415f) - (noteRectangle.height / 2))};
+                    DrawTextEx(testFont, noteTextVec[j][i], noteTextLoc, noteTextSize, 0, WHITE);
+                }
+                // TODO: Never gets here in standard tuning, but will use for alt tunings
+                else {  // If accidental
+                    noteTextSize = (noteRectangle.width > noteRectangle.height) ? static_cast<float>(noteRectangle.height * .65f) : static_cast<float>(noteRectangle.width * .7f);
+                    noteTextLoc = {static_cast<float>(neckRectangle.x - (neckRectangle.width * .5525f) + ((neckRectangle.width * .08) * i) - (noteRectangle.width / 3)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .4225f) - (noteRectangle.height / 2))};
+                    DrawTextEx(testFont, noteTextVec[j][i], noteTextLoc, noteTextSize, 0, WHITE);
+                }
             }
             noteLocations[i][j] = {static_cast<float>(neckRectangle.x - (neckRectangle.width * .53f) + ((neckRectangle.width * .08) * i) - (noteRectangle.width / 2)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .4f) - (noteRectangle.height / 2))};
         }

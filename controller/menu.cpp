@@ -152,8 +152,10 @@ void Menu::click(int currButton) {  // Don't need param, could use currentButton
 }
 
 // Setters
-void Menu::setActiveButton(int activeButton){
-    this->active = activeButton;
+void Menu::setActiveButton(int activeButton, int index){
+    //this->active = activeButton;
+    // set activeButton in activeVec at index
+    activeVec[index] = activeButton;
 }
 
 // Getters

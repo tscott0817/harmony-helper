@@ -84,7 +84,7 @@ public:
     void click(int currentButton);
 
     // Setters
-    void setActiveButton(int activeButton);
+    void setActiveButton(int activeButton, int index);
 
     // Getters
     std::vector<int> getActiveButtons();

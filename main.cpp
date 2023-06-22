@@ -68,10 +68,11 @@ int main()
     //    2880x1620
     //    3200x1800
     //    3840x2160 (4K UHD)
-    const int screenWidth =  1280;
-    const int screenHeight = 720;
+    const int screenWidth =  1600;
+    const int screenHeight = 900;
 
-    Color backgroundColor = RAYWHITE;  // Ignore error; I prefer knowing the type instead of 'auto'
+    // Color backgroundColor = RAYWHITE;  // Ignore error; I prefer knowing the type instead of 'auto'
+    Color backgroundColor = Color({25, 43, 66, 255});
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);  // Allows window to be resized
     SetConfigFlags(FLAG_MSAA_4X_HINT);  // Anti-aliasing for shape edges
     InitWindow(screenWidth, screenHeight, "Guitar App");
@@ -138,7 +139,7 @@ int main()
         bool canDrawScaleMenu = false;  // TODO: Preer to not have this here
         bool canDrawChordMenu = false;
         for (int i = 0; i < 4; i++) {
-            if (menu.getActiveButtons()[i] == 0) {  // This checks if the current button is active or not
+            if (menu.getActiveButtons()[i] == 0) {  // This checks if the current button is active or not (0 = inactive, 1 = active)
                 if (i == 2) {  // TODO: 2 is the scale chart, need to take different approach
                     canDrawScaleMenu = false;
                 }
@@ -174,6 +175,13 @@ int main()
                 instrument->draw(scale);  // Scale is not being used currently
             }
         }
+
+        // TODO: Put these before each GUI element to style them individually
+        GuiSetStyle(DEFAULT, TEXT_ALIGNMENT, TEXT_ALIGN_CENTER);
+        GuiSetStyle(DEFAULT, TEXT_COLOR_NORMAL, 0x000000FF);  // TODO: Don't hard code this
+        // Change the button color, not the text color
+        GuiSetStyle(BUTTON, BASE_COLOR_NORMAL, 0xE2E2E2FF);   // TODO: Don't hard code this
+        GuiSetStyle(BUTTON, BORDER_WIDTH, 2);
         /** This will be a separate object, just for testing now **/
         if (GuiButton((Rectangle){screenWidth * .9f, screenHeight * .9f, screenWidth * .1f, screenHeight * .1f}, "Clear")) {
             for (const auto & instrument : instrumentsVec) {
@@ -198,12 +206,7 @@ int main()
         if (canDrawChordMenu) {
             chordMenu.draw();
             chordMenu.setChord(screenWidth, screenHeight, instrumentsVec);
-//            chordMenu.chooseButton(mousePos);
-//            chordMenu.setChord(instrumentsVec);  // TODO: Maybe separate this into two functions
         }
-//        else {
-//            chordMenu.resetMenu(instrumentsVec);  // TODO: Not quite what I want
-//        }
 
         // Want Menu to be drawn last so it's on top
         menu.drawTopMenu(screenWidth, screenHeight);

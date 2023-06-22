@@ -27,6 +27,11 @@ private:
     bool dropDown001EditMode;
     std::string currentRoot;
 
+    // const int buttonColor = 0xAA5588FF;  // TODO: Learn more about this color format. [Red (AA), Green (55), Blue (88) and Alpha (FF)]
+    // Make pure black button color
+    const int buttonTextColor = 0x000000FF;
+    const int buttonColor = 0xE2E2E2FF;
+
 public:
 
     ChordMenu(int screenWidth, int screenHeight, float posX, float posY, float width, float height);

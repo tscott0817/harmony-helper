@@ -1,4 +1,5 @@
 #include "chordMenu.h"
+#include <utility>
 #include <vector>
 #include <string>
 #include <algorithm>
@@ -8,144 +9,157 @@ ChordMenu::ChordMenu(int screenWidth, int screenHeight, float posX, float posY, 
 
     container = {posX, posY, static_cast<float>(screenWidth * width), static_cast<float>(screenHeight * height)};  // @params: x-pos, y-pos, width, height
     containerCenter = {container.width / 2, container.height / 2};
+    containerTexture = LoadTexture("../images/plaid.png");
 
-    buttonOneRec = {container.x + (container.width * .01f), container.y + (container.height * .25f), container.width * .3f, container.height * .1f}; // TODO: Fill container with neck (Currently have padding for testing)
-    buttonOneCenter = {static_cast<float>(buttonOneRec.width / 2), static_cast<float>(buttonOneRec.height / 2)};
-
-    buttonTwoRec = {container.x + (container.width * .01f), container.y + (container.height * .5f), container.width * .3f, container.height * .1f}; // TODO: Fill container with neck (Currently have padding for testing)
-    buttonTwoCenter = {static_cast<float>(buttonOneRec.width / 2), static_cast<float>(buttonOneRec.height / 2)};
-
-    /** Vector Inits **/
-    baseColor = BLUE;
-    activeColor = {34, 61, 156, 255};
-    // TODO: Just filling to 100 for room, but don't want to hardcode this 100
-    for (int i = 0; i < 100; i++) {
-        buttonLocations.emplace_back(Vector2 {0, 0});
-        buttonColorVec.emplace_back(baseColor);
-        activeVec.emplace_back(0);
-    }
-    // isHovering = false;  // TODO: This is never used
-    currentButton = 0;
-
-    /** GUI Stuff **/
-    GuiSetStyle(DEFAULT, TEXT_SIZE, 20);  // Default text size
-
-    testFont = LoadFontEx("../resources/fonts/OpenSans-Light.ttf", 200, nullptr, 100);
-    GenTextureMipmaps(&testFont.texture);
-    fontSize = (float)testFont.baseSize;
-    fontPosition = { 500.0f, 1200.0f};
-    textSize = { 10.0f, 10.0f };
-
-    // Setup texture scaling filter
-    SetTextureFilter(testFont.texture, TEXTURE_FILTER_TRILINEAR);
+    dropdownBox001Active = 0;
+    dropDown001EditMode = false;
+    currentRoot = "A";
 }
 
 void ChordMenu::draw() {
-    DrawRectangle(container.x, container.y, container.width, container.height, bgColor);
-
-    /** Buttons **/
-    DrawRectangle(buttonOneRec.x, buttonOneRec.y, buttonOneRec.width, buttonOneRec.height, buttonColorVec[0]);
-    DrawRectangle(buttonTwoRec.x, buttonTwoRec.y, buttonTwoRec.width, buttonTwoRec.height, buttonColorVec[1]);
-
-    if (!buttonLocAdded) {  // Should never change relative to window size, so only need to do this once
-        buttonLocations[0] = {buttonOneRec.x, buttonOneRec.y};
-        buttonLocations[1] = {buttonTwoRec.x, buttonTwoRec.y};
-        buttonLocAdded = true;
-    }
-
-    float buttonTextSize = (buttonOneRec.width > buttonOneRec.height) ? static_cast<float>(buttonOneRec.height * .9f) : static_cast<float>(buttonOneRec.width * .9f);
-    Vector2 buttonOneLoc = {buttonOneRec.x + (buttonOneRec.width * .05f), buttonOneRec.y};
-    DrawTextEx(testFont, "Major 7", buttonOneLoc, buttonTextSize, 0, WHITE);
-
-    float buttonTwoTextSize = (buttonTwoRec.width > buttonTwoRec.height) ? static_cast<float>(buttonTwoRec.height * .9f) : static_cast<float>(buttonTwoRec.width * .9f);
-    Vector2 buttonTwoLoc = {buttonTwoRec.x + (buttonTwoRec.width * .05f), buttonTwoRec.y};
-    DrawTextEx(testFont, "Minor Triad", buttonTwoLoc, buttonTwoTextSize, 0, WHITE);
+    // DrawRectangle(container.x, container.y, container.width, container.height, bgColor);
+    DrawRectangleRounded(container, 0.05f, 0, bgColor);
 }
 
-void ChordMenu::click(int currButton) {  // Don't need param, could use currentButton, but feel this shows intent better
-    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-        std::cout << "Clicked Button" << std::endl;
-        if (activeVec[currButton] == 0) {
-            activeVec[currButton] = 1;
-            // Set all other activeVec[currButton] to 0
-            for (int i = 0; i < activeVec.size(); i++) {
-                if (i != currButton) {
-                    activeVec[i] = 0;
-                    buttonColorVec[i] = baseColor;
-                }
+void ChordMenu::setChord(float screenWidth, float screenHeight, const std::vector<std::unique_ptr<Instrument>>& instrumentsVec) {
+
+    // TODO: Make GuiButton for each scale type
+    if (GuiButton((Rectangle){container.x + (container.width * .35f), container.y + (container.height * .05f), container.width * .3f, container.height * .1f}, "Major")) {
+        std::vector<std::string> newNotesVec;
+        for (int i = 0; i < rootNoteVec.size(); i++) {
+            if (currentRoot == rootNoteVec[i]) {
+                // Find the index of the third and fifth degrees based on the major scale
+                int thirdIndex = (i + 4) % 12;
+                int fifthIndex = (i + 7) % 12;
+
+                newNotesVec.emplace_back(rootNoteVec[i]);
+                newNotesVec.emplace_back(rootNoteVec[thirdIndex]);
+                newNotesVec.emplace_back(rootNoteVec[fifthIndex]);
+                break;
             }
-            buttonColorVec[currButton] = activeColor;
         }
-        else {
-            activeVec[currButton] = 0;
-            buttonColorVec[currButton] = baseColor;
-        }
-
-        // If any activeVec[currButton] == 1, then set all others to 0
-    }
-}
-
-void ChordMenu::chooseButton(Vector2 mousePos) {
-    // Determine which button was pressed
-    for (int i = 0; i < buttonLocations.size(); i++) {
-        // For individual buttons
-        if (mousePos.x > buttonLocations[i].x && mousePos.x < buttonLocations[i].x + (buttonOneRec.width) &&
-            mousePos.y > buttonLocations[i].y && mousePos.y < buttonLocations[i].y + (buttonOneRec.height)) {
-            currentButton = i;
-            click(currentButton);
-        }
-//        else {
-//            buttonColorVec[currentButton] = buttonColorVec[currentButton];
-//        }
-    }
-}
-
-void ChordMenu::setChord(const std::vector<std::unique_ptr<Instrument>>& instrumentsVec) {
-    if (activeVec[0] == 1) {
-        std::vector<std::string> newNotesVec;
-        newNotesVec.emplace_back("C");
-        newNotesVec.emplace_back("E");
-        newNotesVec.emplace_back("G");
-        newNotesVec.emplace_back("B");
+        // TODO: Not sure I want to do this, maybe just return the newly created vec and assign in main
         for (const auto & instrument : instrumentsVec) {
             instrument->setNotesShared(newNotesVec);
         }
-
-        // Make all other buttons inactive
-        activeVec[1] = 0;
     }
-    else if (activeVec[1] == 1) {
+    if (GuiButton((Rectangle){container.x + (container.width * .675f), container.y + (container.height * .05f), container.width * .3f, container.height * .1f}, "Minor")) {
         std::vector<std::string> newNotesVec;
-        newNotesVec.emplace_back("C");
-        newNotesVec.emplace_back("Eb");
-        newNotesVec.emplace_back("G");
+        for (int i = 0; i < rootNoteVec.size(); i++) {
+            if (currentRoot == rootNoteVec[i]) {
+                // Find the index of the third and fifth degrees based on the major scale
+                int thirdIndex = (i + 3) % 12;
+                int fifthIndex = (i + 7) % 12;
+
+                newNotesVec.emplace_back(rootNoteVec[i]);
+                newNotesVec.emplace_back(rootNoteVec[thirdIndex]);
+                newNotesVec.emplace_back(rootNoteVec[fifthIndex]);
+                break;
+            }
+        }
+        // TODO: Not sure I want to do this, maybe just return the newly created vec and assign in main
         for (const auto & instrument : instrumentsVec) {
             instrument->setNotesShared(newNotesVec);
         }
-
-        // Make all other buttons inactive
-        activeVec[0] = 0;
     }
-    else {
+    if (GuiButton((Rectangle){container.x + (container.width * .35f), container.y + (container.height * .175f), container.width * .3f, container.height * .1f}, "Diminished")) {
+        std::vector<std::string> newNotesVec;
+        for (int i = 0; i < rootNoteVec.size(); i++) {
+            if (currentRoot == rootNoteVec[i]) {
+                int thirdIndex = (i + 3) % 12;
+                int fifthIndex = (i + 6) % 12;
+
+                newNotesVec.emplace_back(rootNoteVec[i]);
+                newNotesVec.emplace_back(rootNoteVec[thirdIndex]);
+                newNotesVec.emplace_back(rootNoteVec[fifthIndex]);
+
+                break;
+            }
+        }
+        // TODO: Not sure I want to do this, maybe just return the newly created vec and assign in main
         for (const auto & instrument : instrumentsVec) {
-            instrument->clearNotesShared();
+            instrument->setNotesShared(newNotesVec);
         }
     }
-}
+    if (GuiButton((Rectangle){container.x + (container.width * .675f), container.y + (container.height * .175f), container.width * .3f, container.height * .1f}, "Augmented")) {
+        std::vector<std::string> newNotesVec;
+        for (int i = 0; i < rootNoteVec.size(); i++) {
+            if (currentRoot == rootNoteVec[i]) {
+                int thirdIndex = (i + 4) % 12;
+                int fifthIndex = (i + 8) % 12;
 
-void ChordMenu::resetMenu(const std::vector<std::unique_ptr<Instrument>>& instrumentsVec) {
+                newNotesVec.emplace_back(rootNoteVec[i]);
+                newNotesVec.emplace_back(rootNoteVec[thirdIndex]);
+                newNotesVec.emplace_back(rootNoteVec[fifthIndex]);
+                break;
+            }
+        }
+        // TODO: Not sure I want to do this, maybe just return the newly created vec and assign in main
+        for (const auto & instrument : instrumentsVec) {
+            instrument->setNotesShared(newNotesVec);
+        }
+    }
+    if (GuiButton((Rectangle){container.x + (container.width * .35f), container.y + (container.height * .3f), container.width * .3f, container.height * .1f}, "Major7")) {
+        std::vector<std::string> newNotesVec;
+        for (int i = 0; i < rootNoteVec.size(); i++) {
+            if (currentRoot == rootNoteVec[i]) {
+                int thirdIndex = (i + 4) % 12;  // Major 3rd interval
+                int fifthIndex = (i + 7) % 12;  // Perfect 5th interval
+                int seventhIndex = (i + 11) % 12;  // Major 7th interval
 
-    // Clear the instrument notes
-//    for (const auto & instrument : instrumentsVec) {
-//        // instrument->setNotesShared(newNotesVec);
-//        instrument->clearNotesShared();
+                newNotesVec.emplace_back(rootNoteVec[i]);
+                newNotesVec.emplace_back(rootNoteVec[thirdIndex]);
+                newNotesVec.emplace_back(rootNoteVec[fifthIndex]);
+                newNotesVec.emplace_back(rootNoteVec[seventhIndex]);
+
+                break;
+            }
+        }
+        // TODO: Not sure I want to do this, maybe just return the newly created vec and assign in main
+        for (const auto & instrument : instrumentsVec) {
+            instrument->setNotesShared(newNotesVec);
+        }
+    }
+    if (GuiButton((Rectangle){container.x + (container.width * .675f), container.y + (container.height * .3f), container.width * .3f, container.height * .1f}, "Minor7")) {
+        std::vector<std::string> newNotesVec;
+        for (int i = 0; i < rootNoteVec.size(); i++) {
+            if (currentRoot == rootNoteVec[i]) {
+                int thirdIndex = (i + 3) % 12;  // Minor 3rd interval
+                int fifthIndex = (i + 7) % 12;  // Perfect 5th interval
+                int seventhIndex = (i + 10) % 12;  // Minor 7th interval
+
+                newNotesVec.emplace_back(rootNoteVec[i]);
+                newNotesVec.emplace_back(rootNoteVec[thirdIndex]);
+                newNotesVec.emplace_back(rootNoteVec[fifthIndex]);
+                newNotesVec.emplace_back(rootNoteVec[seventhIndex]);
+                break;
+            }
+        }
+        // TODO: Not sure I want to do this, maybe just return the newly created vec and assign in main
+        for (const auto & instrument : instrumentsVec) {
+            instrument->setNotesShared(newNotesVec);
+        }
+    }
+
+    // TODO: Put in separate function?
+    // NOTE: GuiDropdownBox must draw after any other control that can be covered on unfolding
+    GuiUnlock();
+    GuiSetStyle(DROPDOWNBOX, TEXT_ALIGNMENT, TEXT_ALIGN_CENTER);
+    if (GuiDropdownBox((Rectangle){ container.x + (container.width * .025f), container.y + (container.height * .05f), container.width * .3f, container.height * .05f},
+                       "A;A#/Bb;B;C;C#/Db;D;D#/Eb;E;F;F#/Gb;G;G#/Ab", &dropdownBox001Active, dropDown001EditMode)) {
+        dropDown001EditMode = !dropDown001EditMode;
+        currentRoot = rootNoteVec[dropdownBox001Active];  // Checks current key as a string based on the index of the dropdown box
+    }
+    // TODO: The (#num# is for the symbol before the text
+//    if (GuiDropdownBox((Rectangle){ container.x + (container.width * .05f), container.y + (container.height * .05f), 125, 30 },
+//                       "#01#A;#02#A#/Bb;#03#B;#04#C;#05#C#/Db;#06#D;", &dropdownBox001Active, dropDown001EditMode)) {
+//        dropDown001EditMode = !dropDown001EditMode;
+//        currentKey = scaleNoteVec[dropdownBox001Active];  // Checks current key as a string based on the index of the dropdown box
 //    }
-
-    for (int & activeButton : activeVec) {
-        activeButton = 0;
-    }
-
-    for (auto & buttonColor : buttonColorVec) {
-        buttonColor = baseColor;
-    }
 }
+
+void ChordMenu::setKey(std::string key) {
+    currentRoot = std::move(key);
+}
+
+std::string ChordMenu::getKey() {return currentRoot;}

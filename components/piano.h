@@ -59,7 +59,8 @@ private:
 
     // White keys
     const char *keysWhite[7] = {"C",  "D", "E", "F", "G", "A", "B"};
-    const char *keysBlack[5] = {"Db",  "Eb", "Gb", "Ab", "Bb"};
+    const char *keysBlack[5] = {"Db/C#", "Eb/D#", "Gb/F#", "Ab/G#", "Bb/A#"};
+//    const char *keysBlack[5] = {"Db",  "Eb", "Gb", "Ab", "Bb"};
     std::vector<const char **> noteTextVec;
 
     Color containerColor;

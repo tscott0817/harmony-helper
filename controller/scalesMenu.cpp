@@ -24,64 +24,62 @@ void ScalesMenu::draw() {
 void ScalesMenu::setScale(float screenWidth, float screenHeight, const std::vector<std::unique_ptr<Instrument>>& instrumentsVec) {
 
     // TODO: Make GuiButton for each scale type
-    if (GuiButton((Rectangle){container.x + (container.width * .01f), container.y + (container.height * .21f), container.width * .3f, container.height * .1f}, "Major")) {
+    if (GuiButton((Rectangle){container.x + (container.width * .35f), container.y + (container.height * .05f), container.width * .3f, container.height * .1f}, "Major")) {
         std::vector<std::string> newNotesVec;
-
-        // TODO: Make this a function
-        if (currentKey == "A") {
-            newNotesVec.emplace_back("A");
-            newNotesVec.emplace_back("B");
-            newNotesVec.emplace_back("Db");
-            newNotesVec.emplace_back("D");
-            newNotesVec.emplace_back("E");
-            newNotesVec.emplace_back("Gb");
+        for (int i = 0; i < scaleNoteVec.size(); i++) {
+            if (currentKey == scaleNoteVec[i]) {
+                // The minor scale pattern is W-W-H-W-W-W-H
+                newNotesVec.emplace_back(scaleNoteVec[i]);
+                newNotesVec.emplace_back(scaleNoteVec[i + 2]);
+                newNotesVec.emplace_back(scaleNoteVec[i + 4]);
+                newNotesVec.emplace_back(scaleNoteVec[i + 5]);
+                newNotesVec.emplace_back(scaleNoteVec[i + 7]);
+                newNotesVec.emplace_back(scaleNoteVec[i + 9]);
+                newNotesVec.emplace_back(scaleNoteVec[i + 11]);
+                break;
+            }
         }
-        else if (currentKey == "Bb") {
-            newNotesVec.emplace_back("Bb");
-            newNotesVec.emplace_back("C");
-            newNotesVec.emplace_back("Eb");
-            newNotesVec.emplace_back("F");
-            newNotesVec.emplace_back("G");
-            newNotesVec.emplace_back("A");
+        // TODO: Not sure I want to do this, maybe just return the newly created vec and assign in main
+        for (const auto & instrument : instrumentsVec) {
+            instrument->setNotesShared(newNotesVec);
         }
-        // TODO: Just doing C for testing
-        else {
-            newNotesVec.emplace_back("C");
-            newNotesVec.emplace_back("D");
-            newNotesVec.emplace_back("E");
-            newNotesVec.emplace_back("F");
-            newNotesVec.emplace_back("G");
-            newNotesVec.emplace_back("A");
-            newNotesVec.emplace_back("B");
+    }
+    if (GuiButton((Rectangle){container.x + (container.width * .35f), container.y + (container.height * .175f), container.width * .3f, container.height * .1f}, "Minor")) {
+        std::vector<std::string> newNotesVec;
+        for (int i = 0; i < scaleNoteVec.size(); i++) {
+            if (currentKey == scaleNoteVec[i]) {
+                // The minor scale pattern is W-H-W-W-H-W-W
+                newNotesVec.emplace_back(scaleNoteVec[i]);
+                newNotesVec.emplace_back(scaleNoteVec[i + 2]);
+                newNotesVec.emplace_back(scaleNoteVec[i + 3]);
+                newNotesVec.emplace_back(scaleNoteVec[i + 5]);
+                newNotesVec.emplace_back(scaleNoteVec[i + 7]);
+                newNotesVec.emplace_back(scaleNoteVec[i + 8]);
+                newNotesVec.emplace_back(scaleNoteVec[i + 10]);
+                break;
+            }
         }
-
+        // TODO: Not sure I want to do this, maybe just return the newly created vec and assign in main
         for (const auto & instrument : instrumentsVec) {
             instrument->setNotesShared(newNotesVec);
         }
     }
 
+    // TODO: Put in separate function?
     // NOTE: GuiDropdownBox must draw after any other control that can be covered on unfolding
     GuiUnlock();
-    GuiSetStyle(DROPDOWNBOX, TEXT_ALIGNMENT, TEXT_ALIGN_LEFT);
-    if (GuiDropdownBox((Rectangle){ 25, 65, 125, 30 }, "#01#A;#02#A#/Bb;#03#B;#04#C", &dropdownBox001Active, dropDown001EditMode)) {
+    GuiSetStyle(DROPDOWNBOX, TEXT_ALIGNMENT, TEXT_ALIGN_CENTER);
+    if (GuiDropdownBox((Rectangle){ container.x + (container.width * .025f), container.y + (container.height * .05f), container.width * .3f, container.height * .05f},
+                       "A;A#/Bb;B;C;C#/Db;D;D#/Eb;E;F;F#/Gb;G;G#/Ab", &dropdownBox001Active, dropDown001EditMode)) {
         dropDown001EditMode = !dropDown001EditMode;
-        if (dropdownBox001Active == 0) {
-            // setKey("A");
-            currentKey = "A";
-        }
-        else if (dropdownBox001Active == 1) {
-            // setKey("Bb");
-            currentKey = "Bb";
-        }
-        else if (dropdownBox001Active == 2) {
-            // setKey("B");
-            currentKey = "B";
-        }
-        else if (dropdownBox001Active == 3) {
-            // setKey("C");
-            currentKey = "C";
-        }
+        currentKey = scaleNoteVec[dropdownBox001Active];  // Checks current key as a string based on the index of the dropdown box
     }
+    // TODO: The (#num# is for the symbol before the text
+//    if (GuiDropdownBox((Rectangle){ container.x + (container.width * .05f), container.y + (container.height * .05f), 125, 30 },
+//                       "#01#A;#02#A#/Bb;#03#B;#04#C;#05#C#/Db;#06#D;", &dropdownBox001Active, dropDown001EditMode)) {
+//        dropDown001EditMode = !dropDown001EditMode;
+//        currentKey = scaleNoteVec[dropdownBox001Active];  // Checks current key as a string based on the index of the dropdown box
+//    }
 }
 
 void ScalesMenu::setKey(std::string key) {

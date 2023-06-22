@@ -20,8 +20,10 @@ private:
     Color bgColor = Color({55, 55, 55, 200});
 
     // To choose scale.
-    std::vector<std::string> scaleNameVec = {"Major", "Minor", "Pentatonic", "Blues", "Harmonic Minor", "Melodic Minor", "Dorian", "Mixolydian", "Lydian", "Phrygian", "Locrian"};
-    std::vector<std::string> scaleNoteVec = {"A", "Bb", "B", "C", "Db", "D", "Eb", "E", "F", "Gb", "G"};
+    std::vector<std::string> scaleTypeVec = {"Major", "Minor", "Pentatonic", "Blues", "Harmonic Minor", "Melodic Minor", "Dorian", "Mixolydian", "Lydian", "Phrygian", "Locrian"};
+    // TODO: Just repeating for now, but want to just loop back to beginning
+    std::vector<std::string> scaleNoteVec = {"A", "Bb/A#", "B", "C", "Db/C#", "D", "Eb/D#", "E", "F", "Gb/F#", "G", "Ab/G#",
+                                             "A", "Bb/A#", "B", "C", "Db/C#", "D", "Eb/D#", "E", "F", "Gb/F#", "G", "Ab/G#"};
 
     int dropdownBox001Active;
     bool dropDown001EditMode;

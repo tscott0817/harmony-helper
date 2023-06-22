@@ -41,12 +41,19 @@ private:
     Vector2 textSize;
     int currentFontFilter;
 
-    const char *lowE[13] = {"E", "F", "Gb", "G", "Ab", "A", "Bb", "B", "C", "Db", "D", "Eb", "E"};
-    const char *a[13] = {"A", "Bb", "B", "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A"};
-    const char *d[13] = {"D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B", "C", "Db", "D"};
-    const char *g[13] = {"G", "Ab", "A", "Bb", "B", "C", "Db", "D", "Eb", "E", "F", "Gb", "G"};
-    const char *b[13] = {"B","C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"};
-    const char *highE[13] = {"E", "F", "Gb", "G", "Ab", "A", "Bb", "B", "C", "Db", "D", "Eb", "E"};
+    // TODO: Need to do add sharp keys (probably just share with enharmonic flat keys)
+    const char *lowE[13] = {"E", "F", "Gb/F#", "G", "Ab/G#", "A", "Bb/A#", "B", "C", "Db/C#", "D", "Eb/D#", "E"};
+    const char *a[13] = {"A", "Bb/A#", "B", "C", "Db/C#", "D", "Eb/D#", "E", "F", "Gb/F#", "G", "Ab/G#", "A"};
+    const char *d[13] = {"D", "Eb/D#", "E", "F", "Gb/F#", "G", "Ab/G#", "A", "Bb/A#", "B", "C", "Db/C#", "D"};
+    const char *g[13] = {"G", "Ab/G#", "A", "Bb/A#", "B", "C", "Db/C#", "D", "Eb/D#", "E", "F", "Gb/F#", "G"};
+    const char *b[13] = {"B","C", "Db/C#", "D", "Eb/D#", "E", "F", "Gb/F#", "G", "Ab/G#", "A", "Bb/A#", "B"};
+    const char *highE[13] = {"E", "F", "Gb/F#", "G", "Ab/G#", "A", "Bb/A#", "B", "C", "Db/C#", "D", "Eb/D#", "E"};
+//    const char *lowE[13] = {"E", "F", "Gb", "G", "Ab", "A", "Bb", "B", "C", "Db", "D", "Eb", "E"};
+//    const char *a[13] = {"A", "Bb", "B", "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A"};
+//    const char *d[13] = {"D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B", "C", "Db", "D"};
+//    const char *g[13] = {"G", "Ab", "A", "Bb", "B", "C", "Db", "D", "Eb", "E", "F", "Gb", "G"};
+//    const char *b[13] = {"B","C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"};
+//    const char *highE[13] = {"E", "F", "Gb", "G", "Ab", "A", "Bb", "B", "C", "Db", "D", "Eb", "E"};
     std::vector<const char **> noteTextVec;
 
     /** Colors **/

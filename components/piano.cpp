@@ -182,7 +182,8 @@ void Piano::clickAndDrag(Vector2 mousePos) {
 
 void Piano::notesActivate() {
     std::vector<std::string> whiteKeysTemp = {"C", "D", "E", "F", "G", "A", "B"};
-    std::vector<std::string> blackKeysTemp = {"Db", "Eb", "Gb", "Ab", "Bb"};
+    std::vector<std::string> blackKeysTemp = {"Db/C#", "Eb/D#", "Gb/F#", "Ab/G#", "Bb/A#"};
+//    std::vector<std::string> blackKeysTempSharp = {"C#", "D#", "F#", "G#", "A#"};
 
     for (int i = 0; i < whiteKeysTemp.size(); i++) {
         if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), whiteKeysTemp[i]) != sharedNotesVec.end()) {
@@ -203,6 +204,16 @@ void Piano::notesActivate() {
             noteClickedBoolVecBlack[i] = 0;
         }
     }
+
+//    for (int i = 0; i < blackKeysTempSharp.size(); i++) {
+//        if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), blackKeysTempSharp[i]) != sharedNotesVec.end()) {
+//            keyBlackColorVec[i] = blackKeyColorVec[i];
+//            noteClickedBoolVecBlack[i] = 1;
+//        } else {
+//            keyBlackColorVec[i] = blackKeyColor;
+//            noteClickedBoolVecBlack[i] = 0;
+//        }
+//    }
 }
 
 /** Getters **/
@@ -248,7 +259,8 @@ void Piano::initAudio() {
 void Piano::playSound() {
     // TODO: I don't like this here, move it to .h file maybe
     std::vector<std::string> whiteKeysTemp = {"C", "D", "E", "F", "G", "A", "B"};  // TODO: Just keep adding as octaves go up, indices should stay the same I think
-    std::vector<std::string> blackKeysTemp = {"Db", "Eb", "Gb", "Ab", "Bb"};
+    std::vector<std::string> blackKeysTemp = {"Db/C#", "Eb/D#", "Gb/F#", "Ab/G#", "Bb/A#"};
+//    std::vector<std::string> blackKeysTemp = {"Db", "Eb", "Gb", "Ab", "Bb"};
 
     std::cout << "Playing Sound" << std::endl;
     for (const auto &note: getNotesShared()) {

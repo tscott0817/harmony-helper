@@ -110,7 +110,7 @@ void Guitar::draw(float windowScale) {
             if (noteClickedBoolVec[i][j] == 1) {
                 DrawEllipse(static_cast<float>(neckRectangle.x - (neckRectangle.width * .53f) + ((neckRectangle.width * .08) * i)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .4f)), static_cast<float>(noteRectangle.width / 2), static_cast<float>(noteRectangle.height / 2), noteColorVec[i][j]);
 
-                float noteTextSize = (noteRectangle.width > noteRectangle.height) ? static_cast<float>(noteRectangle.height) : static_cast<float>(noteRectangle.width);
+                float noteTextSize = (noteRectangle.width > noteRectangle.height) ? static_cast<float>(noteRectangle.height * .75f) : static_cast<float>(noteRectangle.width * .75f);
                 Vector2 noteTextLoc = {static_cast<float>(neckRectangle.x - (neckRectangle.width * .53f) + ((neckRectangle.width * .08) * i) - (noteRectangle.width / 3)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .4f) - (noteRectangle.height / 2))};
                 DrawTextEx(testFont, noteTextVec[j][i], noteTextLoc, noteTextSize, 0, WHITE);
             }
@@ -185,7 +185,7 @@ void Guitar::notesActivate() {
 
     }
 
-    if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "Db") != sharedNotesVec.end()) {
+    if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "Db/C#") != sharedNotesVec.end()) {
 
         noteColorVec[2][4] = dbNoteColor;
         noteColorVec[4][1] = dbNoteColor;
@@ -256,7 +256,7 @@ void Guitar::notesActivate() {
 
     }
 
-    if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "Eb") != sharedNotesVec.end()) {
+    if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "Eb/D#") != sharedNotesVec.end()) {
 
         noteColorVec[1][2] = ebNoteColor;
         noteColorVec[4][4] = ebNoteColor;
@@ -360,7 +360,9 @@ void Guitar::notesActivate() {
         noteClickedBoolVec[8][1] = 0;
         noteClickedBoolVec[10][3] = 0;
     }
-    if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "Gb") != sharedNotesVec.end()) {
+//    if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "Gb") != sharedNotesVec.end() ||
+//        std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "F#") != sharedNotesVec.end()) {
+    if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "Gb/F#") != sharedNotesVec.end()) {
 
         noteColorVec[2][0] = gbNoteColor;
         noteColorVec[2][5] = gbNoteColor;
@@ -428,7 +430,7 @@ void Guitar::notesActivate() {
         noteClickedBoolVec[12][3] = 0;
 
     }
-    if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "Ab") != sharedNotesVec.end()) {
+    if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "Ab/G#") != sharedNotesVec.end()) {
 
         noteColorVec[1][3] = abNoteColor;
         noteColorVec[4][5] = abNoteColor;
@@ -495,7 +497,7 @@ void Guitar::notesActivate() {
         noteClickedBoolVec[10][4] = 0;
         noteClickedBoolVec[12][1] = 0;
     }
-    if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "Bb") != sharedNotesVec.end()) {
+    if (std::find(sharedNotesVec.begin(), sharedNotesVec.end(), "Bb/A#") != sharedNotesVec.end()) {
 
         noteColorVec[1][1] = bbNoteColor;
         noteColorVec[3][3] = bbNoteColor;

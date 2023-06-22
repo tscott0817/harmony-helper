@@ -80,11 +80,11 @@ int main()
     /** Object Inits **/
     Menu menu(screenWidth, screenHeight, 0, screenHeight * .0001f, 1, .05f);
     ScalesMenu scalesMenu(screenWidth, screenHeight, screenWidth * .01f, screenHeight * .06, .4f, .8f);
-    ChordMenu chordMenu(screenWidth, screenHeight, screenWidth * .01f, screenHeight * .06, .4f, .8f);
+    ChordMenu chordMenu(screenWidth, screenHeight, screenWidth * .01f, screenHeight * .06, .4f, .925f);
 
     std::vector<std::unique_ptr<Instrument>> instrumentsVec;  // Holds all instruments
-    float guitarWidth = .5f;
-    float guitarHeight = .3f;
+    float guitarWidth = .6f;
+    float guitarHeight = .35f;
     float guitarPosX = .5f;  // The ( * 0.5f) are basically scalars for the guitar's position
     float guitarPosY = .8f;
     std::unique_ptr<Guitar> guitar = std::make_unique<Guitar>(screenWidth, screenHeight, guitarPosX, guitarPosY, guitarWidth, guitarHeight);
@@ -197,12 +197,13 @@ int main()
         }
         if (canDrawChordMenu) {
             chordMenu.draw();
-            chordMenu.chooseButton(mousePos);
-            chordMenu.setChord(instrumentsVec);  // TODO: Maybe separate this into two functions
+            chordMenu.setChord(screenWidth, screenHeight, instrumentsVec);
+//            chordMenu.chooseButton(mousePos);
+//            chordMenu.setChord(instrumentsVec);  // TODO: Maybe separate this into two functions
         }
-        else {
-            chordMenu.resetMenu(instrumentsVec);  // TODO: Not quite what I want
-        }
+//        else {
+//            chordMenu.resetMenu(instrumentsVec);  // TODO: Not quite what I want
+//        }
 
         // Want Menu to be drawn last so it's on top
         menu.drawTopMenu(screenWidth, screenHeight);

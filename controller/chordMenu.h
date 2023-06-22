@@ -10,42 +10,22 @@
 #include <memory>
 #include "../components/instrument.h"
 
-
 class ChordMenu {
 
 private:
 
-    int active;
-    bool editMode;
-    std::vector<int> activeVec;
-
     Rectangle container;
     Vector2 containerCenter;
-
-    Rectangle buttonOneRec;
-    Vector2 buttonOneCenter;
-
-    Rectangle buttonTwoRec;
-    Vector2 buttonTwoCenter;
-
-    int currentButton;
-    std::vector<Vector2> buttonLocations;
-    bool buttonLocAdded;
-    std::vector<Color> buttonColorVec;
+    Texture2D containerTexture;
 
     Color bgColor = Color({55, 55, 55, 200});
-    Color baseColor;
-    Color activeColor;
 
-    const char *testText;
-    const char *noteName;
-    Font testFont;
-    float fontSize;
-    Vector2 fontPosition;
-    Vector2 textSize;
-    const char *buttonText[2] = {"Guitar", "Piano"};
+    std::vector<std::string> rootNoteVec = {"A", "Bb/A#", "B", "C", "Db/C#", "D", "Eb/D#", "E", "F", "Gb/F#", "G", "Ab/G#",
+                                             "A", "Bb/A#", "B", "C", "Db/C#", "D", "Eb/D#", "E", "F", "Gb/F#", "G", "Ab/G#"};
 
-    bool scaleChanged;
+    int dropdownBox001Active;
+    bool dropDown001EditMode;
+    std::string currentRoot;
 
 public:
 
@@ -53,12 +33,14 @@ public:
     ~ChordMenu() = default;
 
     void draw();
-    void click(int currButton);
-    void chooseButton(Vector2 mousePos);
-    void resetMenu(const std::vector<std::unique_ptr<Instrument>>& instrumentsVec);
 
 //    std::vector<std::string> setScale(float screenWidth, float screenHeight, const std::vector<std::unique_ptr<Instrument>> &instrumentsVec);
-    void setChord(const std::vector<std::unique_ptr<Instrument>> &instrumentsVec);
+    void setChord(float screenWidth, float screenHeight, const std::vector<std::unique_ptr<Instrument>> &instrumentsVec);
+    void setKey(std::string key);
+    std::string getKey();
+    // std::vector<std::unique_ptr<Instrument>> getScale();
+
+
 
 };
 

@@ -1,4 +1,4 @@
-# Musical Chord Translator
+# Program
 This started as a small personal project to help me (a guitarist) with doing covers of songs
 that were originally played on piano. I wanted to be able to easily translate the chords to
 my primary instrument and decided to expand upon it to help other instrumentalists. You can

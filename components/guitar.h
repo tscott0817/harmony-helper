@@ -19,6 +19,11 @@ private:
     Rectangle fretRectangle;
     Vector2 fretCenter;
 
+    Image fretMarkerImage;
+    Texture2D fretMarkerTexture;
+    Rectangle fretMarkerRectangle;
+    Vector2 fretMarkerCenter;
+
     Image stringImage;
     Texture2D stringTexture;
     Rectangle stringRectangle;
@@ -58,6 +63,8 @@ private:
 
     /** Colors **/
     Color containerColor;
+    Color neckColor = Color{135, 98, 51, 255};
+    Color outlineColor = Color{179, 130, 68, 255};
 
     /** Audio **/
     Sound testSound;

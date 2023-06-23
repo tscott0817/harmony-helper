@@ -79,9 +79,9 @@ int main()
     SetExitKey(KEY_ZERO);  // Frees up escape key for menu, makes '0' exit program
 
     /** Object Inits **/
-    Menu menu(screenWidth, screenHeight, 0, screenHeight * .0001f, 1, .05f);
-    ScalesMenu scalesMenu(screenWidth, screenHeight, screenWidth * .01f, screenHeight * .06, .4f, .8f);
-    ChordMenu chordMenu(screenWidth, screenHeight, screenWidth * .01f, screenHeight * .06, .4f, .925f);
+    Menu menu(screenWidth, screenHeight, 0, screenHeight * .0001f, 1, .055f);
+    ScalesMenu scalesMenu(screenWidth, screenHeight, screenWidth * .01f, screenHeight * .06, .4f, .85f);
+    ChordMenu chordMenu(screenWidth, screenHeight, screenWidth * .01f, screenHeight * .06, .4f, .85f);
 
     std::vector<std::unique_ptr<Instrument>> instrumentsVec;  // Holds all instruments
     float guitarWidth = .6f;
@@ -183,13 +183,13 @@ int main()
         GuiSetStyle(BUTTON, BASE_COLOR_NORMAL, 0xE2E2E2FF);   // TODO: Don't hard code this
         GuiSetStyle(BUTTON, BORDER_WIDTH, 2);
         /** This will be a separate object, just for testing now **/
-        if (GuiButton((Rectangle){screenWidth * .9f, screenHeight * .9f, screenWidth * .1f, screenHeight * .1f}, "Clear")) {
+        if (GuiButton((Rectangle){screenWidth * .0f, screenHeight * .92f, screenWidth * .08f, screenHeight * .08f}, "Clear")) {
             for (const auto & instrument : instrumentsVec) {
                 instrument->clearNotesShared();
             }
         }
         /** Create a second button that will read the sharedNotesVec and use PlaySound to play appropriate notes **/
-        if (GuiButton((Rectangle){screenWidth * .9f, screenHeight * .8f, screenWidth * .1f, screenHeight * .1f}, "Play")) {
+        if (GuiButton((Rectangle){screenWidth * .08f, screenHeight * .92f, screenWidth * .08f, screenHeight * .08f}, "Play")) {
             if (instrSoundChoice == "Guitar") {
                 instrumentsVec[0]->playSound();
             }

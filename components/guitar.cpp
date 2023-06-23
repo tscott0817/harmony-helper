@@ -24,8 +24,13 @@ Guitar::Guitar(int screenWidth, int screenHeight, float posX, float posY, float 
     neckCenter = {static_cast<float>(neckRectangle.width * .5f), static_cast<float>(neckRectangle.height * .5f)};
 
     /** Frets **/
-    fretRectangle = {neckRectangle.x, neckRectangle.y, static_cast<float>(neckRectangle.width * .01), neckRectangle.height};
+    fretRectangle = {neckRectangle.x, neckRectangle.y, neckRectangle.width * .01f, neckRectangle.height};
     fretCenter = {static_cast<float>(fretRectangle.width * .5f), static_cast<float>(fretRectangle.height * .5f)};
+
+    /** Fret Markers **/
+    fretMarkerRectangle = {neckRectangle.x, neckRectangle.y, neckRectangle.width * .02f, neckRectangle.height * .06f};
+    fretMarkerCenter = {static_cast<float>(fretMarkerRectangle.width * .5f), static_cast<float>(fretMarkerRectangle.height * .5f)};
+
 
     /** Strings **/
     stringRectangle = {neckRectangle.x, neckRectangle.y, neckRectangle.width, neckRectangle.height * .02f};
@@ -67,7 +72,8 @@ Guitar::Guitar(int screenWidth, int screenHeight, float posX, float posY, float 
         noteColorVec.emplace_back(tempColor);
         noteClickedBoolVec.emplace_back(tempClicked);
     }
-    containerColor = Color{51, 51, 51, 255};
+//    containerColor = Color{51, 51, 51, 255};
+    containerColor = Color{51, 51, 51, 0};
 }
 
 void Guitar::draw(float windowScale) {
@@ -77,43 +83,80 @@ void Guitar::draw(float windowScale) {
     containerLoc = {container.x, container.y};  // TODO: Not sure if needed; Maybe want to update location only when container is moved, not every frame
 
     /** Neck **/
-    DrawRectangle(static_cast<int>(neckRectangle.x - (neckRectangle.width * .5f)), static_cast<int>(neckRectangle.y - (neckRectangle.height * .5f)), static_cast<int>(neckRectangle.width), static_cast<int>(neckRectangle.height), BROWN);
+    DrawRectangle(static_cast<int>(neckRectangle.x - (neckRectangle.width * .5f)), static_cast<int>(neckRectangle.y - (neckRectangle.height * .5f)), static_cast<int>(neckRectangle.width), static_cast<int>(neckRectangle.height), BLACK);
+    DrawRectangle(static_cast<int>(neckRectangle.x - (neckRectangle.width * .4975f)), static_cast<int>(neckRectangle.y - (neckRectangle.height * .4925f)), static_cast<int>(neckRectangle.width * .995f), static_cast<int>(neckRectangle.height * .985f), neckColor);
 
     /** Frets **/
     // Frets separated by 1/8 width of neck, built from a central point outward
-    DrawRectangle(static_cast<int>(fretRectangle.x - (neckRectangle.width * .49)), static_cast<int>(fretRectangle.y - (neckRectangle.height * .5f)), static_cast<int>(fretRectangle.width), static_cast<int>(fretRectangle.height), GRAY);
-    DrawRectangle(static_cast<int>(fretRectangle.x - (neckRectangle.width * .41)), static_cast<int>(fretRectangle.y - (neckRectangle.height * .5f)), static_cast<int>(fretRectangle.width), static_cast<int>(fretRectangle.height), GRAY);
-    DrawRectangle(static_cast<int>(fretRectangle.x - (neckRectangle.width * .33)), static_cast<int>(fretRectangle.y - (neckRectangle.height * .5f)), static_cast<int>(fretRectangle.width), static_cast<int>(fretRectangle.height), GRAY);
-    DrawRectangle(static_cast<int>(fretRectangle.x - (neckRectangle.width * .25)), static_cast<int>(fretRectangle.y - (neckRectangle.height * .5f)), static_cast<int>(fretRectangle.width), static_cast<int>(fretRectangle.height), GRAY);
-    DrawRectangle(static_cast<int>(fretRectangle.x - (neckRectangle.width * .17)), static_cast<int>(fretRectangle.y - (neckRectangle.height * .5f)), static_cast<int>(fretRectangle.width), static_cast<int>(fretRectangle.height), GRAY);
-    DrawRectangle(static_cast<int>(fretRectangle.x - (neckRectangle.width * .09)), static_cast<int>(fretRectangle.y - (neckRectangle.height * .5f)), static_cast<int>(fretRectangle.width), static_cast<int>(fretRectangle.height), GRAY);
-    DrawRectangle(static_cast<int>(fretRectangle.x - (neckRectangle.width * .01)), static_cast<int>(fretRectangle.y - (neckRectangle.height * .5f)), static_cast<int>(fretRectangle.width), static_cast<int>(fretRectangle.height), GRAY);
-    DrawRectangle(static_cast<int>(fretRectangle.x + (neckRectangle.width * .07)), static_cast<int>(fretRectangle.y - (neckRectangle.height * .5f)), static_cast<int>(fretRectangle.width), static_cast<int>(fretRectangle.height), GRAY);
-    DrawRectangle(static_cast<int>(fretRectangle.x + (neckRectangle.width * .15)), static_cast<int>(fretRectangle.y - (neckRectangle.height * .5f)), static_cast<int>(fretRectangle.width), static_cast<int>(fretRectangle.height), GRAY);
-    DrawRectangle(static_cast<int>(fretRectangle.x + (neckRectangle.width * .23)), static_cast<int>(fretRectangle.y - (neckRectangle.height * .5f)), static_cast<int>(fretRectangle.width), static_cast<int>(fretRectangle.height), GRAY);
-    DrawRectangle(static_cast<int>(fretRectangle.x + (neckRectangle.width * .31)), static_cast<int>(fretRectangle.y - (neckRectangle.height * .5f)), static_cast<int>(fretRectangle.width), static_cast<int>(fretRectangle.height), GRAY);
-    DrawRectangle(static_cast<int>(fretRectangle.x + (neckRectangle.width * .39)), static_cast<int>(fretRectangle.y - (neckRectangle.height * .5f)), static_cast<int>(fretRectangle.width), static_cast<int>(fretRectangle.height), GRAY);
-    DrawRectangle(static_cast<int>(fretRectangle.x + (neckRectangle.width * .47)), static_cast<int>(fretRectangle.y - (neckRectangle.height * .5f)), static_cast<int>(fretRectangle.width), static_cast<int>(fretRectangle.height), GRAY);
+    DrawRectangle(static_cast<int>(fretRectangle.x - (neckRectangle.width * .49)), static_cast<int>(fretRectangle.y - (neckRectangle.height * .5f)), static_cast<int>(fretRectangle.width), static_cast<int>(fretRectangle.height), BLACK);
+    DrawRectangle(static_cast<int>(fretRectangle.x - (neckRectangle.width * .41)), static_cast<int>(fretRectangle.y - (neckRectangle.height * .5f)), static_cast<int>(fretRectangle.width), static_cast<int>(fretRectangle.height), BLACK);
+    DrawRectangle(static_cast<int>(fretRectangle.x - (neckRectangle.width * .33)), static_cast<int>(fretRectangle.y - (neckRectangle.height * .5f)), static_cast<int>(fretRectangle.width), static_cast<int>(fretRectangle.height), BLACK);
+    DrawRectangle(static_cast<int>(fretRectangle.x - (neckRectangle.width * .25)), static_cast<int>(fretRectangle.y - (neckRectangle.height * .5f)), static_cast<int>(fretRectangle.width), static_cast<int>(fretRectangle.height), BLACK);
+    DrawRectangle(static_cast<int>(fretRectangle.x - (neckRectangle.width * .17)), static_cast<int>(fretRectangle.y - (neckRectangle.height * .5f)), static_cast<int>(fretRectangle.width), static_cast<int>(fretRectangle.height), BLACK);
+    DrawRectangle(static_cast<int>(fretRectangle.x - (neckRectangle.width * .09)), static_cast<int>(fretRectangle.y - (neckRectangle.height * .5f)), static_cast<int>(fretRectangle.width), static_cast<int>(fretRectangle.height), BLACK);
+    DrawRectangle(static_cast<int>(fretRectangle.x - (neckRectangle.width * .01)), static_cast<int>(fretRectangle.y - (neckRectangle.height * .5f)), static_cast<int>(fretRectangle.width), static_cast<int>(fretRectangle.height), BLACK);
+    DrawRectangle(static_cast<int>(fretRectangle.x + (neckRectangle.width * .07)), static_cast<int>(fretRectangle.y - (neckRectangle.height * .5f)), static_cast<int>(fretRectangle.width), static_cast<int>(fretRectangle.height), BLACK);
+    DrawRectangle(static_cast<int>(fretRectangle.x + (neckRectangle.width * .15)), static_cast<int>(fretRectangle.y - (neckRectangle.height * .5f)), static_cast<int>(fretRectangle.width), static_cast<int>(fretRectangle.height), BLACK);
+    DrawRectangle(static_cast<int>(fretRectangle.x + (neckRectangle.width * .23)), static_cast<int>(fretRectangle.y - (neckRectangle.height * .5f)), static_cast<int>(fretRectangle.width), static_cast<int>(fretRectangle.height), BLACK);
+    DrawRectangle(static_cast<int>(fretRectangle.x + (neckRectangle.width * .31)), static_cast<int>(fretRectangle.y - (neckRectangle.height * .5f)), static_cast<int>(fretRectangle.width), static_cast<int>(fretRectangle.height), BLACK);
+    DrawRectangle(static_cast<int>(fretRectangle.x + (neckRectangle.width * .39)), static_cast<int>(fretRectangle.y - (neckRectangle.height * .5f)), static_cast<int>(fretRectangle.width), static_cast<int>(fretRectangle.height), BLACK);
+    DrawRectangle(static_cast<int>(fretRectangle.x + (neckRectangle.width * .47)), static_cast<int>(fretRectangle.y - (neckRectangle.height * .5f)), static_cast<int>(fretRectangle.width), static_cast<int>(fretRectangle.height), BLACK);
+
+    DrawRectangle(static_cast<int>(fretRectangle.x - (neckRectangle.width * .49)) + (fretRectangle.width * .2f), static_cast<int>(fretRectangle.y - (neckRectangle.height * .5f)), static_cast<int>(fretRectangle.width * .8f), static_cast<int>(fretRectangle.height), GRAY);
+    DrawRectangle(static_cast<int>(fretRectangle.x - (neckRectangle.width * .41)) + (fretRectangle.width * .2f), static_cast<int>(fretRectangle.y - (neckRectangle.height * .5f)), static_cast<int>(fretRectangle.width * .8f), static_cast<int>(fretRectangle.height), GRAY);
+    DrawRectangle(static_cast<int>(fretRectangle.x - (neckRectangle.width * .33)) + (fretRectangle.width * .2f), static_cast<int>(fretRectangle.y - (neckRectangle.height * .5f)), static_cast<int>(fretRectangle.width * .8f), static_cast<int>(fretRectangle.height), GRAY);
+    DrawRectangle(static_cast<int>(fretRectangle.x - (neckRectangle.width * .25)) + (fretRectangle.width * .2f), static_cast<int>(fretRectangle.y - (neckRectangle.height * .5f)), static_cast<int>(fretRectangle.width * .8f), static_cast<int>(fretRectangle.height), GRAY);
+    DrawRectangle(static_cast<int>(fretRectangle.x - (neckRectangle.width * .17)) + (fretRectangle.width * .2f), static_cast<int>(fretRectangle.y - (neckRectangle.height * .5f)), static_cast<int>(fretRectangle.width * .8f), static_cast<int>(fretRectangle.height), GRAY);
+    DrawRectangle(static_cast<int>(fretRectangle.x - (neckRectangle.width * .09)) + (fretRectangle.width * .2f), static_cast<int>(fretRectangle.y - (neckRectangle.height * .5f)), static_cast<int>(fretRectangle.width * .8f), static_cast<int>(fretRectangle.height), GRAY);
+    DrawRectangle(static_cast<int>(fretRectangle.x - (neckRectangle.width * .01)) + (fretRectangle.width * .2f), static_cast<int>(fretRectangle.y - (neckRectangle.height * .5f)), static_cast<int>(fretRectangle.width * .8f), static_cast<int>(fretRectangle.height), GRAY);
+    DrawRectangle(static_cast<int>(fretRectangle.x + (neckRectangle.width * .07)) + (fretRectangle.width * .2f), static_cast<int>(fretRectangle.y - (neckRectangle.height * .5f)), static_cast<int>(fretRectangle.width * .8f), static_cast<int>(fretRectangle.height), GRAY);
+    DrawRectangle(static_cast<int>(fretRectangle.x + (neckRectangle.width * .15)) + (fretRectangle.width * .2f), static_cast<int>(fretRectangle.y - (neckRectangle.height * .5f)), static_cast<int>(fretRectangle.width * .8f), static_cast<int>(fretRectangle.height), GRAY);
+    DrawRectangle(static_cast<int>(fretRectangle.x + (neckRectangle.width * .23)) + (fretRectangle.width * .2f), static_cast<int>(fretRectangle.y - (neckRectangle.height * .5f)), static_cast<int>(fretRectangle.width * .8f), static_cast<int>(fretRectangle.height), GRAY);
+    DrawRectangle(static_cast<int>(fretRectangle.x + (neckRectangle.width * .31)) + (fretRectangle.width * .2f), static_cast<int>(fretRectangle.y - (neckRectangle.height * .5f)), static_cast<int>(fretRectangle.width * .8f), static_cast<int>(fretRectangle.height), GRAY);
+    DrawRectangle(static_cast<int>(fretRectangle.x + (neckRectangle.width * .39)) + (fretRectangle.width * .2f), static_cast<int>(fretRectangle.y - (neckRectangle.height * .5f)), static_cast<int>(fretRectangle.width * .8f), static_cast<int>(fretRectangle.height), GRAY);
+    DrawRectangle(static_cast<int>(fretRectangle.x + (neckRectangle.width * .47)) + (fretRectangle.width * .2f), static_cast<int>(fretRectangle.y - (neckRectangle.height * .5f)), static_cast<int>(fretRectangle.width * .8f), static_cast<int>(fretRectangle.height), GRAY);
+
+    /** Fret Markers **/
+    // Draw fret marker at the 3rd, 5th, 7th, 9th, 12th frets.
+    DrawEllipse(static_cast<float>(fretMarkerRectangle.x - (fretMarkerRectangle.width * 14.25f)), static_cast<float>(fretMarkerRectangle.y), static_cast<float>(fretMarkerRectangle.width), static_cast<float>(fretMarkerRectangle.height), BLACK);
+    DrawEllipse(static_cast<float>(fretMarkerRectangle.x - (fretMarkerRectangle.width * 6.25f)), static_cast<float>(fretMarkerRectangle.y), static_cast<float>(fretMarkerRectangle.width), static_cast<float>(fretMarkerRectangle.height), BLACK);
+    DrawEllipse(static_cast<float>(fretMarkerRectangle.x + (fretMarkerRectangle.width * 1.8f)), static_cast<float>(fretMarkerRectangle.y), static_cast<float>(fretMarkerRectangle.width), static_cast<float>(fretMarkerRectangle.height), BLACK);
+    DrawEllipse(static_cast<float>(fretMarkerRectangle.x + (fretMarkerRectangle.width * 9.8f)), static_cast<float>(fretMarkerRectangle.y), static_cast<float>(fretMarkerRectangle.width), static_cast<float>(fretMarkerRectangle.height), BLACK);
+
+    // 12th fret marker is a double marker
+    DrawEllipse(static_cast<float>(fretMarkerRectangle.x + (fretMarkerRectangle.width * 21.75f)), static_cast<float>(fretMarkerRectangle.y + (fretMarkerRectangle.height * 5.25f)), static_cast<float>(fretMarkerRectangle.width), static_cast<float>(fretMarkerRectangle.height), BLACK);
+    DrawEllipse(static_cast<float>(fretMarkerRectangle.x + (fretMarkerRectangle.width * 21.75f)), static_cast<float>(fretMarkerRectangle.y - (fretMarkerRectangle.height * 5.25f)), static_cast<float>(fretMarkerRectangle.width), static_cast<float>(fretMarkerRectangle.height), BLACK);
+
+
 
     /** Strings **/
     // String are 1/6 the height of the neck, built from the center of the neck
-    DrawRectangle(static_cast<int>(stringRectangle.x - (stringRectangle.width * .5f)), static_cast<int>(stringRectangle.y - (neckRectangle.height * .40)), static_cast<int>(stringRectangle.width), static_cast<int>(stringRectangle.height), RED);
-    DrawRectangle(static_cast<int>(stringRectangle.x - (stringRectangle.width * .5f)), static_cast<int>(stringRectangle.y - (neckRectangle.height * .24)), static_cast<int>(stringRectangle.width), static_cast<int>(stringRectangle.height), RED);
-    DrawRectangle(static_cast<int>(stringRectangle.x - (stringRectangle.width * .5f)), static_cast<int>(stringRectangle.y - (neckRectangle.height * .08)), static_cast<int>(stringRectangle.width), static_cast<int>(stringRectangle.height), RED);
-    DrawRectangle(static_cast<int>(stringRectangle.x - (stringRectangle.width * .5f)), static_cast<int>(stringRectangle.y + (neckRectangle.height * .08)), static_cast<int>(stringRectangle.width), static_cast<int>(stringRectangle.height), RED);
-    DrawRectangle(static_cast<int>(stringRectangle.x - (stringRectangle.width * .5f)), static_cast<int>(stringRectangle.y + (neckRectangle.height * .24)), static_cast<int>(stringRectangle.width), static_cast<int>(stringRectangle.height), RED);
-    DrawRectangle(static_cast<int>(stringRectangle.x - (stringRectangle.width * .5f)), static_cast<int>(stringRectangle.y + (neckRectangle.height * .40)), static_cast<int>(stringRectangle.width), static_cast<int>(stringRectangle.height), RED);
+    DrawRectangle(static_cast<int>(stringRectangle.x - (stringRectangle.width * .5f)), static_cast<int>(stringRectangle.y - (neckRectangle.height * .40)), static_cast<int>(stringRectangle.width), static_cast<int>(stringRectangle.height), BLACK);
+    DrawRectangle(static_cast<int>(stringRectangle.x - (stringRectangle.width * .5f)), static_cast<int>(stringRectangle.y - (neckRectangle.height * .24)), static_cast<int>(stringRectangle.width), static_cast<int>(stringRectangle.height), BLACK);
+    DrawRectangle(static_cast<int>(stringRectangle.x - (stringRectangle.width * .5f)), static_cast<int>(stringRectangle.y - (neckRectangle.height * .08)), static_cast<int>(stringRectangle.width), static_cast<int>(stringRectangle.height), BLACK);
+    DrawRectangle(static_cast<int>(stringRectangle.x - (stringRectangle.width * .5f)), static_cast<int>(stringRectangle.y + (neckRectangle.height * .08)), static_cast<int>(stringRectangle.width), static_cast<int>(stringRectangle.height), BLACK);
+    DrawRectangle(static_cast<int>(stringRectangle.x - (stringRectangle.width * .5f)), static_cast<int>(stringRectangle.y + (neckRectangle.height * .24)), static_cast<int>(stringRectangle.width), static_cast<int>(stringRectangle.height), BLACK);
+    DrawRectangle(static_cast<int>(stringRectangle.x - (stringRectangle.width * .5f)), static_cast<int>(stringRectangle.y + (neckRectangle.height * .40)), static_cast<int>(stringRectangle.width), static_cast<int>(stringRectangle.height), BLACK);
+
+    DrawRectangle(static_cast<int>(stringRectangle.x - (stringRectangle.width * .5f)), static_cast<int>(stringRectangle.y - (neckRectangle.height * .40)) + (stringRectangle.height * .25f), static_cast<int>(stringRectangle.width), static_cast<int>(stringRectangle.height * .6f), LIGHTGRAY);
+    DrawRectangle(static_cast<int>(stringRectangle.x - (stringRectangle.width * .5f)), static_cast<int>(stringRectangle.y - (neckRectangle.height * .24)) + (stringRectangle.height * .25f), static_cast<int>(stringRectangle.width), static_cast<int>(stringRectangle.height * .6f), LIGHTGRAY);
+    DrawRectangle(static_cast<int>(stringRectangle.x - (stringRectangle.width * .5f)), static_cast<int>(stringRectangle.y - (neckRectangle.height * .08)) + (stringRectangle.height * .25f), static_cast<int>(stringRectangle.width), static_cast<int>(stringRectangle.height * .6f), LIGHTGRAY);
+    DrawRectangle(static_cast<int>(stringRectangle.x - (stringRectangle.width * .5f)), static_cast<int>(stringRectangle.y + (neckRectangle.height * .08)) + (stringRectangle.height * .25f), static_cast<int>(stringRectangle.width), static_cast<int>(stringRectangle.height * .6f), LIGHTGRAY);
+    DrawRectangle(static_cast<int>(stringRectangle.x - (stringRectangle.width * .5f)), static_cast<int>(stringRectangle.y + (neckRectangle.height * .24)) + (stringRectangle.height * .25f), static_cast<int>(stringRectangle.width), static_cast<int>(stringRectangle.height * .6f), LIGHTGRAY);
+    DrawRectangle(static_cast<int>(stringRectangle.x - (stringRectangle.width * .5f)), static_cast<int>(stringRectangle.y + (neckRectangle.height * .40)) + (stringRectangle.height * .25f), static_cast<int>(stringRectangle.width), static_cast<int>(stringRectangle.height * .6f), LIGHTGRAY);
 
     /** Notes **/
     // TODO: The whole design of the notes
     for (int i = 0; i < 13; i++) {  // Rows
         for (int j = 0; j < 6; j++) {  // Columns
             if (noteClickedBoolVec[i][j] == 0 && i == 0) {
-                DrawEllipseLines(static_cast<float>(neckRectangle.x - (neckRectangle.width * .55f) + ((neckRectangle.width * .08) * i)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .4f)), static_cast<float>(noteRectangle.width / 2), static_cast<float>(noteRectangle.height / 2), GREEN);
+                DrawEllipseLines(static_cast<float>(neckRectangle.x - (neckRectangle.width * .55f) + ((neckRectangle.width * .08) * i)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .4f)), static_cast<float>(noteRectangle.width / 2), static_cast<float>(noteRectangle.height / 2), outlineColor);
             }
             if (noteClickedBoolVec[i][j] == 1 && i != 0) {  // If not clicked and  not at the first column
                 // DrawRectangle(static_cast<int>(neckRectangle.x - (neckRectangle.width * .56f) + ((neckRectangle.width * .08) * i)), static_cast<int>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .325f)), static_cast<int>(noteRectangle.width), static_cast<int>(noteRectangle.height), BLACK);
-                DrawEllipse(static_cast<float>(neckRectangle.x - (neckRectangle.width * .525f) + ((neckRectangle.width * .08) * i)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .4f)), static_cast<float>(noteRectangle.width / 2), static_cast<float>(noteRectangle.height / 2), noteColorVec[i][j]);
+                DrawEllipse(static_cast<float>(neckRectangle.x - (neckRectangle.width * .525f) + ((neckRectangle.width * .08) * i)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .4f)), static_cast<float>(noteRectangle.width / 2), static_cast<float>(noteRectangle.height / 2), BLACK);
+                DrawEllipse(static_cast<float>(neckRectangle.x - (neckRectangle.width * .525f) + ((neckRectangle.width * .08) * i)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .4f)), static_cast<float>(noteRectangle.width / 2.1), static_cast<float>(noteRectangle.height / 2.1), noteColorVec[i][j]);
+
 
                 Vector2 noteTextLoc;
                 float noteTextSize;
@@ -132,7 +175,8 @@ void Guitar::draw(float windowScale) {
             }
             else if (noteClickedBoolVec[i][j] == 1 && i == 0) {  // If at the first column
                 // DrawRectangle(static_cast<int>(neckRectangle.x - (neckRectangle.width * .56f) + ((neckRectangle.width * .08) * i)), static_cast<int>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .325f)), static_cast<int>(noteRectangle.width), static_cast<int>(noteRectangle.height), BLACK);
-                DrawEllipse(static_cast<float>(neckRectangle.x - (neckRectangle.width * .55f) + ((neckRectangle.width * .08) * i)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .4f)), static_cast<float>(noteRectangle.width / 2), static_cast<float>(noteRectangle.height / 2), noteColorVec[i][j]);
+                DrawEllipse(static_cast<float>(neckRectangle.x - (neckRectangle.width * .55f) + ((neckRectangle.width * .08) * i)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .4f)), static_cast<float>(noteRectangle.width / 2), static_cast<float>(noteRectangle.height / 2), BLACK);
+                DrawEllipse(static_cast<float>(neckRectangle.x - (neckRectangle.width * .55f) + ((neckRectangle.width * .08) * i)), static_cast<float>((neckRectangle.y) - ((neckRectangle.height * .16) * j) + (neckRectangle.height * .4f)), static_cast<float>(noteRectangle.width / 2.1), static_cast<float>(noteRectangle.height / 2.1), noteColorVec[i][j]);
 
                 Vector2 noteTextLoc;
                 float noteTextSize;
@@ -609,6 +653,8 @@ void Guitar::clickAndDrag(Vector2 mousePos) {
             neckRectangle.y = mousePos.y;
             fretRectangle.x = mousePos.x;
             fretRectangle.y = mousePos.y;
+            fretMarkerRectangle.x = mousePos.x;
+            fretMarkerRectangle.y = mousePos.y;
             stringRectangle.x = mousePos.x;
             stringRectangle.y = mousePos.y;
             noteRectangle.x = mousePos.x;

@@ -16,6 +16,14 @@ Piano::Piano(int screenWidth, int screenHeight, float posX, float posY, float wi
     containerLocAdded = false;
     bgLoc = {static_cast<float>(this->screenWidth * posX), static_cast<float>(this->screenHeight * posY), static_cast<float>(this->screenWidth * width), static_cast<float>(this->screenHeight * height)};
 
+    keyboardImage = LoadImage("../images/blue_background.png");     // Loaded in CPU memory (RAM)
+    keyboardTexture = LoadTextureFromImage(keyboardImage);  // Image converted to texture, GPU memory (VRAM)
+    UnloadImage(keyboardImage);   // Once image has been converted to texture and uploaded to VRAM, it can be unloaded from RAM
+    keyboardRectangle = {static_cast<float>(this->screenWidth * posX), static_cast<float>(this->screenHeight * posY), static_cast<float>(this->screenWidth * width), static_cast<float>(this->screenHeight * height)};
+    keyboardCenter = {container.width * .5f, container.height * .5f};
+    // keyboardLocAdded = false;
+    keyboardLoc = {static_cast<float>(this->screenWidth * posX), static_cast<float>(this->screenHeight * posY), static_cast<float>(this->screenWidth * width), static_cast<float>(this->screenHeight * height)};
+
 
     keyWhiteImage = LoadImage("../images/silver.png");
     keyWhiteTexture = LoadTextureFromImage(keyWhiteImage);
@@ -52,7 +60,8 @@ Piano::Piano(int screenWidth, int screenHeight, float posX, float posY, float wi
     noteTextVec.emplace_back(keysWhite);
     noteTextVec.emplace_back(keysBlack);
 
-    containerColor = Color{51, 51, 51, 255};
+    containerColor = Color{51, 51, 51, 0};
+    keyboardColor = Color{51, 51, 51, 255};
 
 }
 
@@ -62,7 +71,14 @@ void Piano::draw(float windowScale) {
     DrawRectangle(container.x - (container.width * .5f), container.y - (container.height * .5f), container.width, container.height, containerColor);
     containerLoc = {container.x, container.y};  // TODO: Not sure if needed; Maybe want to update location only when container is moved, not every frame
 
+    // Draw the keyboard
+    DrawRectangle(keyboardRectangle.x - (keyboardRectangle.width * .504f), keyboardRectangle.y - (keyboardRectangle.height * .504f), keyboardRectangle.width * 1.01f, keyboardRectangle.height * 1.02f, BLACK);
+    DrawRectangle(keyboardRectangle.x - (keyboardRectangle.width * .5f), keyboardRectangle.y - (keyboardRectangle.height * .5f), keyboardRectangle.width, keyboardRectangle.height, keyboardColor);
+
     /** White Keys **/
+    // Draw one rectangle to encapsulate each key
+    DrawRectangle(keyboardRectangle.x - (keyboardRectangle.width * .458f), keyboardRectangle.y - (keyboardRectangle.height * .265f), keyboardRectangle.width * .92f, keyboardRectangle.height * .77f, BLACK);
+
     DrawRectangle(keyWhiteRectangle.x - (keyWhiteRectangle.width * .5f) - (container.width * .39f), keyWhiteRectangle.y - (keyWhiteRectangle.height * .5f), keyWhiteRectangle.width, keyWhiteRectangle.height, keyWhiteColorVec[0]);
     DrawRectangle(keyWhiteRectangle.x - (keyWhiteRectangle.width * .5f) - (container.width * .26f), keyWhiteRectangle.y - (keyWhiteRectangle.height * .5f), keyWhiteRectangle.width, keyWhiteRectangle.height, keyWhiteColorVec[1]);
     DrawRectangle(keyWhiteRectangle.x - (keyWhiteRectangle.width * .5f) - (container.width * .13f), keyWhiteRectangle.y - (keyWhiteRectangle.height * .5f), keyWhiteRectangle.width, keyWhiteRectangle.height, keyWhiteColorVec[2]);
@@ -80,11 +96,17 @@ void Piano::draw(float windowScale) {
     keyWhiteLocations[6] = {keyWhiteRectangle.x - (keyWhiteRectangle.width * .5f) + (container.width * .39f), keyWhiteRectangle.y - (keyWhiteRectangle.height * .5f)};
 
     /** Black Keys **/
-    DrawRectangle(keyBlackRectangle.x - (container.width * .365f), keyBlackRectangle.y - (keyBlackRectangle.height * .85f), keyBlackRectangle.width, keyBlackRectangle.height, keyBlackColorVec[0]);
-    DrawRectangle(keyBlackRectangle.x - (container.width * .235f), keyBlackRectangle.y - (keyBlackRectangle.height * .85f), keyBlackRectangle.width, keyBlackRectangle.height, keyBlackColorVec[1]);
-    DrawRectangle(keyBlackRectangle.x + (keyWhiteRectangle.width * .2f), keyBlackRectangle.y - (keyBlackRectangle.height * .85f), keyBlackRectangle.width, keyBlackRectangle.height, keyBlackColorVec[2]);
-    DrawRectangle(keyBlackRectangle.x + (container.width * .1575f), keyBlackRectangle.y - (keyBlackRectangle.height * .85f), keyBlackRectangle.width, keyBlackRectangle.height, keyBlackColorVec[3]);
-    DrawRectangle(keyBlackRectangle.x + (container.width * .2875f), keyBlackRectangle.y - (keyBlackRectangle.height * .85f), keyBlackRectangle.width, keyBlackRectangle.height, keyBlackColorVec[4]);
+    DrawRectangle(keyBlackRectangle.x - (container.width * .365f), keyBlackRectangle.y - (keyBlackRectangle.height * .85f), keyBlackRectangle.width, keyBlackRectangle.height, BLACK);
+    DrawRectangle(keyBlackRectangle.x - (container.width * .235f), keyBlackRectangle.y - (keyBlackRectangle.height * .85f), keyBlackRectangle.width, keyBlackRectangle.height, BLACK);
+    DrawRectangle(keyBlackRectangle.x + (keyWhiteRectangle.width * .2f), keyBlackRectangle.y - (keyBlackRectangle.height * .85f), keyBlackRectangle.width, keyBlackRectangle.height, BLACK);
+    DrawRectangle(keyBlackRectangle.x + (container.width * .1575f), keyBlackRectangle.y - (keyBlackRectangle.height * .85f), keyBlackRectangle.width, keyBlackRectangle.height, BLACK);
+    DrawRectangle(keyBlackRectangle.x + (container.width * .2875f), keyBlackRectangle.y - (keyBlackRectangle.height * .85f), keyBlackRectangle.width, keyBlackRectangle.height, BLACK);
+
+    DrawRectangle(keyBlackRectangle.x - (container.width * .36225f), keyBlackRectangle.y - (keyBlackRectangle.height * .85f), keyBlackRectangle.width * .95f, keyBlackRectangle.height * .98f, keyBlackColorVec[0]);
+    DrawRectangle(keyBlackRectangle.x - (container.width * .23225f), keyBlackRectangle.y - (keyBlackRectangle.height * .85f), keyBlackRectangle.width * .95f, keyBlackRectangle.height * .98f, keyBlackColorVec[1]);
+    DrawRectangle(keyBlackRectangle.x + (keyWhiteRectangle.width * .223f), keyBlackRectangle.y - (keyBlackRectangle.height * .85f), keyBlackRectangle.width * .95f, keyBlackRectangle.height * .98f, keyBlackColorVec[2]);
+    DrawRectangle(keyBlackRectangle.x + (container.width * .16025f), keyBlackRectangle.y - (keyBlackRectangle.height * .85f), keyBlackRectangle.width * .95f, keyBlackRectangle.height * .98f, keyBlackColorVec[3]);
+    DrawRectangle(keyBlackRectangle.x + (container.width * .29025f), keyBlackRectangle.y - (keyBlackRectangle.height * .85f), keyBlackRectangle.width * .95f, keyBlackRectangle.height * .98f, keyBlackColorVec[4]);
 
     keyBlackLocations[0] = {keyBlackRectangle.x - (container.width * .365f), keyBlackRectangle.y - (keyBlackRectangle.height * .85f)};
     keyBlackLocations[1] = {keyBlackRectangle.x - (container.width * .235f), keyBlackRectangle.y - (keyBlackRectangle.height * .85f)};
@@ -164,6 +186,8 @@ void Piano::clickAndDrag(Vector2 mousePos) {
             // TODO: Should only have to change the container?? Maybe since initial build is in constructor.
             container.x = mousePos.x;
             container.y = mousePos.y;
+            keyboardRectangle.x = container.x;
+            keyboardRectangle.y = container.y;
             keyWhiteRectangle.x = container.x;
             keyWhiteRectangle.y = container.y + (container.height * .125f);
             keyBlackRectangle.x = container.x;

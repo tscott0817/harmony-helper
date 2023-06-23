@@ -55,6 +55,8 @@ private:
     Color thirdColor;
     Color fourthColor;
     Color fifthColor;
+    const int buttonTextColor = 0x000000FF;
+    const int buttonColor = 0xE2E2E2FF;
 
     int currentButton;
 

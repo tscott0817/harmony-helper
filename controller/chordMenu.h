@@ -18,7 +18,8 @@ private:
     Vector2 containerCenter;
     Texture2D containerTexture;
 
-    Color bgColor = Color({55, 55, 55, 200});
+    Color bgColor = Color({25, 25, 25, 125});
+//    Color bgColor = Color{0, 0, 0, 150};
 
     std::vector<std::string> rootNoteVec = {"A", "Bb/A#", "B", "C", "Db/C#", "D", "Eb/D#", "E", "F", "Gb/F#", "G", "Ab/G#",
                                              "A", "Bb/A#", "B", "C", "Db/C#", "D", "Eb/D#", "E", "F", "Gb/F#", "G", "Ab/G#"};

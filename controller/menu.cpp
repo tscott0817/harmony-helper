@@ -6,7 +6,9 @@ Menu::Menu(int screenWidth, int screenHeight, float posX, float posY, float widt
     /** Init **/
     active = 0;
     editMode = false;
-    blackBackground = {0, 0, 0, 150};
+//    blackBackground = {25, 25, 25, 125};
+    blackBackground = {25, 25, 25, 200};
+
     canDraw = true;
 
     /** Parent Container **/
@@ -17,26 +19,27 @@ Menu::Menu(int screenWidth, int screenHeight, float posX, float posY, float widt
 
     /** Buttons **/
     // TODO: Want the put all instruments into own menu
-    buttonOneRec = {container.x + (container.width * .0005f), container.y + (container.height * .06f), container.width * .1f, container.height * .9f}; // TODO: Fill container with neck (Currently have padding for testing)
+    buttonOneRec = {container.x + (container.width * .005f), container.y + (container.height * .12f), container.width * .1f, container.height * .75f}; // TODO: Fill container with neck (Currently have padding for testing)
     buttonOneCenter = {static_cast<float>(buttonOneRec.width / 2), static_cast<float>(buttonOneRec.height / 2)};
 
-    buttonTwoRec = {container.x + (container.width * .1025f), container.y + (container.height * .06f), container.width * .1f, container.height * .9f}; // TODO: Fill container with neck (Currently have padding for testing)
+    buttonTwoRec = {container.x + (container.width * .1095f), container.y + (container.height * .12f), container.width * .1f, container.height * .75f}; // TODO: Fill container with neck (Currently have padding for testing)
     buttonTwoCenter = {static_cast<float>(buttonTwoRec.width / 2), static_cast<float>(buttonTwoRec.height / 2)};
 
     // TODO: The menu items
-    buttonThreeRec = {container.x + (container.width * .2050f), container.y + (container.height * .06f), container.width * .1f, container.height * .9f}; // TODO: Fill container with neck (Currently have padding for testing)
+    buttonThreeRec = {container.x + (container.width * .2130f), container.y + (container.height * .12f), container.width * .1f, container.height * .75f}; // TODO: Fill container with neck (Currently have padding for testing)
     buttonThreeCenter = {static_cast<float>(buttonThreeRec.width / 2), static_cast<float>(buttonThreeRec.height / 2)};
 
-    buttonFourRec = {container.x + (container.width * .3075f), container.y + (container.height * .06f), container.width * .1f, container.height * .9f}; // TODO: Fill container with neck (Currently have padding for testing)
+    buttonFourRec = {container.x + (container.width * .3175f), container.y + (container.height * .12f), container.width * .1f, container.height * .75f}; // TODO: Fill container with neck (Currently have padding for testing)
     buttonFourCenter = {static_cast<float>(buttonThreeRec.width / 2), static_cast<float>(buttonThreeRec.height / 2)};
 
     buttonLocAdded = false;
 
     /** Colors **/
-    baseColor = BLUE;
+    baseColor = Color{225, 225, 225, 255};
     currentColor = BLUE;
     hoverColor = RED;
-    activeColor = {34, 61, 156, 255};
+//    activeColor = {150, 150, 150, 255};
+    activeColor = {173, 82, 59, 255};
 
     /** Vector Inits **/
     // TODO: Just filling to 100 for room, but don't want to hardcode this 100
@@ -80,10 +83,10 @@ void Menu::drawTopMenu(int width, int height) {
 //    DrawRectangle(buttonFourRec.x, buttonFourRec.y, buttonFourRec.width, buttonFourRec.height, buttonColorVec[3]);
 
     DrawRectangleRounded(container, 0.05f, 0, blackBackground);
-    DrawRectangleRounded(buttonOneRec, 0.25f, 0, buttonColorVec[0]);
-    DrawRectangleRounded(buttonTwoRec, 0.25f, 0, buttonColorVec[1]);
-    DrawRectangleRounded(buttonThreeRec, 0.25f, 0, buttonColorVec[2]);
-    DrawRectangleRounded(buttonFourRec, 0.25f, 0, buttonColorVec[3]);
+    DrawRectangleRounded(buttonOneRec, 0.75f, 0, buttonColorVec[0]);
+    DrawRectangleRounded(buttonTwoRec, 0.75f, 0, buttonColorVec[1]);
+    DrawRectangleRounded(buttonThreeRec, 0.75f, 0, buttonColorVec[2]);
+    DrawRectangleRounded(buttonFourRec, 0.75f, 0, buttonColorVec[3]);
 
     if (!buttonLocAdded) {
         buttonLocations[0] = {buttonOneRec.x, buttonOneRec.y};
@@ -95,19 +98,19 @@ void Menu::drawTopMenu(int width, int height) {
 
     float buttonTextSize = (buttonOneRec.width > buttonOneRec.height) ? static_cast<float>(buttonOneRec.height) : static_cast<float>(buttonOneRec.width);
     Vector2 buttonOneLoc = {buttonOneRec.x + (buttonOneRec.width * .25f), buttonOneRec.y};
-    DrawTextEx(testFont, "Guitar", buttonOneLoc, buttonTextSize, 0, WHITE);
+    DrawTextEx(testFont, "Guitar", buttonOneLoc, buttonTextSize, 0, BLACK);
 
     float buttonTwoTextSize = (buttonTwoRec.width > buttonTwoRec.height) ? static_cast<float>(buttonTwoRec.height) : static_cast<float>(buttonTwoRec.width);
     Vector2 buttonTwoNewLoc = {buttonTwoRec.x + (buttonTwoRec.width * .25f), buttonTwoRec.y};
-    DrawTextEx(testFont, "Piano", buttonTwoNewLoc, buttonTwoTextSize, 0, WHITE);
+    DrawTextEx(testFont, "Piano", buttonTwoNewLoc, buttonTwoTextSize, 0, BLACK);
 
     float buttonThreeTextSize = (buttonThreeRec.width > buttonThreeRec.height) ? static_cast<float>(buttonThreeRec.height) : static_cast<float>(buttonThreeRec.width);
     Vector2 buttonThreeNewLoc = {buttonThreeRec.x + (buttonThreeRec.width * .25f), buttonThreeRec.y};
-    DrawTextEx(testFont, "Scales", buttonThreeNewLoc, buttonThreeTextSize, 0, WHITE);
+    DrawTextEx(testFont, "Scales", buttonThreeNewLoc, buttonThreeTextSize, 0, BLACK);
 
     float buttonFourTextSize = (buttonFourRec.width > buttonFourRec.height) ? static_cast<float>(buttonFourRec.height) : static_cast<float>(buttonFourRec.width);
     Vector2 buttonFourNewLoc = {buttonFourRec.x + (buttonFourRec.width * .21f), buttonFourRec.y};
-    DrawTextEx(testFont, "Chords", buttonFourNewLoc, buttonFourTextSize, 0, WHITE);
+    DrawTextEx(testFont, "Chords", buttonFourNewLoc, buttonFourTextSize, 0, BLACK);
 }
 
 void Menu::hover(Vector2 mousePos) {

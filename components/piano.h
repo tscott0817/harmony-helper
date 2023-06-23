@@ -19,6 +19,14 @@ private:
     Vector2 keyWhiteLoc;
     bool keyWhiteLocAdded;
 
+    Image keyboardImage;
+    Texture2D keyboardTexture;
+    Rectangle keyboardRectangle;
+    Vector2 keyboardCenter;
+    Rectangle keyboardLoc;
+    bool keyboardAdded;
+    Color keyboardColor;
+
     Image keyBlackImage;
     Texture2D keyBlackTexture;
     Rectangle keyBlackRectangle;

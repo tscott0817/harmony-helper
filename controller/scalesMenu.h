@@ -17,7 +17,7 @@ private:
     Vector2 containerCenter;
     Texture2D containerTexture;
 
-    Color bgColor = Color({55, 55, 55, 200});
+    Color bgColor = Color({25, 25, 25, 125});
 
     // To choose scale.
     std::vector<std::string> scaleTypeVec = {"Major", "Minor", "Pentatonic", "Blues", "Harmonic Minor", "Melodic Minor", "Dorian", "Mixolydian", "Lydian", "Phrygian", "Locrian"};

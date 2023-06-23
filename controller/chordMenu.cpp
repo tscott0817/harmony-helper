@@ -253,7 +253,7 @@ void ChordMenu::setChord(float screenWidth, float screenHeight, const std::vecto
         dropDown001EditMode = !dropDown001EditMode;
         currentRoot = rootNoteVec[dropdownBox001Active];  // Checks current key as a string based on the index of the dropdown box
     }
-    // TODO: The (#num# is for the symbol before the text
+    // TODO: The #num# is for the symbol before the text
 //    if (GuiDropdownBox((Rectangle){ container.x + (container.width * .05f), container.y + (container.height * .05f), 125, 30 },
 //                       "#01#A;#02#A#/Bb;#03#B;#04#C;#05#C#/Db;#06#D;", &dropdownBox001Active, dropDown001EditMode)) {
 //        dropDown001EditMode = !dropDown001EditMode;

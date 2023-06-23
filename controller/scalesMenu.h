@@ -2,7 +2,7 @@
 #define GUITAR_APP_SCALESMENU_H
 #include "raylib.h"
 #define RAYGUI_STATIC
-#include "../raygui.h"
+#include "../rayguiCustom.h"
 #undef RAYGUI_STATIC
 #include <iostream>
 #include <vector>

@@ -39,7 +39,8 @@ Menu::Menu(int screenWidth, int screenHeight, float posX, float posY, float widt
     currentColor = BLUE;
     hoverColor = RED;
 //    activeColor = {150, 150, 150, 255};
-    activeColor = {173, 82, 59, 255};
+//    activeColor = {173, 82, 59, 255};
+    activeColor = {76, 127, 194, 255};
 
     /** Vector Inits **/
     // TODO: Just filling to 100 for room, but don't want to hardcode this 100
@@ -87,6 +88,17 @@ void Menu::drawTopMenu(int width, int height) {
     DrawRectangleRounded(buttonTwoRec, 0.75f, 0, buttonColorVec[1]);
     DrawRectangleRounded(buttonThreeRec, 0.75f, 0, buttonColorVec[2]);
     DrawRectangleRounded(buttonFourRec, 0.75f, 0, buttonColorVec[3]);
+
+    // TODO: Put these before each GUI element to style them individually
+//    GuiSetStyle(LISTVIEW, TEXT_ALIGNMENT, TEXT_ALIGN_CENTER);
+//    GuiSetStyle(LISTVIEW, TEXT_COLOR_NORMAL, buttonTextColor);
+//    GuiSetStyle(LISTVIEW, BASE_COLOR_NORMAL, buttonColor);   // TODO: Don't hard code this
+//    GuiSetStyle(LISTVIEW, BORDER_WIDTH, 2);
+
+//    GuiListViewEx((Rectangle){ 165, 180, 140, 200 }, listViewExList, 8, &listViewExScrollIndex, &listViewExActive, &listViewExFocus);
+
+    // GuiListViewEx((Rectangle){ 165, 180, 140, 200 }, listViewExList, 8, &listViewExScrollIndex, &listViewExActive, listViewExFocus);
+
 
     if (!buttonLocAdded) {
         buttonLocations[0] = {buttonOneRec.x, buttonOneRec.y};
@@ -165,4 +177,9 @@ void Menu::setActiveButton(int activeButton, int index){
 std::vector<int> Menu::getActiveButtons(){
     // return the active vector
     return activeVec;
+}
+
+void Menu::deactivateButton(int index) {
+    activeVec[index] = 0;
+    buttonColorVec[index] = baseColor;
 }

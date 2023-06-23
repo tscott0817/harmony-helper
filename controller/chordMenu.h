@@ -2,7 +2,7 @@
 #define GUITAR_APP_CHORDMENU_H
 #include "raylib.h"
 #define RAYGUI_STATIC
-#include "../raygui.h"
+#include "../rayguiCustom.h"
 #undef RAYGUI_STATIC
 #include <iostream>
 #include <vector>
@@ -32,6 +32,11 @@ private:
     // Make pure black button color
     const int buttonTextColor = 0x000000FF;
     const int buttonColor = 0xE2E2E2FF;
+
+    int listViewExScrollIndex = 0;
+    int listViewExActive = 2;
+    int listViewExFocus = -1;
+    const char *listViewExList[8] = { "This", "is", "a", "list view", "with", "disable", "elements", "amazing!" };
 
 public:
 

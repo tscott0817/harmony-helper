@@ -72,7 +72,9 @@ int main()
     const int screenHeight = 900;
 
     // Color backgroundColor = RAYWHITE;  // Ignore error; I prefer knowing the type instead of 'auto'
-    Color backgroundColor = Color({25, 43, 66, 255});
+//    Color backgroundColor = Color({25, 43, 66, 255});
+//    Color backgroundColor = Color({204, 204, 204, 255});
+    Color backgroundColor = Color({192, 192, 192, 255});
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);  // Allows window to be resized
     SetConfigFlags(FLAG_MSAA_4X_HINT);  // Anti-aliasing for shape edges
     InitWindow(screenWidth, screenHeight, "Guitar App");
@@ -84,8 +86,8 @@ int main()
     ChordMenu chordMenu(screenWidth, screenHeight, screenWidth * .01f, screenHeight * .06, .4f, .85f);
 
     std::vector<std::unique_ptr<Instrument>> instrumentsVec;  // Holds all instruments
-    float guitarWidth = .6f;
-    float guitarHeight = .35f;
+    float guitarWidth = .5f;
+    float guitarHeight = .3f;
     float guitarPosX = .5f;  // The ( * 0.5f) are basically scalars for the guitar's position
     float guitarPosY = .8f;
     std::unique_ptr<Guitar> guitar = std::make_unique<Guitar>(screenWidth, screenHeight, guitarPosX, guitarPosY, guitarWidth, guitarHeight);
@@ -104,6 +106,10 @@ int main()
     instrumentsVec[1]->initAudio();  // TODO: Just Piano has audio currently
 
     std::string instrSoundChoice = "Piano";  // TODO: Make this user assignable to choose sound
+
+    bool canDrawScaleMenu = false;  // TODO: Preer to not have this here
+    bool canDrawChordMenu = false;
+    int prevButton = -1;
 
     /** Main Loop **/
     SetTargetFPS(60);
@@ -136,14 +142,12 @@ int main()
         // Menu stuff
         // TODO: Need to make some boolean check in instruments to add locations or
         //  mouse interactions still work even if instruments is not visible
-        bool canDrawScaleMenu = false;  // TODO: Preer to not have this here
-        bool canDrawChordMenu = false;
         for (int i = 0; i < 4; i++) {
-            if (menu.getActiveButtons()[i] == 0) {  // This checks if the current button is active or not (0 = inactive, 1 = active)
-                if (i == 2) {  // TODO: 2 is the scale chart, need to take different approach
+            if (menu.getActiveButtons()[i] == 0) {
+                if (i == 2) {
                     canDrawScaleMenu = false;
                 }
-                else if (i == 3) {  // TODO: 3 is the chord chart, need to take different approach
+                else if (i == 3) {
                     canDrawChordMenu = false;
                 }
                 else {
@@ -153,15 +157,54 @@ int main()
             if (menu.getActiveButtons()[i] == 1) {
                 if (i == 2) {
                     canDrawScaleMenu = true;
+                    canDrawChordMenu = false;
+                    if (prevButton == 3) {
+                        canDrawChordMenu = false;
+                        menu.deactivateButton(3);  // Deactivate chord button if scales button is active
+                    }
                 }
                 else if (i == 3) {
                     canDrawChordMenu = true;
+                    canDrawScaleMenu = false;
+                    if (prevButton == 2) {
+                        canDrawScaleMenu = false;
+                        menu.deactivateButton(2);  // Deactivate scales button if chord button is active
+                    }
                 }
                 else {
                     instrumentsVec[i]->setCanDraw(true);
                 }
+                prevButton = i;
             }
         }
+//        bool canDrawScaleMenu = false;  // TODO: Preer to not have this here
+//        bool canDrawChordMenu = false;
+//        for (int i = 0; i < 4; i++) {
+//            if (menu.getActiveButtons()[i] == 0) {  // This checks if the current button is active or not (0 = inactive, 1 = active)
+//                if (i == 2) {  // TODO: 2 is the scale chart, need to take different approach
+//                    canDrawScaleMenu = false;
+//                }
+//                else if (i == 3) {  // TODO: 3 is the chord chart, need to take different approach
+//                    canDrawChordMenu = false;
+//                }
+//                else {
+//                    instrumentsVec[i]->setCanDraw(false);
+//                }
+//            }
+//            if (menu.getActiveButtons()[i] == 1) {
+//                if (i == 2) {
+//                    canDrawScaleMenu = true;
+//                    canDrawChordMenu = false;
+//                }
+//                else if (i == 3) {
+//                    canDrawChordMenu = true;
+//                    canDrawScaleMenu = false;
+//                }
+//                else {
+//                    instrumentsVec[i]->setCanDraw(true);
+//                }
+//            }
+//        }
 
         /** Object Drawing Here  **/
         BeginDrawing();
@@ -199,13 +242,15 @@ int main()
         }
 
         // TODO: Refactor all of this into menu state machine
-        if (canDrawScaleMenu) {
-            scalesMenu.draw();
-            scalesMenu.setScale(screenWidth, screenHeight, instrumentsVec);  // TODO: Maybe separate this into two functions
-        }
         if (canDrawChordMenu) {
             chordMenu.draw();
             chordMenu.setChord(screenWidth, screenHeight, instrumentsVec);
+            menu.deactivateButton(2);
+        }
+        if (canDrawScaleMenu) {
+            scalesMenu.draw();
+            scalesMenu.setScale(screenWidth, screenHeight, instrumentsVec);  // TODO: Maybe separate this into two functions
+            menu.deactivateButton(3);
         }
 
         // Want Menu to be drawn last so it's on top

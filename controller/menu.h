@@ -2,7 +2,7 @@
 #define GUITAR_APP_MENU_H
 #include "raylib.h"
 #define RAYGUI_STATIC
-#include "../raygui.h"
+#include "../rayguiCustom.h"
 #undef RAYGUI_STATIC            // Avoid including raygui implementation again
 
 
@@ -90,6 +90,9 @@ public:
 
     // Getters
     std::vector<int> getActiveButtons();
+
+    void deactivateButton(int index);
+
 
 };
 

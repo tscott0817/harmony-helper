@@ -5,7 +5,7 @@ my primary instrument and decided to expand upon it to help other instrumentalis
 use this program to move your ideas between different instruments.
 
 
-![GUI](https://i.imgur.com/qXHLKgl.png)
+![GUI](https://i.imgur.com/Tk9kc9u.png)
 
 ## How To Use
     - Choose instruments from the top menu

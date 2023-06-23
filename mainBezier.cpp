@@ -1,6 +1,6 @@
 #include "raylib.h"
 #define RAYGUI_IMPLEMENTATION
-#include "raygui.h"
+#include "rayguiCustom.h"
 #undef RAYGUI_IMPLEMENTATION  // Avoid including raygui implementation again
 #include <iostream>
 #include "components/guitar.h"

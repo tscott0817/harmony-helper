@@ -89,17 +89,6 @@ void Menu::drawTopMenu(int width, int height) {
     DrawRectangleRounded(buttonThreeRec, 0.75f, 0, buttonColorVec[2]);
     DrawRectangleRounded(buttonFourRec, 0.75f, 0, buttonColorVec[3]);
 
-    // TODO: Put these before each GUI element to style them individually
-//    GuiSetStyle(LISTVIEW, TEXT_ALIGNMENT, TEXT_ALIGN_CENTER);
-//    GuiSetStyle(LISTVIEW, TEXT_COLOR_NORMAL, buttonTextColor);
-//    GuiSetStyle(LISTVIEW, BASE_COLOR_NORMAL, buttonColor);   // TODO: Don't hard code this
-//    GuiSetStyle(LISTVIEW, BORDER_WIDTH, 2);
-
-//    GuiListViewEx((Rectangle){ 165, 180, 140, 200 }, listViewExList, 8, &listViewExScrollIndex, &listViewExActive, &listViewExFocus);
-
-    // GuiListViewEx((Rectangle){ 165, 180, 140, 200 }, listViewExList, 8, &listViewExScrollIndex, &listViewExActive, listViewExFocus);
-
-
     if (!buttonLocAdded) {
         buttonLocations[0] = {buttonOneRec.x, buttonOneRec.y};
         buttonLocations[1] = {buttonTwoRec.x, buttonTwoRec.y};

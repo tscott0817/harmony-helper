@@ -73,7 +73,7 @@ Guitar::Guitar(int screenWidth, int screenHeight, float posX, float posY, float 
         noteClickedBoolVec.emplace_back(tempClicked);
     }
 //    containerColor = Color{51, 51, 51, 255};
-    containerColor = Color{51, 51, 51, 0};
+    containerColor = Color{51, 51, 51, 255};
 }
 
 void Guitar::draw(float windowScale) {
